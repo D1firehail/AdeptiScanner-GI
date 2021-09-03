@@ -45,12 +45,12 @@ namespace GenshinArtifactOCR
             this.label_statSub3 = new System.Windows.Forms.Label();
             this.label_statSub4 = new System.Windows.Forms.Label();
             this.btn_capture = new System.Windows.Forms.Button();
-            this.btn_Filter = new System.Windows.Forms.Button();
             this.btn_OCR = new System.Windows.Forms.Button();
             this.text_raw = new System.Windows.Forms.TextBox();
             this.label_raw = new System.Windows.Forms.Label();
             this.label_level = new System.Windows.Forms.Label();
             this.text_Level = new System.Windows.Forms.TextBox();
+            this.checkbox_OCRcapture = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.image_preview)).BeginInit();
             this.SuspendLayout();
             // 
@@ -203,7 +203,7 @@ namespace GenshinArtifactOCR
             // btn_capture
             // 
             this.btn_capture.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btn_capture.Location = new System.Drawing.Point(535, 516);
+            this.btn_capture.Location = new System.Drawing.Point(493, 516);
             this.btn_capture.Name = "btn_capture";
             this.btn_capture.Size = new System.Drawing.Size(75, 23);
             this.btn_capture.TabIndex = 16;
@@ -211,21 +211,10 @@ namespace GenshinArtifactOCR
             this.btn_capture.UseVisualStyleBackColor = true;
             this.btn_capture.Click += new System.EventHandler(this.btn_capture_Click);
             // 
-            // btn_Filter
-            // 
-            this.btn_Filter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btn_Filter.Location = new System.Drawing.Point(616, 516);
-            this.btn_Filter.Name = "btn_Filter";
-            this.btn_Filter.Size = new System.Drawing.Size(75, 23);
-            this.btn_Filter.TabIndex = 17;
-            this.btn_Filter.Text = "Filter";
-            this.btn_Filter.UseVisualStyleBackColor = true;
-            this.btn_Filter.Click += new System.EventHandler(this.btn_Filter_Click);
-            // 
             // btn_OCR
             // 
             this.btn_OCR.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btn_OCR.Location = new System.Drawing.Point(697, 516);
+            this.btn_OCR.Location = new System.Drawing.Point(574, 516);
             this.btn_OCR.Name = "btn_OCR";
             this.btn_OCR.Size = new System.Drawing.Size(75, 23);
             this.btn_OCR.TabIndex = 18;
@@ -272,18 +261,28 @@ namespace GenshinArtifactOCR
             this.text_Level.Size = new System.Drawing.Size(279, 20);
             this.text_Level.TabIndex = 21;
             // 
+            // checkbox_OCRcapture
+            // 
+            this.checkbox_OCRcapture.AutoSize = true;
+            this.checkbox_OCRcapture.Location = new System.Drawing.Point(656, 521);
+            this.checkbox_OCRcapture.Name = "checkbox_OCRcapture";
+            this.checkbox_OCRcapture.Size = new System.Drawing.Size(93, 17);
+            this.checkbox_OCRcapture.TabIndex = 23;
+            this.checkbox_OCRcapture.Text = "OCR captures";
+            this.checkbox_OCRcapture.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.LightGray;
             this.ClientSize = new System.Drawing.Size(784, 561);
+            this.Controls.Add(this.checkbox_OCRcapture);
             this.Controls.Add(this.label_level);
             this.Controls.Add(this.text_Level);
             this.Controls.Add(this.label_raw);
             this.Controls.Add(this.text_raw);
             this.Controls.Add(this.btn_OCR);
-            this.Controls.Add(this.btn_Filter);
             this.Controls.Add(this.btn_capture);
             this.Controls.Add(this.label_statSub4);
             this.Controls.Add(this.text_statSub4);
@@ -327,12 +326,12 @@ namespace GenshinArtifactOCR
         private System.Windows.Forms.Label label_statSub4;
         private System.Windows.Forms.TextBox text_statSub4;
         private System.Windows.Forms.Button btn_capture;
-        private System.Windows.Forms.Button btn_Filter;
         private System.Windows.Forms.Button btn_OCR;
         private System.Windows.Forms.TextBox text_raw;
         private System.Windows.Forms.Label label_raw;
         private System.Windows.Forms.Label label_level;
         private System.Windows.Forms.TextBox text_Level;
+        private System.Windows.Forms.CheckBox checkbox_OCRcapture;
     }
 }
 

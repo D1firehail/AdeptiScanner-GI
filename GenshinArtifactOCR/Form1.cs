@@ -21,6 +21,7 @@ namespace GenshinArtifactOCR
         private Bitmap img_Raw;
         private Bitmap img_Filtered;
         private int[] filtered_rows;
+        Rectangle artifactArea;
 
         public static string appDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\GenshinArtifactOCR";
         public static List<string> Pieces = new List<string>(){
@@ -52,18 +53,95 @@ namespace GenshinArtifactOCR
             image_preview.Image = new Bitmap(img_Raw);
         }
 
-        private Bitmap filterAndGetArtifactArea(Bitmap img, out int[] rows)
+        private void resetTextBoxes ()
         {
-            int[] cols = new int[img.Width];
-            BitmapData imgData = img_Filtered.LockBits(new Rectangle(0, 0, img.Width, img.Height), ImageLockMode.ReadWrite, img.PixelFormat);
+            text_raw.Text = "";
+            text_Set.Text = "";
+            text_Level.Text = "";
+            text_Type.Text = "";
+            text_statMain.Text = "";
+            text_statSub1.Text = "";
+            text_statSub2.Text = "";
+            text_statSub3.Text = "";
+            text_statSub4.Text = "";
+        }
+
+        private Rectangle findArtifactArea(Bitmap img, Rectangle gameArea)
+        {
+            Bitmap areaImg = new Bitmap(gameArea.Width, gameArea.Height);
+            using (Graphics g = Graphics.FromImage(areaImg))
+            {
+                g.DrawImage(img, 0, 0, gameArea, GraphicsUnit.Pixel);
+            }
+            int[] cols = new int[gameArea.Width];
+            BitmapData imgData = areaImg.LockBits( new Rectangle(0, 0, gameArea.Width, gameArea.Height), ImageLockMode.ReadWrite, areaImg.PixelFormat);
+            int numBytes = Math.Abs(imgData.Stride) * imgData.Height;
+            byte[] imgBytes = new byte[numBytes];
+            Marshal.Copy(imgData.Scan0, imgBytes, 0, numBytes);
+            areaImg.UnlockBits(imgData);
+            int PixelSize = 4; //ARGB, reverse order
+            for (int i = 0; i < numBytes; i += PixelSize)
+            {
+                int x = (i / PixelSize) % gameArea.Width;
+                if (imgBytes[i + 1] > 220 || (imgBytes[i] > 160 && imgBytes[i + 1] > 160 && imgBytes[i + 2] > 160))
+                {
+                    //Make Black
+                    //imgBytes[i] = 0;
+                    //imgBytes[i + 1] = 0;
+                    //imgBytes[i + 2] = 0;
+                    //imgBytes[i + 3] = 255;
+                    cols[x]++;
+                }
+                else
+                {
+                    //Make White
+                    //imgBytes[i] = 255;
+                    //imgBytes[i + 1] = 255;
+                    //imgBytes[i + 2] = 255;
+                    //imgBytes[i + 3] = 255;
+                }
+            }
+
+            //Find artifact text columns
+            int edgewidth = 0;
+            while (cols[cols.Length - 1 - edgewidth] / (double)gameArea.Height < 0.01)
+                edgewidth++;
+            int rightmost = cols.Length - edgewidth * 2;
+            int leftmost = rightmost - edgewidth;
+            int misses = 0;
+            while (leftmost - misses > 0 && misses < edgewidth * 2)
+            {
+                if (cols[leftmost - misses] / (double)gameArea.Height > 0.05)
+                {
+                    leftmost -= misses + 1;
+                    misses = 0;
+                }
+                else
+                {
+                    misses++;
+                }
+            }
+            leftmost -= edgewidth / 2;
+            return new Rectangle(gameArea.Left + leftmost, gameArea.Top, rightmost - leftmost, gameArea.Height);
+        }
+
+        private Bitmap getArtifactImg(Bitmap img, Rectangle area, out int[] rows)
+        {
+            rows = new int[area.Height];
+            Bitmap areaImg = new Bitmap(area.Width, area.Height);
+            using (Graphics g = Graphics.FromImage(areaImg))
+            {
+                g.DrawImage(img, 0, 0, area, GraphicsUnit.Pixel);
+            }
+            BitmapData imgData = areaImg.LockBits(new Rectangle(0, 0, areaImg.Width, areaImg.Height), ImageLockMode.ReadWrite, areaImg.PixelFormat);
             int numBytes = Math.Abs(imgData.Stride) * imgData.Height;
             byte[] imgBytes = new byte[numBytes];
             Marshal.Copy(imgData.Scan0, imgBytes, 0, numBytes);
             int PixelSize = 4; //ARGB, reverse order
             for (int i = 0; i < numBytes; i += PixelSize)
             {
-                int x = (i / PixelSize) % img.Width;
-                int y = (i / PixelSize - x) / img.Width;
+                int x = (i / PixelSize) % areaImg.Width;
+                int y = (i / PixelSize - x) / areaImg.Width;
                 if (imgBytes[i + 1] > 220 || (imgBytes[i] > 160 && imgBytes[i + 1] > 160 && imgBytes[i + 2] > 160))
                 {
                     //Make Black
@@ -71,7 +149,8 @@ namespace GenshinArtifactOCR
                     imgBytes[i + 1] = 0;
                     imgBytes[i + 2] = 0;
                     imgBytes[i + 3] = 255;
-                    cols[x]++;
+
+                    rows[y]++;
                 }
                 else
                 {
@@ -83,56 +162,11 @@ namespace GenshinArtifactOCR
                 }
             }
             Marshal.Copy(imgBytes, 0, imgData.Scan0, numBytes);
-            img.UnlockBits(imgData);
-
-            //Find artifact text columns
-            int edgewidth = 0;
-            while (cols[cols.Length - 1 - edgewidth] / (double)img.Height < 0.01)
-                edgewidth++;
-            int rightmost = cols.Length - edgewidth;
-            int leftmost = rightmost - edgewidth;
-            int misses = 0;
-            while (leftmost - misses > 0 && misses < edgewidth * 2)
-            {
-                if (cols[leftmost - misses] / (double)img.Height > 0.01)
-                {
-                    leftmost -= misses + 1;
-                    misses = 0;
-                }
-                else
-                {
-                    misses++;
-                }
-            }
-            leftmost -= edgewidth / 2;
-
-
-            //find artifact text rows
-            rows = new int[img.Height];
-            for (int i = 0; i < numBytes; i += PixelSize)
-            {
-                int x = (i / PixelSize) % img.Width;
-                int y = (i / PixelSize - x) / img.Width;
-                if (x > leftmost  && x < rightmost && imgBytes[i] == 0)
-                {
-                    rows[y]++;
-                }
-            }
-
-            int top = 0;
-            int left = leftmost;
-            int width = rightmost - leftmost;
-            int height = img.Height;
-            Bitmap artifactArea = new Bitmap(width, height);
-            using (Graphics g = Graphics.FromImage(artifactArea))
-            {
-                Rectangle sourceRect = new Rectangle(left, top, width, height);
-                g.DrawImage(img, 0, 0, sourceRect, GraphicsUnit.Pixel);
-            }
+            areaImg.UnlockBits(imgData);
 
             string timestamp = DateTime.UtcNow.ToString("yyyy-MM-dd HH-mm-ssff");
-            artifactArea.Save(appDir + @"\images\GenshinArtifactArea " + timestamp + ".png");
-            return artifactArea;
+            areaImg.Save(appDir + @"\images\GenshinArtifactArea " + timestamp + ".png");
+            return areaImg;
         }
 
         private Bitmap CaptureScreenshot()
@@ -148,32 +182,43 @@ namespace GenshinArtifactOCR
             return img;
         }
 
-        private Bitmap findGameArea(Bitmap full)
+        private Rectangle findGameArea(Bitmap full)
         {
+            BitmapData imgData = full.LockBits(new Rectangle(0, 0, full.Width, full.Height), ImageLockMode.ReadWrite, full.PixelFormat);
+            int numBytes = Math.Abs(imgData.Stride) * imgData.Height;
+            byte[] imgBytes = new byte[numBytes];
+            Marshal.Copy(imgData.Scan0, imgBytes, 0, numBytes);
+            int PixelSize = 4; //ARGB, reverse order
+            full.UnlockBits(imgData);
+
             int minWidth = Screen.PrimaryScreen.Bounds.Width / 4;
             for (int y = full.Height / 2; y > 0; y--)
             {
                 int x = full.Width / 2;
                 int i_pos = 0;
                 int i_neg = 0;
-                Color pixel = full.GetPixel(x, y);
+                int index = (y * full.Width + x) * PixelSize;
+                Color pixel = Color.FromArgb(imgBytes[index + 3], imgBytes[index + 2], imgBytes[index + 1], imgBytes[index]);
 
                 //explore right
                 while ( x + i_pos < full.Width*0.99 && pixel.R > 220 && pixel.G > 220 && pixel.B > 220) 
                 {
                     i_pos++;
-                    pixel = full.GetPixel(x + i_pos, y);
+                    index = (y * full.Width + x + i_pos) * PixelSize;
+                    pixel = Color.FromArgb(imgBytes[index + 3], imgBytes[index + 2], imgBytes[index + 1], imgBytes[index]);
                 }
 
                 if (i_pos == 0)
                     continue;
 
-                pixel = full.GetPixel(x, y);
+                index = (y * full.Width + x) * PixelSize;
+                pixel = Color.FromArgb(imgBytes[index + 3], imgBytes[index + 2], imgBytes[index + 1], imgBytes[index]);
                 //explore left
                 while (x - i_neg > full.Width * 0.01 && pixel.R > 220 && pixel.G > 220 && pixel.B > 220)
                 {
                     i_neg++;
-                    pixel = full.GetPixel(x - i_neg, y);
+                    index = (y * full.Width + x - i_neg) * PixelSize;
+                    pixel = Color.FromArgb(imgBytes[index + 3], imgBytes[index + 2], imgBytes[index + 1], imgBytes[index]);
                 }
 
                 if (i_pos + i_neg < minWidth)
@@ -183,15 +228,9 @@ namespace GenshinArtifactOCR
                 int left = x - i_neg + (i_pos + i_neg) / 2;
                 int width = (i_pos + i_neg) / 2;
                 int height = (full.Height - y + 1) * 2/3;
-                Bitmap gameArea = new Bitmap(width, height);
-                using (Graphics g = Graphics.FromImage(gameArea))
-                {
-                    Rectangle sourceRect = new Rectangle(left, top, width, height);
-                    g.DrawImage(full, 0, 0, sourceRect, GraphicsUnit.Pixel);
-                }
-                return gameArea;
+                return new Rectangle(left, top, width, height);
             }
-            return null;
+            return new Rectangle(0, 0, full.Width, full.Height);
         }
 
         private Bitmap LoadScreenshot()
@@ -231,6 +270,8 @@ namespace GenshinArtifactOCR
             // For more info see: https://en.wikipedia.org/wiki/Levenshtein_distance
             s = s.ToLower();
             t = t.ToLower();
+            s = Regex.Replace(s, @"[+,. ]", "");
+            t = Regex.Replace(t, @"[+,. ]", "");
             int n = s.Length;
             int m = t.Length;
             int[,] d = new int[n + 1, m + 1];
@@ -289,7 +330,7 @@ namespace GenshinArtifactOCR
             return lowest;
         }
 
-        private string OCRRow(Bitmap img, int start, int stop, List<string> validText, out int dist)
+        private string OCRRow(Bitmap img, int start, int stop, List<string> validText, out int dist, out string rawText)
         {
 
             tessEngine.SetVariable("tessedit_char_whitelist", @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ9876543210+%,:() ");
@@ -319,9 +360,10 @@ namespace GenshinArtifactOCR
             }
 
             text = Regex.Replace(text, @"\s+", "");
+            rawText = text;
 
             string bestMatch = FindClosestMatch(text, validText, out dist);
-            Console.WriteLine("\nGot (" + dist + ") \"" + bestMatch + "\" from \"" + text + "\"");
+            //Console.WriteLine("\nGot (" + dist + ") \"" + bestMatch + "\" from \"" + text + "\"");
 
             return bestMatch;
         }
@@ -341,27 +383,16 @@ namespace GenshinArtifactOCR
                 textRows.Add(Tuple.Create(Math.Max(0, rowTop-3), Math.Min(img.Height-1, i + 3)));
             }
 
-            //remove rows around as tall as artifact name and rows too short to be part of the text
+            //first row guaranteed to be of no use
             textRows.RemoveAt(0);
-            //int ArtifactNameHeight = textRows[0].Item2 - textRows[0].Item1;
-            //for (i = 0; i < textRows.Count; )
-            //{
-            //    int rowHeight = textRows[i].Item2 - textRows[i].Item1;
-            //    if (rowHeight > ArtifactNameHeight * 0.95 || rowHeight < ArtifactNameHeight * 0.5)
-            //    {
-            //        textRows.RemoveAt(i);
-            //    } else
-            //    {
-            //        i++;
-            //    }
-            //}
 
 
-            text_raw.Text = "";
+
+            resetTextBoxes();
             i = 0;
             for (; i < textRows.Count; i++)
             {
-                string result = OCRRow(img, textRows[i].Item1, textRows[i].Item2, Pieces, out int dist);
+                string result = OCRRow(img, textRows[i].Item1, textRows[i].Item2, Pieces, out int dist, out _);
                 if (dist < 3)
                 {
                     text_raw.Text += result + Environment.NewLine;
@@ -373,8 +404,8 @@ namespace GenshinArtifactOCR
 
             for (; i < textRows.Count; i++)
             {
-                string result = OCRRow(img, textRows[i].Item1, textRows[i].Item2, MainStats, out int dist);
-                if (dist < 3)
+                string result = OCRRow(img, textRows[i].Item1, textRows[i].Item2, MainStats, out int dist, out _);
+                if (dist < result.Length)
                 {
                     text_raw.Text += result + Environment.NewLine;
                     text_statMain.Text = result;
@@ -385,8 +416,8 @@ namespace GenshinArtifactOCR
 
             for (; i < textRows.Count; i++)
             {
-                string result = OCRRow(img, textRows[i].Item1, textRows[i].Item2, Levels, out int dist);
-                if (dist == 0)
+                string result = OCRRow(img, textRows[i].Item1, textRows[i].Item2, Levels, out int dist, out string rawText);
+                if (rawText.Length != 0)
                 {
                     text_raw.Text += result + Environment.NewLine;
                     text_Level.Text = result;
@@ -398,7 +429,7 @@ namespace GenshinArtifactOCR
             int substat = 0;
             for (; i < textRows.Count; i++)
             {
-                string result = OCRRow(img, textRows[i].Item1, textRows[i].Item2, Substats, out int dist);
+                string result = OCRRow(img, textRows[i].Item1, textRows[i].Item2, Substats, out int dist, out string rawText);
                 if (dist < 3)
                 {
                     text_raw.Text += result + Environment.NewLine;
@@ -420,7 +451,7 @@ namespace GenshinArtifactOCR
                         break;
                     }
                     substat++;
-                } else if (substat > 2)
+                } else if (substat > 2 && rawText.Length > 5)
                 {
                     break;
                 }
@@ -429,7 +460,7 @@ namespace GenshinArtifactOCR
             int startRow = i;
             for (; i < textRows.Count; i++)
             {
-                string result = OCRRow(img, textRows[startRow].Item1, textRows[i].Item2, Sets, out int dist);
+                string result = OCRRow(img, textRows[startRow].Item1, textRows[i].Item2, Sets, out int dist, out _);
                 if (dist < 5)
                 {
                     text_raw.Text += result + Environment.NewLine;
@@ -446,36 +477,53 @@ namespace GenshinArtifactOCR
 
         }
 
-        private void btn_Filter_Click(object sender, EventArgs e)
-        {
-            img_Filtered = new Bitmap(img_Raw);
-            img_Filtered = filterAndGetArtifactArea(img_Filtered, out filtered_rows);
-
-            image_preview.Image = new Bitmap(img_Filtered);
-        }
-
         private void btn_capture_Click(object sender, EventArgs e)
         {
-            text_raw.Text = "";
-            Bitmap img;
+            resetTextBoxes();
             if (Keyboard.IsKeyDown(Key.LeftShift))
             {
-                img = LoadScreenshot();
+                img_Raw = LoadScreenshot();
             } else
             {
-                img = CaptureScreenshot();
+                img_Raw = CaptureScreenshot();
             }
-            img = findGameArea(img);
-            if (img != null)
+
+            Rectangle gameArea = findGameArea(img_Raw);
+            artifactArea = findArtifactArea(img_Raw, gameArea);
+
+            if (artifactArea.Width == 0 || artifactArea.Height == 0)
             {
-                img_Raw = new Bitmap(img);
+                image_preview.Image = new Bitmap(img_Raw);
+                return;
             }
-            image_preview.Image = new Bitmap(img_Raw);
+            image_preview.Image = new Bitmap(artifactArea.Width, artifactArea.Height);
+            using (Graphics g = Graphics.FromImage(image_preview.Image))
+            {
+                g.DrawImage(img_Raw, 0, 0, artifactArea, GraphicsUnit.Pixel);
+            }
         }
 
         private void btn_OCR_Click(object sender, EventArgs e)
         {
+            if (checkbox_OCRcapture.Checked)
+            {
+                resetTextBoxes();
+                if (Keyboard.IsKeyDown(Key.LeftShift))
+                {
+                    img_Raw = LoadScreenshot();
+                }
+                else
+                {
+                    img_Raw = CaptureScreenshot();
+                }
+            }
+            img_Filtered = new Bitmap(img_Raw);
+            img_Filtered = getArtifactImg(img_Filtered, artifactArea, out filtered_rows);
+
+            image_preview.Image = new Bitmap(img_Filtered);
+
             getArtifacts(img_Filtered, filtered_rows);
         }
+
     }
 }

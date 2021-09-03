@@ -29,6 +29,7 @@ namespace GenshinArtifactOCR
 
         static void GenerateFilters()
         {
+            System.Globalization.CultureInfo culture = new System.Globalization.CultureInfo("en-GB", false);
             //Main stat filter
             JObject MainJSON = JsonConvert.DeserializeObject<JObject>(File.ReadAllText(Form1.appDir + @"\filterdata\MainStats.json"));
             foreach (var stat in MainJSON)
@@ -36,14 +37,14 @@ namespace GenshinArtifactOCR
                 foreach (var statVal in stat.Value.ToObject<JObject>())
                 {
                     double value = statVal.Value.ToObject<double>();
-                    string text = stat.Key +  (value).ToString("N0");
+                    string text = stat.Key +  (value).ToString("N0", culture);
                     if (stat.Key.Contains("%"))
                     {
-                        text = stat.Key + value.ToString("N1");
+                        text = stat.Key + value.ToString("N1", culture);
                         text = text.Replace("%", "") + "%";
                     }
                     Form1.MainStats.Add(text);
-                    Console.WriteLine(text);
+                    //Console.WriteLine(text);
                 }
             }
 
@@ -58,40 +59,42 @@ namespace GenshinArtifactOCR
             JObject SubJSON = JsonConvert.DeserializeObject<JObject>(File.ReadAllText(Form1.appDir + @"\filterdata\SubStats.json"));
             foreach (var stat in SubJSON)
             {
-                List<double> baserolls = new List<double>();
-                List<double> rolls = new List<double>();
+                List<int> baserolls = new List<int>();
+                List<int> rolls = new List<int>();
                 foreach (var value in stat.Value.ToObject<JObject>())
                 {
-                    baserolls.Add(value.Value.ToObject<double>());
-                    rolls.Add(value.Value.ToObject<double>());
+                    baserolls.Add( (int)(value.Value.ToObject<double>() * 100));
+                    rolls.Add( (int)(value.Value.ToObject<double>() * 100));
                 }
+                int start = 0;
+                int stop = rolls.Count;
                 for (int i = 0; i < 4; i++)
                 {
-                    int stop = rolls.Count;
-                    for (int j = 0; j < Math.Min(stop, rolls.Count); j++)
+                    for (int j = start; j < stop; j++)
                     {
-                        foreach(double value in baserolls)
+                        foreach(int value in baserolls)
                         {
-                            double tmp = rolls[j] + value;
+                            int tmp = rolls[j] + value;
                             if (!rolls.Contains(tmp))
                                 rolls.Add(tmp);
+                            else
+                                continue;
                         }
                     }
+                    start = stop;
+                    stop = rolls.Count;
                 }
-                foreach (double value in rolls)
+                foreach (int value_int in rolls)
                 {
-                    if (value > 74 && value < 76 && stat.Key.Contains("Elemental"))
-                    {
-                        int tmp = 0;
-                    }
-                    string text = stat.Key + "+" + (value).ToString("N0");
+                    double value = value_int / 100.0;
+                    string text = stat.Key + "+" + (value).ToString("N0", culture);
                     if (stat.Key.Contains("%"))
                     {
-                        text = stat.Key + "+" + value.ToString("N1");
+                        text = stat.Key + "+" + value.ToString("N1", culture);
                         text = text.Replace("%", "") + "%";
                     }
                     Form1.Substats.Add(text);
-                    Console.WriteLine(text);
+                    //Console.WriteLine(text);
                 }
 
             }
@@ -104,7 +107,7 @@ namespace GenshinArtifactOCR
                 {
                     string text = set.Key + ":(" + i + ")";
                     Form1.Sets.Add(text);
-                    Console.WriteLine(text);
+                    //Console.WriteLine(text);
                 }
             }
         }
