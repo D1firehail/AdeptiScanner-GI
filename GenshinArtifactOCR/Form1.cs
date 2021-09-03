@@ -7,6 +7,7 @@ using System.Drawing.Imaging;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Input;
@@ -19,8 +20,21 @@ namespace GenshinArtifactOCR
         private TesseractEngine tessEngine;
         private Bitmap img_Raw;
         private Bitmap img_Filtered;
+        private int[] filtered_rows;
 
-        private static string appDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\WFInfo"; //Use WFInfo tesseract version for now
+        public static string appDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\GenshinArtifactOCR";
+        public static List<string> Pieces = new List<string>(){
+            "Flower of Life",
+            "Plume of Death", 
+            "Sands of Eon",
+            "Goblet on Eonothem",
+            "Circlet of Logos"
+        };
+        public static List<string> MainStats = new List<string>();
+        public static List<string> Levels = new List<string>();
+        public static List<string> Substats = new List<string>();
+        public static List<string> Sets = new List<string>();
+
         public Form1()
         {
             InitializeComponent();
@@ -38,7 +52,7 @@ namespace GenshinArtifactOCR
             image_preview.Image = new Bitmap(img_Raw);
         }
 
-        private Bitmap filterAndGetArtifactArea(Bitmap img)
+        private Bitmap filterAndGetArtifactArea(Bitmap img, out int[] rows)
         {
             int[] cols = new int[img.Width];
             BitmapData imgData = img_Filtered.LockBits(new Rectangle(0, 0, img.Width, img.Height), ImageLockMode.ReadWrite, img.PixelFormat);
@@ -49,8 +63,8 @@ namespace GenshinArtifactOCR
             for (int i = 0; i < numBytes; i += PixelSize)
             {
                 int x = (i / PixelSize) % img.Width;
-                int y = (i / PixelSize - x) % img.Height;
-                if (imgBytes[i + 1] > 220 || (imgBytes[i] > 170 && imgBytes[i + 1] > 170 && imgBytes[i + 2] > 170))
+                int y = (i / PixelSize - x) / img.Width;
+                if (imgBytes[i + 1] > 220 || (imgBytes[i] > 160 && imgBytes[i + 1] > 160 && imgBytes[i + 2] > 160))
                 {
                     //Make Black
                     imgBytes[i] = 0;
@@ -94,11 +108,11 @@ namespace GenshinArtifactOCR
 
 
             //find artifact text rows
-            int[] rows = new int[img.Height];
+            rows = new int[img.Height];
             for (int i = 0; i < numBytes; i += PixelSize)
             {
                 int x = (i / PixelSize) % img.Width;
-                int y = (i / PixelSize - x) % img.Height;
+                int y = (i / PixelSize - x) / img.Width;
                 if (x > leftmost  && x < rightmost && imgBytes[i] == 0)
                 {
                     rows[y]++;
@@ -115,8 +129,10 @@ namespace GenshinArtifactOCR
                 Rectangle sourceRect = new Rectangle(left, top, width, height);
                 g.DrawImage(img, 0, 0, sourceRect, GraphicsUnit.Pixel);
             }
-            return artifactArea;
 
+            string timestamp = DateTime.UtcNow.ToString("yyyy-MM-dd HH-mm-ssff");
+            artifactArea.Save(appDir + @"\images\GenshinArtifactArea " + timestamp + ".png");
+            return artifactArea;
         }
 
         private Bitmap CaptureScreenshot()
@@ -128,7 +144,7 @@ namespace GenshinArtifactOCR
                 g.CopyFromScreen(0, 0, 0, 0, fullSize);
             }
             string timestamp = DateTime.UtcNow.ToString("yyyy-MM-dd HH-mm-ssff");
-            img.Save(appDir + @"\Debug\GenshinSC " + timestamp + ".png");
+            img.Save(appDir + @"\images\GenshinSC " + timestamp + ".png");
             return img;
         }
 
@@ -173,9 +189,6 @@ namespace GenshinArtifactOCR
                     Rectangle sourceRect = new Rectangle(left, top, width, height);
                     g.DrawImage(full, 0, 0, sourceRect, GraphicsUnit.Pixel);
                 }
-
-                string timestamp = DateTime.UtcNow.ToString("yyyy-MM-dd HH-mm-ssff");
-                gameArea.Save(appDir + @"\Debug\GenshinSC_gameonly " + timestamp + ".png");
                 return gameArea;
             }
             return null;
@@ -212,16 +225,238 @@ namespace GenshinArtifactOCR
             return img;
         }
 
+        public int LevenshteinDistance(string s, string t)
+        {
+            // Levenshtein Distance determines how many character changes it takes to form a known result
+            // For more info see: https://en.wikipedia.org/wiki/Levenshtein_distance
+            s = s.ToLower();
+            t = t.ToLower();
+            int n = s.Length;
+            int m = t.Length;
+            int[,] d = new int[n + 1, m + 1];
+
+            if (n == 0 || m == 0)
+                return n + m;
+
+            d[0, 0] = 0;
+
+            int count = 0;
+            for (int i = 1; i <= n; i++)
+                d[i, 0] = (s[i - 1] == ' ' ? count : ++count);
+
+            count = 0;
+            for (int j = 1; j <= m; j++)
+                d[0, j] = (t[j - 1] == ' ' ? count : ++count);
+
+            for (int i = 1; i <= n; i++)
+                for (int j = 1; j <= m; j++)
+                {
+                    // deletion of s
+                    int opt1 = d[i - 1, j];
+                    if (s[i - 1] != ' ')
+                        opt1++;
+
+                    // deletion of t
+                    int opt2 = d[i, j - 1];
+                    if (t[j - 1] != ' ')
+                        opt2++;
+
+                    // swapping s to t
+                    int opt3 = d[i - 1, j - 1];
+                    if (t[j - 1] != s[i - 1])
+                        opt3++;
+                    d[i, j] = Math.Min(Math.Min(opt1, opt2), opt3);
+                }
+
+
+
+            return d[n, m];
+        }
+
+        private string FindClosestMatch(string rawText, List<string> validText, out int dist)
+        {
+            string lowest = "ERROR";
+            dist = 9999;
+            foreach (string validWord in validText)
+            {
+                int val = LevenshteinDistance(validWord, rawText);
+                if (val < dist)
+                {
+                    dist = val;
+                    lowest = validWord;
+                }
+            }
+            return lowest;
+        }
+
+        private string OCRRow(Bitmap img, int start, int stop, List<string> validText, out int dist)
+        {
+
+            tessEngine.SetVariable("tessedit_char_whitelist", @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ9876543210+%,:() ");
+            int height = stop - start;
+            Bitmap scanArea = new Bitmap(img.Width, height);
+            using (Graphics g = Graphics.FromImage(scanArea))
+            {
+                Rectangle sourceRect = new Rectangle(0, start, img.Width, height);
+                g.DrawImage(img, 0, 0, sourceRect, GraphicsUnit.Pixel);
+            }
+
+
+            string timestamp = DateTime.UtcNow.ToString("yyyy-MM-dd HH-mm-ssff");
+            scanArea.Save(appDir + @"\images\GenshinTextRow " + timestamp + ".png");
+
+            string text = "";
+            using ( var page = tessEngine.Process(scanArea, PageSegMode.SparseText))
+            {
+                using (var iterator = page.GetIterator())
+                {
+                    iterator.Begin();
+                    do
+                    {
+                        text += iterator.GetText(PageIteratorLevel.TextLine);
+                    } while (iterator.Next(PageIteratorLevel.TextLine));
+                }
+            }
+
+            text = Regex.Replace(text, @"\s+", "");
+
+            string bestMatch = FindClosestMatch(text, validText, out dist);
+            Console.WriteLine("\nGot (" + dist + ") \"" + bestMatch + "\" from \"" + text + "\"");
+
+            return bestMatch;
+        }
+
+        private void getArtifacts(Bitmap img, int[] rows)
+        {
+            //get all potential text rows
+            List<Tuple<int, int>> textRows = new List<Tuple<int, int>>();
+            int i = 0;
+            while ( i+1 < img.Height)
+            {
+                while ( i+1 < img.Height && rows[i] / (double)img.Width < 0.01)
+                    i++;
+                int rowTop = i;
+                while (i+1 < img.Height && !(rows[i] / (double)img.Width < 0.01))
+                    i++;
+                textRows.Add(Tuple.Create(Math.Max(0, rowTop-3), Math.Min(img.Height-1, i + 3)));
+            }
+
+            //remove rows around as tall as artifact name and rows too short to be part of the text
+            textRows.RemoveAt(0);
+            //int ArtifactNameHeight = textRows[0].Item2 - textRows[0].Item1;
+            //for (i = 0; i < textRows.Count; )
+            //{
+            //    int rowHeight = textRows[i].Item2 - textRows[i].Item1;
+            //    if (rowHeight > ArtifactNameHeight * 0.95 || rowHeight < ArtifactNameHeight * 0.5)
+            //    {
+            //        textRows.RemoveAt(i);
+            //    } else
+            //    {
+            //        i++;
+            //    }
+            //}
+
+
+            text_raw.Text = "";
+            i = 0;
+            for (; i < textRows.Count; i++)
+            {
+                string result = OCRRow(img, textRows[i].Item1, textRows[i].Item2, Pieces, out int dist);
+                if (dist < 3)
+                {
+                    text_raw.Text += result + Environment.NewLine;
+                    text_Type.Text = result;
+                    i++;
+                    break;
+                }
+            }
+
+            for (; i < textRows.Count; i++)
+            {
+                string result = OCRRow(img, textRows[i].Item1, textRows[i].Item2, MainStats, out int dist);
+                if (dist < 3)
+                {
+                    text_raw.Text += result + Environment.NewLine;
+                    text_statMain.Text = result;
+                    i++;
+                    break;
+                }
+            }
+
+            for (; i < textRows.Count; i++)
+            {
+                string result = OCRRow(img, textRows[i].Item1, textRows[i].Item2, Levels, out int dist);
+                if (dist == 0)
+                {
+                    text_raw.Text += result + Environment.NewLine;
+                    text_Level.Text = result;
+                    i++;
+                    break;
+                }
+            }
+
+            int substat = 0;
+            for (; i < textRows.Count; i++)
+            {
+                string result = OCRRow(img, textRows[i].Item1, textRows[i].Item2, Substats, out int dist);
+                if (dist < 3)
+                {
+                    text_raw.Text += result + Environment.NewLine;
+                    if (substat == 0)
+                    {
+                        text_statSub1.Text = result;
+                    } else if (substat == 1)
+                    {
+                        text_statSub2.Text = result;
+                    }
+                    else if (substat == 2)
+                    {
+                        text_statSub3.Text = result;
+                    }
+                    else
+                    {
+                        text_statSub4.Text = result;
+                        i++;
+                        break;
+                    }
+                    substat++;
+                } else if (substat > 2)
+                {
+                    break;
+                }
+            }
+
+            int startRow = i;
+            for (; i < textRows.Count; i++)
+            {
+                string result = OCRRow(img, textRows[startRow].Item1, textRows[i].Item2, Sets, out int dist);
+                if (dist < 5)
+                {
+                    text_raw.Text += result + Environment.NewLine;
+                    text_Set.Text = result;
+                    break;
+                }
+                else
+                {
+                    if (startRow - i > 4)
+                        break;
+                }
+            }
+
+
+        }
+
         private void btn_Filter_Click(object sender, EventArgs e)
         {
             img_Filtered = new Bitmap(img_Raw);
-            img_Filtered = filterAndGetArtifactArea(img_Filtered);
+            img_Filtered = filterAndGetArtifactArea(img_Filtered, out filtered_rows);
 
             image_preview.Image = new Bitmap(img_Filtered);
         }
 
         private void btn_capture_Click(object sender, EventArgs e)
         {
+            text_raw.Text = "";
             Bitmap img;
             if (Keyboard.IsKeyDown(Key.LeftShift))
             {
@@ -229,10 +464,18 @@ namespace GenshinArtifactOCR
             } else
             {
                 img = CaptureScreenshot();
-                img = findGameArea(img);
             }
-            img_Raw = new Bitmap(img);
-            image_preview.Image = new Bitmap(img);
+            img = findGameArea(img);
+            if (img != null)
+            {
+                img_Raw = new Bitmap(img);
+            }
+            image_preview.Image = new Bitmap(img_Raw);
+        }
+
+        private void btn_OCR_Click(object sender, EventArgs e)
+        {
+            getArtifacts(img_Filtered, filtered_rows);
         }
     }
 }

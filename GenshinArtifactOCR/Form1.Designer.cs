@@ -49,6 +49,8 @@ namespace GenshinArtifactOCR
             this.btn_OCR = new System.Windows.Forms.Button();
             this.text_raw = new System.Windows.Forms.TextBox();
             this.label_raw = new System.Windows.Forms.Label();
+            this.label_level = new System.Windows.Forms.Label();
+            this.text_Level = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.image_preview)).BeginInit();
             this.SuspendLayout();
             // 
@@ -132,7 +134,7 @@ namespace GenshinArtifactOCR
             // 
             this.label_Set.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label_Set.AutoSize = true;
-            this.label_Set.Location = new System.Drawing.Point(464, 19);
+            this.label_Set.Location = new System.Drawing.Point(464, 15);
             this.label_Set.Name = "label_Set";
             this.label_Set.Size = new System.Drawing.Size(23, 13);
             this.label_Set.TabIndex = 8;
@@ -142,7 +144,7 @@ namespace GenshinArtifactOCR
             // 
             this.label_Type.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label_Type.AutoSize = true;
-            this.label_Type.Location = new System.Drawing.Point(456, 45);
+            this.label_Type.Location = new System.Drawing.Point(456, 41);
             this.label_Type.Name = "label_Type";
             this.label_Type.Size = new System.Drawing.Size(31, 13);
             this.label_Type.TabIndex = 9;
@@ -152,7 +154,7 @@ namespace GenshinArtifactOCR
             // 
             this.label_statMain.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label_statMain.AutoSize = true;
-            this.label_statMain.Location = new System.Drawing.Point(435, 71);
+            this.label_statMain.Location = new System.Drawing.Point(435, 67);
             this.label_statMain.Name = "label_statMain";
             this.label_statMain.Size = new System.Drawing.Size(52, 13);
             this.label_statMain.TabIndex = 10;
@@ -162,7 +164,7 @@ namespace GenshinArtifactOCR
             // 
             this.label_statSub1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label_statSub1.AutoSize = true;
-            this.label_statSub1.Location = new System.Drawing.Point(435, 97);
+            this.label_statSub1.Location = new System.Drawing.Point(435, 93);
             this.label_statSub1.Name = "label_statSub1";
             this.label_statSub1.Size = new System.Drawing.Size(52, 13);
             this.label_statSub1.TabIndex = 11;
@@ -172,7 +174,7 @@ namespace GenshinArtifactOCR
             // 
             this.label_statSub2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label_statSub2.AutoSize = true;
-            this.label_statSub2.Location = new System.Drawing.Point(435, 123);
+            this.label_statSub2.Location = new System.Drawing.Point(435, 119);
             this.label_statSub2.Name = "label_statSub2";
             this.label_statSub2.Size = new System.Drawing.Size(52, 13);
             this.label_statSub2.TabIndex = 12;
@@ -182,7 +184,7 @@ namespace GenshinArtifactOCR
             // 
             this.label_statSub3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label_statSub3.AutoSize = true;
-            this.label_statSub3.Location = new System.Drawing.Point(435, 149);
+            this.label_statSub3.Location = new System.Drawing.Point(435, 145);
             this.label_statSub3.Name = "label_statSub3";
             this.label_statSub3.Size = new System.Drawing.Size(52, 13);
             this.label_statSub3.TabIndex = 13;
@@ -192,7 +194,7 @@ namespace GenshinArtifactOCR
             // 
             this.label_statSub4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label_statSub4.AutoSize = true;
-            this.label_statSub4.Location = new System.Drawing.Point(435, 175);
+            this.label_statSub4.Location = new System.Drawing.Point(435, 171);
             this.label_statSub4.Name = "label_statSub4";
             this.label_statSub4.Size = new System.Drawing.Size(52, 13);
             this.label_statSub4.TabIndex = 15;
@@ -229,26 +231,46 @@ namespace GenshinArtifactOCR
             this.btn_OCR.TabIndex = 18;
             this.btn_OCR.Text = "OCR";
             this.btn_OCR.UseVisualStyleBackColor = true;
+            this.btn_OCR.Click += new System.EventHandler(this.btn_OCR_Click);
             // 
             // text_raw
             // 
             this.text_raw.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.text_raw.Location = new System.Drawing.Point(493, 204);
+            this.text_raw.Location = new System.Drawing.Point(493, 255);
             this.text_raw.Multiline = true;
             this.text_raw.Name = "text_raw";
             this.text_raw.ReadOnly = true;
-            this.text_raw.Size = new System.Drawing.Size(279, 306);
+            this.text_raw.Size = new System.Drawing.Size(279, 255);
             this.text_raw.TabIndex = 19;
             // 
             // label_raw
             // 
             this.label_raw.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label_raw.AutoSize = true;
-            this.label_raw.Location = new System.Drawing.Point(458, 204);
+            this.label_raw.Location = new System.Drawing.Point(458, 255);
             this.label_raw.Name = "label_raw";
             this.label_raw.Size = new System.Drawing.Size(29, 13);
             this.label_raw.TabIndex = 20;
             this.label_raw.Text = "Raw";
+            // 
+            // label_level
+            // 
+            this.label_level.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.label_level.AutoSize = true;
+            this.label_level.Location = new System.Drawing.Point(454, 197);
+            this.label_level.Name = "label_level";
+            this.label_level.Size = new System.Drawing.Size(33, 13);
+            this.label_level.TabIndex = 22;
+            this.label_level.Text = "Level";
+            // 
+            // text_Level
+            // 
+            this.text_Level.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.text_Level.Location = new System.Drawing.Point(493, 194);
+            this.text_Level.Name = "text_Level";
+            this.text_Level.ReadOnly = true;
+            this.text_Level.Size = new System.Drawing.Size(279, 20);
+            this.text_Level.TabIndex = 21;
             // 
             // Form1
             // 
@@ -256,6 +278,8 @@ namespace GenshinArtifactOCR
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.LightGray;
             this.ClientSize = new System.Drawing.Size(784, 561);
+            this.Controls.Add(this.label_level);
+            this.Controls.Add(this.text_Level);
             this.Controls.Add(this.label_raw);
             this.Controls.Add(this.text_raw);
             this.Controls.Add(this.btn_OCR);
@@ -307,6 +331,8 @@ namespace GenshinArtifactOCR
         private System.Windows.Forms.Button btn_OCR;
         private System.Windows.Forms.TextBox text_raw;
         private System.Windows.Forms.Label label_raw;
+        private System.Windows.Forms.Label label_level;
+        private System.Windows.Forms.TextBox text_Level;
     }
 }
 
