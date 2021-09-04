@@ -1,7 +1,7 @@
 ﻿
 namespace GenshinArtifactOCR
 {
-    partial class Form1
+    partial class GenshinArtifactOCR
     {
         /// <summary>
         /// Required designer variable.
@@ -52,6 +52,7 @@ namespace GenshinArtifactOCR
             this.text_Level = new System.Windows.Forms.TextBox();
             this.checkbox_OCRcapture = new System.Windows.Forms.CheckBox();
             this.checkbox_inventorymode = new System.Windows.Forms.CheckBox();
+            this.checkbox_saveImages = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.image_preview)).BeginInit();
             this.SuspendLayout();
             // 
@@ -284,12 +285,24 @@ namespace GenshinArtifactOCR
             this.checkbox_inventorymode.Text = "Inventory Mode";
             this.checkbox_inventorymode.UseVisualStyleBackColor = true;
             // 
-            // Form1
+            // checkbox_saveImages
+            // 
+            this.checkbox_saveImages.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.checkbox_saveImages.AutoSize = true;
+            this.checkbox_saveImages.Location = new System.Drawing.Point(680, 485);
+            this.checkbox_saveImages.Name = "checkbox_saveImages";
+            this.checkbox_saveImages.Size = new System.Drawing.Size(87, 17);
+            this.checkbox_saveImages.TabIndex = 25;
+            this.checkbox_saveImages.Text = "Save images";
+            this.checkbox_saveImages.UseVisualStyleBackColor = true;
+            // 
+            // GenshinArtifactOCR
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.LightGray;
             this.ClientSize = new System.Drawing.Size(784, 561);
+            this.Controls.Add(this.checkbox_saveImages);
             this.Controls.Add(this.checkbox_inventorymode);
             this.Controls.Add(this.checkbox_OCRcapture);
             this.Controls.Add(this.label_level);
@@ -314,8 +327,8 @@ namespace GenshinArtifactOCR
             this.Controls.Add(this.text_Set);
             this.Controls.Add(this.image_preview);
             this.MinimumSize = new System.Drawing.Size(600, 600);
-            this.Name = "Form1";
-            this.Text = "Form1";
+            this.Name = "GenshinArtifactOCR";
+            this.Text = "GenshinArtifactOCR";
             ((System.ComponentModel.ISupportInitialize)(this.image_preview)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -347,6 +360,7 @@ namespace GenshinArtifactOCR
         private System.Windows.Forms.TextBox text_Level;
         private System.Windows.Forms.CheckBox checkbox_OCRcapture;
         private System.Windows.Forms.CheckBox checkbox_inventorymode;
+        private System.Windows.Forms.CheckBox checkbox_saveImages;
     }
 }
 

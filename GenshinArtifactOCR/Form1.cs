@@ -15,7 +15,7 @@ using Tesseract;
 
 namespace GenshinArtifactOCR
 {
-    public partial class Form1 : Form
+    public partial class GenshinArtifactOCR : Form
     {
         private TesseractEngine tessEngine;
         private Bitmap img_Raw;
@@ -37,7 +37,7 @@ namespace GenshinArtifactOCR
         public static List<string> Substats = new List<string>();
         public static List<string> Sets = new List<string>();
 
-        public Form1()
+        public GenshinArtifactOCR()
         {
             InitializeComponent();
             tessEngine = new TesseractEngine(appDir + @"/tessdata", "en")
@@ -270,7 +270,8 @@ namespace GenshinArtifactOCR
             areaImg.UnlockBits(imgData);
 
             string timestamp = DateTime.UtcNow.ToString("yyyy-MM-dd HH-mm-ssff");
-            areaImg.Save(appDir + @"\images\GenshinArtifactArea " + timestamp + ".png");
+            if (checkbox_saveImages.Checked)
+                areaImg.Save(appDir + @"\images\GenshinArtifactArea " + timestamp + ".png");
             return areaImg;
         }
 
@@ -324,7 +325,8 @@ namespace GenshinArtifactOCR
             areaImg.UnlockBits(imgData);
 
             string timestamp = DateTime.UtcNow.ToString("yyyy-MM-dd HH-mm-ssff");
-            areaImg.Save(appDir + @"\images\GenshinArtifactArea " + timestamp + ".png");
+            if (checkbox_saveImages.Checked)
+                areaImg.Save(appDir + @"\images\GenshinArtifactArea " + timestamp + ".png");
             return areaImg;
         }
 
@@ -341,7 +343,8 @@ namespace GenshinArtifactOCR
                 g.CopyFromScreen(0, 0, 0, 0, fullSize);
             }
             string timestamp = DateTime.UtcNow.ToString("yyyy-MM-dd HH-mm-ssff");
-            img.Save(appDir + @"\images\GenshinSC " + timestamp + ".png");
+            if (checkbox_saveImages.Checked)
+                img.Save(appDir + @"\images\GenshinSC " + timestamp + ".png");
             return img;
         }
 
@@ -543,7 +546,8 @@ namespace GenshinArtifactOCR
 
 
             string timestamp = DateTime.UtcNow.ToString("yyyy-MM-dd HH-mm-ssff");
-            scanArea.Save(appDir + @"\images\GenshinTextRow " + timestamp + ".png");
+            if (checkbox_saveImages.Checked)
+                scanArea.Save(appDir + @"\images\GenshinTextRow " + timestamp + ".png");
 
             //Do OCR and append to prevRaw
             string text = prevRaw;
