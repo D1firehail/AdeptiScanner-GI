@@ -27,6 +27,9 @@ namespace GenshinArtifactOCR
             Application.Run(new Form1());
         }
 
+        /// <summary>
+        /// Generate all possible text to look for and assign to filter word lists
+        /// </summary>
         static void GenerateFilters()
         {
             System.Globalization.CultureInfo culture = new System.Globalization.CultureInfo("en-GB", false);
