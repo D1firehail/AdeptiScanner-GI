@@ -24,19 +24,19 @@ namespace GenshinArtifactOCR
         Rectangle artifactArea;
 
         public static string appDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\GenshinArtifactOCR";
-        public static List<string> Pieces = new List<string>(){
-            "Flower of Life",
-            "Plume of Death", 
-            "Sands of Eon",
-            "Goblet on Eonothem",
-            "Circlet of Logos"
-        };
         //These get filled on startup by other file
+        public static List<string> Pieces = new List<string>();
         public static List<string> MainStats = new List<string>();
         public static List<string> Levels = new List<string>();
         public static List<string> Substats = new List<string>();
         public static List<string> Sets = new List<string>();
         public static List<string> Characters = new List<string>();
+        public static List<Tuple<string, string>> Pieces_trans = new List<Tuple<string, string>>();
+        public static List<Tuple<string, string, double>> MainStats_trans = new List<Tuple<string, string, double>>();
+        public static List<Tuple<string, int>> Levels_trans = new List<Tuple<string, int>>();
+        public static List<Tuple<string, string, double>> Substats_trans = new List<Tuple<string, string, double>>();
+        public static List<Tuple<string, string>> Sets_trans = new List<Tuple<string, string>>();
+        public static List<Tuple<string, string>> Characters_trans = new List<Tuple<string, string>>();
 
         public GenshinArtifactOCR()
         {
@@ -70,6 +70,60 @@ namespace GenshinArtifactOCR
             text_statSub2.Text = "";
             text_statSub3.Text = "";
             text_statSub4.Text = "";
+            text_character.Text = "";
+        }
+
+        private void displayInventoryItem (InventoryItem item)
+        {
+            text_full.Text = "";
+            if (item.set != null)
+            {
+                text_full.Text += item.set.Item1 + Environment.NewLine;
+                text_Set.Text = item.set.Item1;
+            }
+            if (item.level != null)
+            {
+                text_full.Text += item.level.Item1 + Environment.NewLine;
+                text_Level.Text = item.level.Item1;
+            }
+            if (item.piece != null)
+            {
+                text_full.Text += item.piece.Item1 + Environment.NewLine;
+                text_Type.Text = item.piece.Item1;
+            }
+            if (item.main != null)
+            {
+                text_full.Text += item.main.Item1 + Environment.NewLine;
+                text_statMain.Text = item.main.Item1;
+            }
+            if (item.subs != null)
+            {
+                if (item.subs.Count > 0)
+                {
+                    text_full.Text += item.subs[0].Item1 + Environment.NewLine;
+                    text_statSub1.Text = item.subs[0].Item1;
+                }
+                if (item.subs.Count > 1)
+                {
+                    text_full.Text += item.subs[1].Item1 + Environment.NewLine;
+                    text_statSub2.Text = item.subs[1].Item1;
+                }
+                if (item.subs.Count > 2)
+                {
+                    text_full.Text += item.subs[2].Item1 + Environment.NewLine;
+                    text_statSub3.Text = item.subs[2].Item1;
+                }
+                if (item.subs.Count > 3)
+                {
+                    text_full.Text += item.subs[3].Item1 + Environment.NewLine;
+                    text_statSub4.Text = item.subs[3].Item1;
+                }
+            }
+            if (item.character != null)
+            {
+                text_full.Text += item.character.Item1 + Environment.NewLine;
+                text_character.Text = item.character.Item1;
+            }
         }
 
         /// <summary>
@@ -564,15 +618,19 @@ namespace GenshinArtifactOCR
         /// <param name="validText">List of words to match against</param>
         /// <param name="dist">Levenshtein distance to closest match</param>
         /// <returns>Closest matching word</returns>
-        private string FindClosestMatch(string rawText, List<string> validText, out int dist)
+        private string FindClosestMatch(string rawText, List<string> validText, out int index, out int dist)
         {
             string lowest = "ERROR";
             dist = 9999;
-            foreach (string validWord in validText)
+            index = 0;
+
+            for (int i = 0; i < validText.Count; i++)
             {
+                string validWord = validText[i];
                 int val = LevenshteinDistance(validWord, rawText);
                 if (val < dist)
                 {
+                    index = i;
                     dist = val;
                     lowest = validWord;
                 }
@@ -591,7 +649,7 @@ namespace GenshinArtifactOCR
         /// <param name="rawText">Raw result from OCR process (appended to <paramref name="prevRaw"/>)</param>
         /// <param name="prevRaw">String to append in front of raw OCR result before searching for match</param>
         /// <returns>Closest matching word</returns>
-        private string OCRRow(Bitmap img, int start, int stop, List<string> validText, out int dist, out string rawText, string prevRaw)
+        private string OCRRow(Bitmap img, int start, int stop, List<string> validText, out int index, out int dist, out string rawText, string prevRaw)
         {
 
             tessEngine.SetVariable("tessedit_char_whitelist", @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ9876543210+%,:() ");
@@ -626,8 +684,8 @@ namespace GenshinArtifactOCR
             text = Regex.Replace(text, @"\s+", "");
             rawText = text;
 
-            string bestMatch = FindClosestMatch(text, validText, out dist);
-            //Console.WriteLine("\nGot (" + dist + ") \"" + bestMatch + "\" from \"" + text + "\"");
+            string bestMatch = FindClosestMatch(text, validText, out index, out dist);
+            Console.WriteLine("\nGot (" + dist + ") \"" + bestMatch + "\" from \"" + text + "\"");
 
             return bestMatch;
         }
@@ -637,7 +695,7 @@ namespace GenshinArtifactOCR
         /// </summary>
         /// <param name="img">Image of artifact area, filtered</param>
         /// <param name="rows">Filter results per row</param>
-        private void getArtifacts(Bitmap img, int[] rows)
+        private InventoryItem getArtifacts(Bitmap img, int[] rows)
         {
             //get all potential text rows
             List<Tuple<int, int>> textRows = new List<Tuple<int, int>>();
@@ -656,17 +714,15 @@ namespace GenshinArtifactOCR
             textRows.RemoveAt(0);
 
 
-
-            resetTextBoxes();
+            InventoryItem foundArtifact = new InventoryItem();
             i = 0;
             //Piece type
             for (; i < textRows.Count; i++)
             {
-                string result = OCRRow(img, textRows[i].Item1, textRows[i].Item2, Pieces, out int dist, out _, "");
+                string result = OCRRow(img, textRows[i].Item1, textRows[i].Item2, Pieces, out int resultIndex, out int dist, out _, "");
                 if (dist < 3)
                 {
-                    text_full.Text += result + Environment.NewLine;
-                    text_Type.Text = result;
+                    foundArtifact.piece = Pieces_trans[resultIndex];
                     i++;
                     break;
                 }
@@ -676,11 +732,10 @@ namespace GenshinArtifactOCR
             string prevRaw = "";
             for (; i < textRows.Count; i++)
             {
-                string result = OCRRow(img, textRows[i].Item1, textRows[i].Item2, MainStats, out int dist, out string rawText, prevRaw);
+                string result = OCRRow(img, textRows[i].Item1, textRows[i].Item2, MainStats, out int resultIndex, out int dist, out string rawText, prevRaw);
                 if (dist < rawText.Length - 2 && rawText.Any(char.IsDigit))
                 {
-                    text_full.Text += result + Environment.NewLine;
-                    text_statMain.Text = result;
+                    foundArtifact.main = MainStats_trans[resultIndex];
                     i++;
                     break;
                 }
@@ -690,38 +745,26 @@ namespace GenshinArtifactOCR
             //Level
             for (; i < textRows.Count; i++)
             {
-                string result = OCRRow(img, textRows[i].Item1, textRows[i].Item2, Levels, out int dist, out string rawText, "");
+                string result = OCRRow(img, textRows[i].Item1, textRows[i].Item2, Levels, out int resultIndex, out int dist, out string rawText, "");
                 if (rawText.Length != 0)
                 {
-                    text_full.Text += result + Environment.NewLine;
-                    text_Level.Text = result;
+                    foundArtifact.level = Levels_trans[resultIndex];
                     i++;
                     break;
                 }
             }
 
             //Substats
+            foundArtifact.subs = new List<Tuple<string, string, double>>();
             int substat = 0;
             for (; i < textRows.Count; i++)
             {
-                string result = OCRRow(img, textRows[i].Item1, textRows[i].Item2, Substats, out int dist, out string rawText, "");
+                string result = OCRRow(img, textRows[i].Item1, textRows[i].Item2, Substats, out int resultIndex, out int dist, out string rawText, "");
                 if (dist < 3)
                 {
-                    text_full.Text += result + Environment.NewLine;
-                    if (substat == 0)
+                    foundArtifact.subs.Add(Substats_trans[resultIndex]);
+                    if (substat > 2)
                     {
-                        text_statSub1.Text = result;
-                    } else if (substat == 1)
-                    {
-                        text_statSub2.Text = result;
-                    }
-                    else if (substat == 2)
-                    {
-                        text_statSub3.Text = result;
-                    }
-                    else
-                    {
-                        text_statSub4.Text = result;
                         i++;
                         break;
                     }
@@ -737,11 +780,10 @@ namespace GenshinArtifactOCR
             prevRaw = "";
             for (; i < textRows.Count; i++)
             {
-                string result = OCRRow(img, textRows[i].Item1, textRows[i].Item2, Sets, out int dist, out string rawText, prevRaw);
+                string result = OCRRow(img, textRows[i].Item1, textRows[i].Item2, Sets, out int resultIndex, out int dist, out string rawText, prevRaw);
                 if (dist < 5)
                 {
-                    text_full.Text += result + Environment.NewLine;
-                    text_Set.Text = result;
+                    foundArtifact.set = Sets_trans[resultIndex];
                     break;
                 }
                 else
@@ -755,16 +797,15 @@ namespace GenshinArtifactOCR
             //Character
             for (i = textRows.Count - 1; i > Math.Max(0, textRows.Count - 3); i--)
             {
-                string result = OCRRow(img, textRows[i].Item1, textRows[i].Item2, Characters, out int dist, out _, "");
+                string result = OCRRow(img, textRows[i].Item1, textRows[i].Item2, Characters, out int resultIndex, out int dist, out _, "");
                 if (dist < 5)
                 {
-                    text_full.Text += result + Environment.NewLine;
-                    text_character.Text = result;
+                    foundArtifact.character = Characters_trans[resultIndex];
                     break;
                 }
             }
 
-
+            return foundArtifact;
         }
 
         private void btn_capture_Click(object sender, EventArgs e)
@@ -827,7 +868,6 @@ namespace GenshinArtifactOCR
 
             if (checkbox_OCRcapture.Checked)
             {
-                resetTextBoxes();
                 if (Keyboard.IsKeyDown(Key.LeftShift))
                 {
                     img_Raw = LoadScreenshot();
@@ -850,7 +890,8 @@ namespace GenshinArtifactOCR
 
             image_preview.Image = new Bitmap(img_Filtered);
 
-            getArtifacts(img_Filtered, filtered_rows);
+            InventoryItem artifact = getArtifacts(img_Filtered, filtered_rows);
+            displayInventoryItem(artifact);
         }
 
     }

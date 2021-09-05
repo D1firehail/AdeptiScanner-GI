@@ -35,8 +35,10 @@ namespace GenshinArtifactOCR
         {
             foreach (JObject mainStat in mainStats)
             {
-                foreach (string statName in mainStat["name"].ToObject<List<string>>())
+                foreach (KeyValuePair<string, JToken> statNameTup in mainStat["name"].ToObject<JObject>())
                 {
+                    string statName = statNameTup.Key;
+                    string statKey = statNameTup.Value.ToObject<string>();
 
                     foreach (double statValue in mainStat["value"].ToObject<List<double>>())
                     {
@@ -47,6 +49,7 @@ namespace GenshinArtifactOCR
                             text = text.Replace("%", "") + "%";
                         }
                         GenshinArtifactOCR.MainStats.Add(text);
+                        GenshinArtifactOCR.MainStats_trans.Add(Tuple.Create(text, statKey, statValue));
                         //Console.WriteLine(text);
                     }
                 }
@@ -57,8 +60,10 @@ namespace GenshinArtifactOCR
         {
             foreach (JObject substat in substats)
             {
-                foreach (string statName in substat["name"].ToObject<List<string>>())
+                foreach (KeyValuePair<string, JToken> statNameTup in substat["name"].ToObject<JObject>())
                 {
+                    string statName = statNameTup.Key;
+                    string statKey = statNameTup.Value.ToObject<string>();
                     List<int> baserolls = new List<int>();
                     List<int> rolls = new List<int>();
                     foreach (double statValue in substat["rolls"].ToObject<List<double>>())
@@ -94,6 +99,7 @@ namespace GenshinArtifactOCR
                             text = text.Replace("%", "") + "%";
                         }
                         GenshinArtifactOCR.Substats.Add(text);
+                        GenshinArtifactOCR.Substats_trans.Add(Tuple.Create(text, statKey, value));
                         //Console.WriteLine(text);
                     }
                 }
@@ -104,13 +110,18 @@ namespace GenshinArtifactOCR
         {
             foreach (JObject set in sets)
             {
-                foreach (string statName in set["name"].ToObject<List<string>>())
+                foreach (KeyValuePair<string, JToken> statNameTup in set["name"].ToObject<JObject>())
                 {
-                    GenshinArtifactOCR.Sets.Add(statName + ":");
+                    string statName = statNameTup.Key;
+                    string statKey = statNameTup.Value.ToObject<string>();
+                    string text = statName + "";
+                    GenshinArtifactOCR.Sets.Add(text);
+                    GenshinArtifactOCR.Sets_trans.Add(Tuple.Create(text, statKey));
                     for (int i = 0; i < 6; i++)
                     {
-                        string text = statName + ":(" + i + ")";
+                        text = statName + ":(" + i + ")";
                         GenshinArtifactOCR.Sets.Add(text);
+                        GenshinArtifactOCR.Sets_trans.Add(Tuple.Create(text, statKey));
                         //Console.WriteLine(text);
                     }
                 }
@@ -121,10 +132,29 @@ namespace GenshinArtifactOCR
         {
             foreach (JObject character in characters)
             {
-                foreach (string statName in character["name"].ToObject<List<string>>())
+                foreach (KeyValuePair<string, JToken> statNameTup in character["name"].ToObject<JObject>())
                 {
+                    string statName = statNameTup.Key;
+                    string statKey = statNameTup.Value.ToObject<string>();
                     string text =  "Equipped: " + statName;
                     GenshinArtifactOCR.Characters.Add(text);
+                    GenshinArtifactOCR.Characters_trans.Add(Tuple.Create(text, statKey));
+                    Console.WriteLine(text);
+                }
+            }
+        }
+
+        static void readPieces(JArray pieces)
+        {
+            foreach (JObject piece in pieces)
+            {
+                foreach (KeyValuePair<string, JToken> statNameTup in piece["name"].ToObject<JObject>())
+                {
+                    string statName = statNameTup.Key;
+                    string statKey = statNameTup.Value.ToObject<string>();
+                    string text = statName;
+                    GenshinArtifactOCR.Pieces.Add(text);
+                    GenshinArtifactOCR.Pieces_trans.Add(Tuple.Create(text, statKey));
                     Console.WriteLine(text);
                 }
             }
@@ -137,30 +167,32 @@ namespace GenshinArtifactOCR
         {
             //Main stat filter
             JObject allJson = JsonConvert.DeserializeObject<JObject>(File.ReadAllText(GenshinArtifactOCR.appDir + @"\filterdata\ArtifactInfo.json"));
-            foreach (var entry in allJson)
+            foreach (KeyValuePair<string, JToken> entry in allJson)
             {
+                JArray entry_arr = entry.Value.ToObject<JArray>();
                 if (entry.Key == "MainStats")
                 {
-                    JArray mainStats = entry.Value.ToObject<JArray>();
-                    ReadMainStats(mainStats);
+                    ReadMainStats(entry_arr);
                 }
 
                 if (entry.Key == "Substats")
                 {
-                    JArray substats = entry.Value.ToObject<JArray>();
-                    readSubstats(substats);
+                    readSubstats(entry_arr);
                 }
 
                 if (entry.Key == "Sets")
                 {
-                    JArray sets = entry.Value.ToObject<JArray>();
-                    readSets(sets);
+                    readSets(entry_arr);
                 }
 
                 if (entry.Key == "Characters")
                 {
-                    JArray characters = entry.Value.ToObject<JArray>();
-                    readCharacters(characters);
+                    readCharacters(entry_arr);
+                }
+
+                if (entry.Key == "Pieces")
+                {
+                    readPieces(entry_arr);
                 }
 
             }
@@ -168,7 +200,10 @@ namespace GenshinArtifactOCR
             //Level filter
             for (int i = 0; i < 21; i++)
             {
-                GenshinArtifactOCR.Levels.Add("+" + i);
+                string text = "+" + i;
+                int statValue = i;
+                GenshinArtifactOCR.Levels.Add(text);
+                GenshinArtifactOCR.Levels_trans.Add(Tuple.Create(text, statValue));
             }
         }
     }
