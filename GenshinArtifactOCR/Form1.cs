@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Input;
 using Tesseract;
+using WindowsInput;
 
 namespace GenshinArtifactOCR
 {
@@ -21,8 +22,10 @@ namespace GenshinArtifactOCR
         private Bitmap img_Raw;
         private Bitmap img_Filtered;
         private int[] filtered_rows;
-        Rectangle artifactArea;
+        private Rectangle artifactArea;
 
+
+        private static InputSimulator sim = new InputSimulator();
         public static string appDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\GenshinArtifactOCR";
         //These get filled on startup by other file
         public static List<string> Pieces = new List<string>();
@@ -54,6 +57,17 @@ namespace GenshinArtifactOCR
             }
             img_Filtered = new Bitmap(img_Raw);
             image_preview.Image = new Bitmap(img_Raw);
+        }
+
+        /// <summary>
+        /// Move cursor to position and simulare left click
+        /// </summary>
+        /// <param name="x">Cursor X position</param>
+        /// <param name="y">Cursor Y position</param>
+        private void clickPos(int x, int y)
+        {
+            System.Windows.Forms.Cursor.Position = new Point(x, y);
+            sim.Mouse.LeftButtonClick();
         }
 
         /// <summary>
@@ -124,6 +138,101 @@ namespace GenshinArtifactOCR
                 text_full.Text += item.character.Item1 + Environment.NewLine;
                 text_character.Text = item.character.Item1;
             }
+        }
+
+        private List<Point> getArtifactGrid_WindowMode(Bitmap img, Rectangle gameArea, Rectangle artifactArea)
+        {
+            Rectangle area = new Rectangle(gameArea.X, gameArea.Y, artifactArea.X - gameArea.X, gameArea.Height);
+            //Get relevant part of image
+            Bitmap areaImg = new Bitmap(area.Width, area.Height);
+            using (Graphics g = Graphics.FromImage(areaImg))
+            {
+                g.DrawImage(img, 0, 0, area, GraphicsUnit.Pixel);
+            }
+            //Prepare bytewise image processing
+            BitmapData imgData = areaImg.LockBits(new Rectangle(0, 0, areaImg.Width, areaImg.Height), ImageLockMode.ReadWrite, areaImg.PixelFormat);
+            int numBytes = Math.Abs(imgData.Stride) * imgData.Height;
+            byte[] imgBytes = new byte[numBytes];
+            Marshal.Copy(imgData.Scan0, imgBytes, 0, numBytes);
+            int PixelSize = 4; //ARGB, reverse order
+
+            List<Tuple<int, int, int>> artifactListTuple = new List<Tuple<int, int, int>>(); //start and end x, y for found artifacts in grid
+            int currStreak = 0;
+            int margin = 2;
+            for (int i = 0; i < numBytes; i += PixelSize)
+            {
+                int x = (i / PixelSize) % areaImg.Width;
+                int y = (i / PixelSize - x) / areaImg.Width;
+                if (imgBytes[i] < 60 && imgBytes[i + 1] > 100 && imgBytes[i + 2] > 170) //look for yellow (artifact background + stars
+                {
+
+                    imgBytes[i] = 255;
+                    imgBytes[i + 1] = 0;
+                    imgBytes[i + 2] = 255;
+                    imgBytes[i + 3] = 255;
+                    currStreak++;
+                    margin = 2;
+                }
+                else
+                {
+                    //give some margin of error before skipping
+                    if (margin > 0)
+                    {
+                        margin--;
+                        continue;
+                    }
+
+                    if (currStreak > areaImg.Width * 0.05)
+                    {
+                        bool alreadyFound = false;
+                        for (int j = 0; j < artifactListTuple.Count; j++)
+                        {
+                            //skip if start or end x, and y is close to an existing found artifactList
+                            if ( (artifactListTuple[j].Item1 <= x - currStreak && artifactListTuple[j].Item2 >= x - currStreak)
+                                || (artifactListTuple[j].Item1 <= x && artifactListTuple[j].Item2 >= x)
+                                || (x - currStreak <= artifactListTuple[j].Item1 && x >= artifactListTuple[j].Item1)
+                                || (x - currStreak <= artifactListTuple[j].Item2 && x >= artifactListTuple[j].Item2)
+                                && true)
+                            {
+                                if (Math.Abs(artifactListTuple[j].Item3 - y) < areaImg.Width * 0.07)
+                                {
+                                    artifactListTuple[j] = Tuple.Create(Math.Min(artifactListTuple[j].Item1, x - currStreak),
+                                        Math.Max(artifactListTuple[j].Item2, x), y);
+                                    alreadyFound = true;
+                                    break;
+                                }
+                            }
+                        }
+                        if (!alreadyFound)
+                            artifactListTuple.Add(Tuple.Create(x - currStreak, x, y));
+                    }
+                    currStreak = 0;
+                }
+
+
+            }
+            Marshal.Copy(imgBytes, 0, imgData.Scan0, numBytes);
+            areaImg.UnlockBits(imgData);
+
+            List<Point> artifactListPoint = new List<Point>();
+            foreach (Tuple<int, int, int> tup in artifactListTuple)
+            {
+                artifactListPoint.Add(new Point(area.X + (tup.Item2 + tup.Item1)/2, area.Y + tup.Item3));
+            }
+
+            string timestamp = DateTime.UtcNow.ToString("yyyy-MM-dd HH-mm-ssff");
+            if (checkbox_saveImages.Checked)
+            {
+                using (Graphics g = Graphics.FromImage(areaImg))
+                {
+                    foreach(Tuple<int, int, int> tup in artifactListTuple)
+                    {
+                        g.FillRectangle(Brushes.Cyan, tup.Item1, tup.Item3, tup.Item2 - tup.Item1, 3);
+                    }
+                }
+                areaImg.Save(appDir + @"\images\GenshinArtifactGridFiltered " + timestamp + ".png");
+            }
+            return artifactListPoint;
         }
 
         /// <summary>
@@ -851,6 +960,7 @@ namespace GenshinArtifactOCR
                 artifactImg.Save(appDir + @"\images\GenshinArtifactArea " + timestamp + ".png");
             }
 
+            List<Point> artifactLocations = getArtifactGrid_WindowMode(img_Raw, gameArea, artifactArea);
 
             if (artifactArea.Width == 0 || artifactArea.Height == 0)
             {
