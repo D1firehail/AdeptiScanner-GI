@@ -36,6 +36,7 @@ namespace GenshinArtifactOCR
         public static List<string> Levels = new List<string>();
         public static List<string> Substats = new List<string>();
         public static List<string> Sets = new List<string>();
+        public static List<string> Characters = new List<string>();
 
         public GenshinArtifactOCR()
         {
@@ -80,6 +81,7 @@ namespace GenshinArtifactOCR
         private Rectangle findArtifactArea_WindowMode(Bitmap img, Rectangle gameArea)
         {
             //Cut out relevant part of image
+            gameArea = new Rectangle(gameArea.X + gameArea.Width / 2, gameArea.Y, gameArea.Width / 2, gameArea.Height);
             Bitmap areaImg = new Bitmap(gameArea.Width, gameArea.Height);
             using (Graphics g = Graphics.FromImage(areaImg))
             {
@@ -140,6 +142,7 @@ namespace GenshinArtifactOCR
         private Rectangle findArtifactArea(Bitmap img, Rectangle gameArea)
         {
             //Cut out relevant part of image
+            gameArea = new Rectangle(gameArea.X + gameArea.Width / 2, gameArea.Y, gameArea.Width / 2, gameArea.Height);
             Bitmap areaImg = new Bitmap(gameArea.Width, gameArea.Height);
             using (Graphics g = Graphics.FromImage(areaImg))
             {
@@ -215,7 +218,7 @@ namespace GenshinArtifactOCR
             Marshal.Copy(imgData.Scan0, imgBytes, 0, numBytes);
             int PixelSize = 4; //ARGB, reverse order
             //some variables to keep track of which part of the image we are in
-            int section = 0; //0 = top part, 1 = artifact level part, 2 = substat and set
+            int section = 0; //0 = top part, 1 = artifact level part, 2 = substat and set, 3 = character
             int secOneStart = 0;
             int secOneEnd = 0;
             for (int i = 0; i < numBytes; i += PixelSize)
@@ -225,7 +228,9 @@ namespace GenshinArtifactOCR
                 if ( 
                     (section == 0 && (x < areaImg.Width * 0.65 && imgBytes[i] > 140 && imgBytes[i + 1] > 140 && imgBytes[i + 2] > 140)) //look for white-ish text, skip right edge (artifact image)
                     || (section == 1 && (imgBytes[i] > 240 && imgBytes[i + 1] > 240 && imgBytes[i + 2] > 240)) //look for bright white text
-                    || (section == 2 && (imgBytes[i] < 200 && imgBytes[i + 1] < 200 && imgBytes[i + 2] < 200)) //look for non-white text
+                    || (section == 2 && (imgBytes[i] < 150 && imgBytes[i + 1] < 150 && imgBytes[i + 2] < 150)) //look for black
+                    || (section == 3 && ((imgBytes[i] < 120 && imgBytes[i + 1] > 160 && imgBytes[i + 2] < 120) 
+                        || (imgBytes[i] < 110 && imgBytes[i + 1] < 100 && imgBytes[i + 2] < 100))) //look for green or black
                     )
                 {
                     //Make Black
@@ -244,26 +249,53 @@ namespace GenshinArtifactOCR
                     imgBytes[i + 2] = 255;
                     imgBytes[i + 3] = 255;
                 }
-                if (section == 0 && x == 0)
-                {
-                    //check if coming row is white-ish, if so move to section 1
-                    int tmp = (y * areaImg.Width + (int)(areaImg.Width * 0.05)) * PixelSize;
-                    if ((imgBytes[tmp] > 200 && imgBytes[tmp + 1] > 200 && imgBytes[tmp + 2] > 200) && (imgBytes[tmp] < 240 && imgBytes[tmp + 1] < 240 && imgBytes[tmp + 2] < 240))
-                    {
-                        section = 1;
-                        i += areaImg.Width * PixelSize;
-                    }
 
-                } else if(section == 1 && x == 0)
+                if (x == 0)
                 {
-                    if (y == secOneEnd)
-                        section = 2;
-                    //end of level text reached
-                    if (secOneEnd == 0 && secOneStart != 0 && rows[y - 1] == 0)
-                        secOneEnd = y + (y - secOneStart);
-                    //start of level text reached
-                    if (secOneStart == 0 && rows[y - 1] != 0)
-                        secOneStart = y - 1;
+                    if (section == 0)
+                    {
+                        //check if coming row is white-ish, if so move to section 1
+                        int tmp = (y * areaImg.Width + (int)(areaImg.Width * 0.05)) * PixelSize;
+                        if ((imgBytes[tmp] > 200 && imgBytes[tmp + 1] > 200 && imgBytes[tmp + 2] > 200) && (imgBytes[tmp] < 240 && imgBytes[tmp + 1] < 240 && imgBytes[tmp + 2] < 240))
+                        {
+                            section = 1;
+                            i += areaImg.Width * PixelSize;
+                        }
+
+                    } else if (section == 1)
+                    {
+                        if (y == secOneEnd)
+                        {
+                            section = 2;
+                            secOneStart = 0;
+                            secOneEnd = 0;
+                        } else if (secOneEnd == 0 && secOneStart != 0 && rows[y - 1] == 0)
+                        {
+                            secOneEnd = y + (y - secOneStart);
+                        }else if (secOneStart == 0 && rows[y - 1] != 0)
+                        {
+                            secOneStart = y - 1;
+                        }
+
+                    } else if (section == 2)
+                    {
+                        if (y == secOneEnd)
+                        {
+                            y -= (secOneStart - secOneEnd) / 5;
+                            section = 3;
+                            secOneStart = 0;
+                            secOneEnd = 0;
+                        }
+                        else if (secOneEnd == 0 && secOneStart != 0 && rows[y - 1] == 0)
+                        {
+                            secOneEnd = y + (y - secOneStart);
+                        }
+                        else if (rows[y - 2] == 0 && rows[y - 1] != 0)
+                        {
+                            secOneStart = y - 1;
+                            secOneEnd = 0;
+                        }
+                    }
                 }
             }
             Marshal.Copy(imgBytes, 0, imgData.Scan0, numBytes);
@@ -271,7 +303,7 @@ namespace GenshinArtifactOCR
 
             string timestamp = DateTime.UtcNow.ToString("yyyy-MM-dd HH-mm-ssff");
             if (checkbox_saveImages.Checked)
-                areaImg.Save(appDir + @"\images\GenshinArtifactArea " + timestamp + ".png");
+                areaImg.Save(appDir + @"\images\GenshinArtifactImgFiltered " + timestamp + ".png");
             return areaImg;
         }
 
@@ -344,7 +376,7 @@ namespace GenshinArtifactOCR
             }
             string timestamp = DateTime.UtcNow.ToString("yyyy-MM-dd HH-mm-ssff");
             if (checkbox_saveImages.Checked)
-                img.Save(appDir + @"\images\GenshinSC " + timestamp + ".png");
+                img.Save(appDir + @"\images\GenshinFullscreen " + timestamp + ".png");
             return img;
         }
 
@@ -398,9 +430,37 @@ namespace GenshinArtifactOCR
                     continue;
 
                 int top = y + 1;
-                int left = x - i_neg + (i_pos + i_neg) / 2;
-                int width = (i_pos + i_neg) / 2;
-                int height = (full.Height - y + 1) * 2/3;
+                int left = x - i_neg;
+                int width = (i_pos + i_neg);
+
+                //find bottom
+                int height = 10;
+                while (height < full.Height - y - 1)
+                {
+                    int row = 0;
+                    int currStreak = 0;
+                    int maxStreak = 0;
+                    for (int i = 0; i < width * 0.3; i++)
+                    {
+                        index = ((y + height) * full.Width + left + i) * PixelSize;
+                        pixel = Color.FromArgb(imgBytes[index + 3], imgBytes[index + 2], imgBytes[index + 1], imgBytes[index]);
+                        if (pixel.R > 230 && pixel.G > 220 && pixel.B > 210)
+                        {
+                            row++;
+                            currStreak++;
+                            if (currStreak > maxStreak)
+                                maxStreak = currStreak;
+                        } else
+                        {
+                            currStreak = 0;
+                        }
+                    }
+
+                    if (row > width * 0.3 * 0.65 && maxStreak > width * 0.3 * 0.25)
+                        break;
+
+                    height++;
+                }
                 return new Rectangle(left, top, width, height);
             }
             return new Rectangle(0, 0, full.Width, full.Height);
@@ -567,7 +627,7 @@ namespace GenshinArtifactOCR
             rawText = text;
 
             string bestMatch = FindClosestMatch(text, validText, out dist);
-            Console.WriteLine("\nGot (" + dist + ") \"" + bestMatch + "\" from \"" + text + "\"");
+            //Console.WriteLine("\nGot (" + dist + ") \"" + bestMatch + "\" from \"" + text + "\"");
 
             return bestMatch;
         }
@@ -692,6 +752,18 @@ namespace GenshinArtifactOCR
                 }
             }
 
+            //Character
+            for (i = textRows.Count - 1; i > Math.Max(0, textRows.Count - 3); i--)
+            {
+                string result = OCRRow(img, textRows[i].Item1, textRows[i].Item2, Characters, out int dist, out _, "");
+                if (dist < 5)
+                {
+                    text_full.Text += result + Environment.NewLine;
+                    text_character.Text = result;
+                    break;
+                }
+            }
+
 
         }
 
@@ -715,11 +787,33 @@ namespace GenshinArtifactOCR
             {
                 artifactArea = findArtifactArea(img_Raw, gameArea);
             }
+            if (artifactArea.Width == 0 || artifactArea.Height == 0)
+            {
+                artifactArea = gameArea;
+                image_preview.Image = new Bitmap(img_Raw);
+            }
+
+            string timestamp = DateTime.UtcNow.ToString("yyyy-MM-dd HH-mm-ssff");
+            if (checkbox_saveImages.Checked)
+            {
+                Bitmap gameImg = new Bitmap(gameArea.Width, gameArea.Height);
+                using (Graphics g = Graphics.FromImage(gameImg))
+                {
+                    g.DrawImage(img_Raw, 0, 0, gameArea, GraphicsUnit.Pixel);
+                }
+                gameImg.Save(appDir + @"\images\GenshinGameArea " + timestamp + ".png");
+                Bitmap artifactImg = new Bitmap(artifactArea.Width, artifactArea.Height);
+                using (Graphics g = Graphics.FromImage(artifactImg))
+                {
+                    g.DrawImage(img_Raw, 0, 0, artifactArea, GraphicsUnit.Pixel);
+                }
+                artifactImg.Save(appDir + @"\images\GenshinArtifactArea " + timestamp + ".png");
+            }
+
 
             if (artifactArea.Width == 0 || artifactArea.Height == 0)
             {
                 image_preview.Image = new Bitmap(img_Raw);
-                return;
             }
             image_preview.Image = new Bitmap(artifactArea.Width, artifactArea.Height);
             using (Graphics g = Graphics.FromImage(image_preview.Image))

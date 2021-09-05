@@ -117,6 +117,19 @@ namespace GenshinArtifactOCR
             }
         }
 
+        static void readCharacters(JArray characters)
+        {
+            foreach (JObject character in characters)
+            {
+                foreach (string statName in character["name"].ToObject<List<string>>())
+                {
+                    string text =  "Equipped: " + statName;
+                    GenshinArtifactOCR.Characters.Add(text);
+                    Console.WriteLine(text);
+                }
+            }
+        }
+
         /// <summary>
         /// Generate all possible text to look for and assign to filter word lists
         /// </summary>
@@ -142,6 +155,12 @@ namespace GenshinArtifactOCR
                 {
                     JArray sets = entry.Value.ToObject<JArray>();
                     readSets(sets);
+                }
+
+                if (entry.Key == "Characters")
+                {
+                    JArray characters = entry.Value.ToObject<JArray>();
+                    readCharacters(characters);
                 }
 
             }
