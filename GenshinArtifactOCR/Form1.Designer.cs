@@ -206,7 +206,7 @@ namespace GenshinArtifactOCR
             // 
             // btn_capture
             // 
-            this.btn_capture.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btn_capture.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btn_capture.Location = new System.Drawing.Point(493, 481);
             this.btn_capture.Name = "btn_capture";
             this.btn_capture.Size = new System.Drawing.Size(75, 23);
@@ -217,7 +217,7 @@ namespace GenshinArtifactOCR
             // 
             // btn_OCR
             // 
-            this.btn_OCR.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btn_OCR.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btn_OCR.Location = new System.Drawing.Point(493, 510);
             this.btn_OCR.Name = "btn_OCR";
             this.btn_OCR.Size = new System.Drawing.Size(75, 23);
@@ -228,7 +228,8 @@ namespace GenshinArtifactOCR
             // 
             // text_full
             // 
-            this.text_full.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.text_full.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.text_full.Location = new System.Drawing.Point(493, 246);
             this.text_full.Multiline = true;
             this.text_full.Name = "text_full";
@@ -267,7 +268,7 @@ namespace GenshinArtifactOCR
             // 
             // checkbox_OCRcapture
             // 
-            this.checkbox_OCRcapture.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.checkbox_OCRcapture.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.checkbox_OCRcapture.AutoSize = true;
             this.checkbox_OCRcapture.Checked = true;
             this.checkbox_OCRcapture.CheckState = System.Windows.Forms.CheckState.Checked;
@@ -280,7 +281,7 @@ namespace GenshinArtifactOCR
             // 
             // checkbox_inventorymode
             // 
-            this.checkbox_inventorymode.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.checkbox_inventorymode.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.checkbox_inventorymode.AutoSize = true;
             this.checkbox_inventorymode.Checked = true;
             this.checkbox_inventorymode.CheckState = System.Windows.Forms.CheckState.Checked;
@@ -293,7 +294,7 @@ namespace GenshinArtifactOCR
             // 
             // checkbox_saveImages
             // 
-            this.checkbox_saveImages.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.checkbox_saveImages.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.checkbox_saveImages.AutoSize = true;
             this.checkbox_saveImages.Location = new System.Drawing.Point(680, 485);
             this.checkbox_saveImages.Name = "checkbox_saveImages";

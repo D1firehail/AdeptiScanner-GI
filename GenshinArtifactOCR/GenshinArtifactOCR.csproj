@@ -59,6 +59,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ImageProcessing.cs" />
+    <Compile Include="Database.cs" />
     <Compile Include="InventoryItem.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
