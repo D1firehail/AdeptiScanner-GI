@@ -56,6 +56,8 @@ namespace GenshinArtifactOCR
             this.label_character = new System.Windows.Forms.Label();
             this.text_character = new System.Windows.Forms.TextBox();
             this.button_auto = new System.Windows.Forms.Button();
+            this.label_locked = new System.Windows.Forms.Label();
+            this.text_locked = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.image_preview)).BeginInit();
             this.SuspendLayout();
             // 
@@ -264,7 +266,7 @@ namespace GenshinArtifactOCR
             this.text_Level.Location = new System.Drawing.Point(493, 64);
             this.text_Level.Name = "text_Level";
             this.text_Level.ReadOnly = true;
-            this.text_Level.Size = new System.Drawing.Size(279, 20);
+            this.text_Level.Size = new System.Drawing.Size(120, 20);
             this.text_Level.TabIndex = 21;
             // 
             // checkbox_OCRcapture
@@ -334,12 +336,33 @@ namespace GenshinArtifactOCR
             this.button_auto.UseVisualStyleBackColor = true;
             this.button_auto.Click += new System.EventHandler(this.button_auto_Click);
             // 
+            // label_locked
+            // 
+            this.label_locked.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.label_locked.AutoSize = true;
+            this.label_locked.Location = new System.Drawing.Point(619, 67);
+            this.label_locked.Name = "label_locked";
+            this.label_locked.Size = new System.Drawing.Size(43, 13);
+            this.label_locked.TabIndex = 29;
+            this.label_locked.Text = "Locked";
+            // 
+            // text_locked
+            // 
+            this.text_locked.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.text_locked.Location = new System.Drawing.Point(668, 64);
+            this.text_locked.Name = "text_locked";
+            this.text_locked.ReadOnly = true;
+            this.text_locked.Size = new System.Drawing.Size(106, 20);
+            this.text_locked.TabIndex = 30;
+            // 
             // GenshinArtifactOCR
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.LightGray;
             this.ClientSize = new System.Drawing.Size(784, 561);
+            this.Controls.Add(this.text_locked);
+            this.Controls.Add(this.label_locked);
             this.Controls.Add(this.button_auto);
             this.Controls.Add(this.label_character);
             this.Controls.Add(this.text_character);
@@ -405,6 +428,8 @@ namespace GenshinArtifactOCR
         private System.Windows.Forms.Label label_character;
         private System.Windows.Forms.TextBox text_character;
         private System.Windows.Forms.Button button_auto;
+        private System.Windows.Forms.Label label_locked;
+        private System.Windows.Forms.TextBox text_locked;
     }
 }
 

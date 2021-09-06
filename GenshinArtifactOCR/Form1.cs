@@ -21,7 +21,7 @@ namespace GenshinArtifactOCR
         private int[] filtered_rows;
         private Rectangle savedArtifactArea;
         private Rectangle savedGameArea;
-        private bool escDown = false;
+        private bool cancelAuto = true;
         bool autoRunning = false;
         List<InventoryItem> scannedItems = new List<InventoryItem>();
 
@@ -34,6 +34,7 @@ namespace GenshinArtifactOCR
             KeyPreview = true;
             KeyDown += eventKeyDown;
             KeyUp += eventKeyUp;
+            Activated += eventGotFocus;
             tessEngine = new TesseractEngine(Database.appDir + @"/tessdata", "en")
             {
                 DefaultPageSegMode = PageSegMode.SingleLine
@@ -49,11 +50,20 @@ namespace GenshinArtifactOCR
             image_preview.Image = new Bitmap(img_Raw);
         }
 
+        private void eventGotFocus(object sender, EventArgs e)
+        {
+            if (!cancelAuto)
+            {
+                cancelAuto = true;
+                text_full.Text += "Cancelling auto" + Environment.NewLine;
+            }
+        }
+
         private void eventKeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
         {
             if ( e.KeyCode == Keys.Escape)
             {
-                escDown = true;
+                cancelAuto = true;
             }
         }
 
@@ -61,7 +71,7 @@ namespace GenshinArtifactOCR
         {
             if (e.KeyCode == Keys.Escape)
             {
-                escDown = false;
+                cancelAuto = false;
             }
         }
 
@@ -96,16 +106,14 @@ namespace GenshinArtifactOCR
         private void displayInventoryItem (InventoryItem item)
         {
             text_full.Text = "";
-            if (item.set != null)
-            {
-                text_full.Text += item.set.Item1 + Environment.NewLine;
-                text_Set.Text = item.set.Item1;
-            }
             if (item.level != null)
             {
                 text_full.Text += item.level.Item1 + Environment.NewLine;
                 text_Level.Text = item.level.Item1;
             }
+            text_full.Text += "Locked: " + item.locked.ToString() + Environment.NewLine;
+            text_locked.Text = item.locked.ToString();
+
             if (item.piece != null)
             {
                 text_full.Text += item.piece.Item1 + Environment.NewLine;
@@ -139,6 +147,11 @@ namespace GenshinArtifactOCR
                     text_statSub4.Text = item.subs[3].Item1;
                 }
             }
+            if (item.set != null)
+            {
+                text_full.Text += item.set.Item1 + Environment.NewLine;
+                text_Set.Text = item.set.Item1;
+            }
             if (item.character != null)
             {
                 text_full.Text += item.character.Item1 + Environment.NewLine;
@@ -146,7 +159,7 @@ namespace GenshinArtifactOCR
             }
         }
 
-        private void runAuto(bool saveImages, int sleepduration = 1000)
+        private void runAuto(bool saveImages, int clickSleepDuration = 100, int scrollSleepDuration = 30)
         {
             if (autoRunning)
             {
@@ -160,134 +173,118 @@ namespace GenshinArtifactOCR
                 //TODO: do OCR or image capture on each step, save results somewhere, auto-scroll, refined and random sleep duration
                 bool running = true;
                 bool firstRun = true;
+                int firstY = 0;
+                const int maxIterations = 20;
+                const int scrollsPerIteration = 2;
                 while (running)
                 {
                     //load current grid/scroll location
                     Bitmap screen = ImageProcessing.CaptureScreenshot(saveImages);
                     List<Point> artifactLocations = ImageProcessing.getArtifactGrid_WindowMode(screen, savedGameArea, savedArtifactArea, saveImages);
-                    int scrollRows = 0;
-                    int prevY = 0;
-                    int prevRowSize = 0;
-                    int rowSize = 0;
-                    foreach (Point p in artifactLocations)
+                    if (artifactLocations.Count < 3)
                     {
-                        if (Math.Abs(p.Y - prevY) > 5)
-                        {
-                            scrollRows++;
-                            prevY = p.Y;
-                            prevRowSize = 1;
-                        } else
-                        {
-                            prevRowSize++;
-                        }
+                        running = false;
+                        break;
                     }
-                    Console.WriteLine("rows: " + scrollRows + ", prevY: " + prevY + ", points: " + artifactLocations.Count);
-
-                    //scroll until enough rows scrolled (or nothing more to scroll through)
-                    while (scrollRows > 0 && !firstRun)
+                    int startTop = artifactLocations[0].Y;
+                    if (firstRun)
                     {
-                        if (escDown)
+                        firstY = startTop;
+                    }
+                    int startBot = artifactLocations[artifactLocations.Count - 1].Y;
+                    int distToScroll = startBot - startTop;
+
+                    Console.WriteLine("startbot: " + startBot + ", starttop: " + startTop + ", points: " + artifactLocations.Count);
+
+                    if (!firstRun) 
+                    {
+                        if (cancelAuto)
                         {
                             autoRunning = false;
                             return;
                         }
+                        //test scroll distance
+                        sim.Mouse.VerticalScroll(-1);
+                        System.Threading.Thread.Sleep(100);
+                        screen = ImageProcessing.CaptureScreenshot(saveImages);
+                        artifactLocations = ImageProcessing.getArtifactGrid_WindowMode(screen, savedGameArea, savedArtifactArea, saveImages);
 
-                        const int maxIterations = 10;
-                        const int scrollsPerIteration = 4;
-                        //try scrolling up to maxIterations times, checking for success by comparing lowest artifact position
-                        int i;
-                        for (i = 0; i < maxIterations; i++)
+                        int distPerScroll = startTop - artifactLocations[0].Y;
+                        int scrollsNeeded = 0;
+                        if ( distPerScroll <= 0)
                         {
-                            for (int j = 0; j < scrollsPerIteration; j++)
-                            {
-                                sim.Mouse.VerticalScroll(-1);
-                            }
-                            System.Threading.Thread.Sleep(sleepduration);
-
-                            screen = ImageProcessing.CaptureScreenshot(false);
-                            artifactLocations = ImageProcessing.getArtifactGrid_WindowMode(screen, savedGameArea, savedArtifactArea, false);
-                            int maxY = 0;
-                            rowSize = 0;
-                            foreach (Point p in artifactLocations)
-                            {
-                                if (Math.Abs(p.Y - prevY) > 5)
-                                {
-                                    maxY = p.Y;
-                                    rowSize = 1;
-                                } else
-                                {
-                                    rowSize++;
-                                }
-                            } 
-
-                            //detect when new lowest row is lower than previous lowest (means we successfully scrolled)
-                            if (maxY > prevY + 10)
-                            {
-                                scrollRows--;
-                                prevY = maxY;
-                                break;
-                            }
-                            prevY = maxY;
-                        }
-
-                        Console.WriteLine("Scroll took " + i + "iterations");
-
-
-                        //scroll failed, end of scrollable area reached. Remove duplicate rows and mark for exit
-                        if (i == maxIterations)
-                        {
-                            int j = 0;
-                            int minY = 0;
-                            while (j < artifactLocations.Count)
-                            {
-                                if (artifactLocations[j].Y > minY + 5 && scrollRows != 0)
-                                {
-                                    scrollRows--;
-                                    minY = artifactLocations[j].Y;
-                                }
-                                if (artifactLocations[j].Y <= minY + 5)
-                                {
-                                    artifactLocations.RemoveAt(j);
-                                }
-                                else
-                                {
-                                    j++;
-                                }
-                            }
                             running = false;
-                            break;
-                        }
-                    }
-
-                    //detect awkward stopping points and fix
-                    if (prevRowSize != rowSize)
-                    {
-                        if (prevRowSize < rowSize)
+                        } else
                         {
-                            sim.Mouse.VerticalScroll(1);
+                            scrollsNeeded = distToScroll / distPerScroll - 1;
                         }
-                        else
+
+                        if (scrollsNeeded <= 0)
+                        {
+                            running = false;
+                        }
+
+                        while (scrollsNeeded > 0)
                         {
                             sim.Mouse.VerticalScroll(-1);
+                            scrollsNeeded--;
                         }
-                        System.Threading.Thread.Sleep(sleepduration);
+                        System.Threading.Thread.Sleep(100);
+                        screen = ImageProcessing.CaptureScreenshot(saveImages);
+                        artifactLocations = ImageProcessing.getArtifactGrid_WindowMode(screen, savedGameArea, savedArtifactArea, saveImages);
 
-                        screen = ImageProcessing.CaptureScreenshot(false);
-                        artifactLocations = ImageProcessing.getArtifactGrid_WindowMode(screen, savedGameArea, savedArtifactArea, false);
+                        //fine adjustments
+                        while (artifactLocations.Count > 0 && artifactLocations[0].Y <= firstY - distPerScroll) 
+                        {
+                            if (cancelAuto)
+                            {
+                                autoRunning = false;
+                                return;
+                            }
+                            sim.Mouse.VerticalScroll(1);
+                            System.Threading.Thread.Sleep(scrollSleepDuration);
+                            screen = ImageProcessing.CaptureScreenshot(false);
+                            artifactLocations = ImageProcessing.getArtifactGrid_WindowMode(screen, savedGameArea, savedArtifactArea, false);
+                        }
+                        while (artifactLocations.Count > 0 && artifactLocations[0].Y > firstY - distPerScroll)
+                        {
+                            if (cancelAuto)
+                            {
+                                autoRunning = false;
+                                return;
+                            }
+                            sim.Mouse.VerticalScroll(-1);
+                            System.Threading.Thread.Sleep(scrollSleepDuration);
+                            screen = ImageProcessing.CaptureScreenshot(false);
+                            artifactLocations = ImageProcessing.getArtifactGrid_WindowMode(screen, savedGameArea, savedArtifactArea, false);
+                        }
+
+                        int tmp = artifactLocations.Count > 0 ?  artifactLocations[0].Y + 50 : 99999;
+                        Console.WriteLine("tmp: " + tmp);
+                        for (int i = 0; i < artifactLocations.Count; i++)
+                        {
+                            if (artifactLocations[i].Y < tmp)
+                            {
+                                Console.WriteLine("Removing " + artifactLocations[i].ToString());
+                                artifactLocations.RemoveAt(i);
+                                i--;
+                            }
+                        }
                     }
+
 
                     firstRun = false;
 
                     //select and OCR each artifact in list
                     foreach (Point p in artifactLocations)
                     {
-                        if (escDown)
+                        if (cancelAuto)
                         {
                             autoRunning = false;
                             return;
                         }
-                        System.Threading.Thread.Sleep(sleepduration);
-                        clickPos(p.X, p.Y);
+                        System.Threading.Thread.Sleep(clickSleepDuration);
+                        clickPos(p.X, p.Y - 10);
                         Console.WriteLine("Clicked " + p.ToString());
                         //Bitmap img = ImageProcessing.CaptureScreenshot(saveImages);
                         //Bitmap filtered = ImageProcessing.getArtifactImg_WindowMode(img, savedArtifactArea, out int[] rows, saveImages);
@@ -391,9 +388,10 @@ namespace GenshinArtifactOCR
 
 
             img_Filtered = new Bitmap(img_Raw);
+            bool artifactLocked = false;
             if (checkbox_inventorymode.Checked)
             {
-                img_Filtered = ImageProcessing.getArtifactImg_WindowMode(img_Filtered, savedArtifactArea, out filtered_rows, saveImages);
+                img_Filtered = ImageProcessing.getArtifactImg_WindowMode(img_Filtered, savedArtifactArea, out filtered_rows, saveImages, out artifactLocked);
             } else
             {
                 img_Filtered = ImageProcessing.getArtifactImg(img_Filtered, savedArtifactArea, out filtered_rows, saveImages);
@@ -401,7 +399,7 @@ namespace GenshinArtifactOCR
 
             image_preview.Image = new Bitmap(img_Filtered);
 
-            InventoryItem artifact = ImageProcessing.getArtifacts(img_Filtered, filtered_rows, saveImages, tessEngine);
+            InventoryItem artifact = ImageProcessing.getArtifacts(img_Filtered, filtered_rows, saveImages, tessEngine, artifactLocked);
             displayInventoryItem(artifact);
         }
 
@@ -412,7 +410,8 @@ namespace GenshinArtifactOCR
             {
                 text_full.Text += "Ignored, auto currently running" + Environment.NewLine;
             }
-            runAuto(false, 50);
+            cancelAuto = false;
+            runAuto(false, 50, 17);
         }
     }
 }

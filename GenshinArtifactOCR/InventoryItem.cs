@@ -11,6 +11,7 @@ namespace GenshinArtifactOCR
         public List<Tuple<string, string, double>> subs;
         public Tuple<string, string> set;
         public Tuple<string, string> character;
+        public bool locked = false;
 
         public InventoryItem()
         {

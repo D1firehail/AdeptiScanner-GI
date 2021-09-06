@@ -244,8 +244,9 @@ namespace GenshinArtifactOCR
         /// <param name="area">Area containing the artifact info</param>
         /// <param name="rows">Filter results per row</param>
         /// <returns>Filtered image of the artifact area</returns>
-        public static Bitmap getArtifactImg_WindowMode(Bitmap img, Rectangle area, out int[] rows, bool saveImages)
+        public static Bitmap getArtifactImg_WindowMode(Bitmap img, Rectangle area, out int[] rows, bool saveImages, out bool locked)
         {
+            locked = false;
             rows = new int[area.Height];
             //Get relevant part of image
             Bitmap areaImg = new Bitmap(area.Width, area.Height);
@@ -260,19 +261,18 @@ namespace GenshinArtifactOCR
             Marshal.Copy(imgData.Scan0, imgBytes, 0, numBytes);
             int PixelSize = 4; //ARGB, reverse order
             //some variables to keep track of which part of the image we are in
-            int section = 0; //0 = top part, 1 = artifact level part, 2 = substat and set, 3 = character
-            int secOneStart = 0;
-            int secOneEnd = 0;
+            int section = 0; //0 = top part, 1 = artifact level part, 2 = substats, 3 = set, 4 = character
+            int sectionStart = 0;
+            int sectionEnd = 0;
             for (int i = 0; i < numBytes; i += PixelSize)
             {
                 int x = (i / PixelSize) % areaImg.Width;
                 int y = (i / PixelSize - x) / areaImg.Width;
                 if (
                     (section == 0 && (x < areaImg.Width * 0.65 && imgBytes[i] > 140 && imgBytes[i + 1] > 140 && imgBytes[i + 2] > 140)) //look for white-ish text, skip right edge (artifact image)
-                    || (section == 1 && (imgBytes[i] > 240 && imgBytes[i + 1] > 240 && imgBytes[i + 2] > 240)) //look for bright white text
-                    || (section == 2 && (imgBytes[i] < 150 && imgBytes[i + 1] < 150 && imgBytes[i + 2] < 150)) //look for black
-                    || (section == 3 && ((imgBytes[i] < 120 && imgBytes[i + 1] > 160 && imgBytes[i + 2] < 120)
-                        || (imgBytes[i] < 110 && imgBytes[i + 1] < 100 && imgBytes[i + 2] < 100))) //look for green or black
+                    || (section == 1 && (x < areaImg.Width * 0.65 && imgBytes[i] > 225 && imgBytes[i + 1] > 225 && imgBytes[i + 2] > 225)) //look for bright white text, skip right edge
+                    || ((section == 2 || section == 4) && (imgBytes[i] < 150 && imgBytes[i + 1] < 150 && imgBytes[i + 2] < 150)) //look for black
+                    || (section == 3 && (imgBytes[i] < 130 && imgBytes[i + 1] > 160 && imgBytes[i + 2] < 130)) //look for green
                     )
                 {
                     //Make Black
@@ -285,6 +285,19 @@ namespace GenshinArtifactOCR
                 }
                 else
                 {
+
+                    if ( section == 1 && imgBytes[i] < 150 && imgBytes[i + 1] > 120 && imgBytes[i + 2] > 200)
+                    {
+                        //if section 1, look for red lock
+                        locked = true;
+                    } else if (section == 2 && (imgBytes[i] < 120 && imgBytes[i + 1] > 160 && imgBytes[i + 2] < 120))
+                    {
+                        //if section 2, look for green text
+                        section = 3;
+                    } else if (section == 3 && imgBytes[i + 2] > 250 && imgBytes[i] > 170 && imgBytes[i + 1] > 220)
+                    {
+                        section = 4;
+                    }
                     //Make White
                     imgBytes[i] = 255;
                     imgBytes[i + 1] = 255;
@@ -307,39 +320,19 @@ namespace GenshinArtifactOCR
                     }
                     else if (section == 1)
                     {
-                        if (y == secOneEnd)
+                        if (y == sectionEnd)
                         {
                             section = 2;
-                            secOneStart = 0;
-                            secOneEnd = 0;
+                            sectionStart = 0;
+                            sectionEnd = 0;
                         }
-                        else if (secOneEnd == 0 && secOneStart != 0 && rows[y - 1] == 0)
+                        else if (sectionEnd == 0 && sectionStart != 0 && rows[y - 1] == 0)
                         {
-                            secOneEnd = y + (y - secOneStart);
+                            sectionEnd = y + (y - sectionStart);
                         }
-                        else if (secOneStart == 0 && rows[y - 1] != 0)
+                        else if (sectionStart == 0 && rows[y - 1] != 0)
                         {
-                            secOneStart = y - 1;
-                        }
-
-                    }
-                    else if (section == 2)
-                    {
-                        if (y == secOneEnd)
-                        {
-                            y -= (secOneStart - secOneEnd) / 5;
-                            section = 3;
-                            secOneStart = 0;
-                            secOneEnd = 0;
-                        }
-                        else if (secOneEnd == 0 && secOneStart != 0 && rows[y - 1] == 0)
-                        {
-                            secOneEnd = y + (y - secOneStart);
-                        }
-                        else if (rows[y - 2] == 0 && rows[y - 1] != 0)
-                        {
-                            secOneStart = y - 1;
-                            secOneEnd = 0;
+                            sectionStart = y - 1;
                         }
                     }
                 }
@@ -606,7 +599,7 @@ namespace GenshinArtifactOCR
         /// </summary>
         /// <param name="img">Image of artifact area, filtered</param>
         /// <param name="rows">Filter results per row</param>
-        public static InventoryItem getArtifacts(Bitmap img, int[] rows, bool saveImages, TesseractEngine tessEngine)
+        public static InventoryItem getArtifacts(Bitmap img, int[] rows, bool saveImages, TesseractEngine tessEngine, bool locked)
         {
             //get all potential text rows
             List<Tuple<int, int>> textRows = new List<Tuple<int, int>>();
@@ -626,6 +619,7 @@ namespace GenshinArtifactOCR
 
 
             InventoryItem foundArtifact = new InventoryItem();
+            foundArtifact.locked = locked;
             i = 0;
             //Piece type
             for (; i < textRows.Count; i++)
