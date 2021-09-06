@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Linq;
@@ -21,9 +23,20 @@ namespace GenshinArtifactOCR
         private int[] filtered_rows;
         private Rectangle savedArtifactArea;
         private Rectangle savedGameArea;
-        private bool cancelAuto = true;
+        private bool pauseAuto = true;
+        private bool softCancelAuto = true;
+        private bool hardCancelAuto = true;
+
+
         bool autoRunning = false;
+        bool autoCaptureDone = false;
         List<InventoryItem> scannedItems = new List<InventoryItem>();
+        bool cancelOCRThreads = false;
+        const int ThreadCount = 4;
+        private bool[] threadRunning = new bool[ThreadCount];
+        private ConcurrentQueue<Bitmap>[] threadQueues = new ConcurrentQueue<Bitmap>[ThreadCount];
+        private TesseractEngine[] threadEngines = new TesseractEngine[ThreadCount];
+        private List<InventoryItem>[] threadResults = new List<InventoryItem>[ThreadCount];
 
 
         private static InputSimulator sim = new InputSimulator();
@@ -31,14 +44,24 @@ namespace GenshinArtifactOCR
         public GenshinArtifactOCR()
         {
             InitializeComponent();
-            KeyPreview = true;
-            KeyDown += eventKeyDown;
-            KeyUp += eventKeyUp;
             Activated += eventGotFocus;
             tessEngine = new TesseractEngine(Database.appDir + @"/tessdata", "en")
             {
                 DefaultPageSegMode = PageSegMode.SingleLine
             };
+
+            //worker thread stuff
+            for (int i = 0; i < ThreadCount; i++)
+            {
+                threadRunning[i] = false;
+                threadQueues[i] = new ConcurrentQueue<Bitmap>();
+                threadEngines[i] = new TesseractEngine(Database.appDir + @"/tessdata", "en")
+                {
+                    DefaultPageSegMode = PageSegMode.SingleLine
+                };
+                threadResults[i] = new List<InventoryItem>();
+            }
+
             //simple junk defaults
             img_Raw = new Bitmap(image_preview.Width, image_preview.Height);
             using (Graphics g = Graphics.FromImage(img_Raw))
@@ -52,28 +75,23 @@ namespace GenshinArtifactOCR
 
         private void eventGotFocus(object sender, EventArgs e)
         {
-            if (!cancelAuto)
+            if (!pauseAuto)
             {
-                cancelAuto = true;
-                text_full.Text += "Cancelling auto" + Environment.NewLine;
+                pauseAuto = true;
+                text_full.Text += "Auto scanning paused, select action" + Environment.NewLine;
             }
         }
 
-        private void eventKeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
+        public void AppendStatusText(string value)
         {
-            if ( e.KeyCode == Keys.Escape)
+            if (InvokeRequired)
             {
-                cancelAuto = true;
+                this.Invoke(new Action<string>(AppendStatusText), new object[] { value });
+                return;
             }
+            text_full.Text += value;
         }
 
-        private void eventKeyUp(object sender, System.Windows.Forms.KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Escape)
-            {
-                cancelAuto = false;
-            }
-        }
 
         /// <summary>
         /// Move cursor to position and simulare left click
@@ -159,28 +177,66 @@ namespace GenshinArtifactOCR
             }
         }
 
-        private void runAuto(bool saveImages, int clickSleepDuration = 100, int scrollSleepDuration = 30)
+        private void runOCRThread(int threadIndex)
         {
-            if (autoRunning)
-            {
-                text_full.Text += "Ignored, auto currently running" + Environment.NewLine;
-            }
-            text_full.Text = "Starting auto-run. HOLD ESCAPE TO CANCEL" + Environment.NewLine + "If no artifact switching happens, you forgot to run as admin" + Environment.NewLine;
-            autoRunning = true;
-            scannedItems = new List<InventoryItem>();
             Task.Run((() =>
             {
+                threadRunning[threadIndex] = true;
+                bool saveImages = false;
+                while ( autoRunning && !cancelOCRThreads )
+                {
+                    if ( threadQueues[threadIndex].TryDequeue(out Bitmap img))
+                    {
+                        Bitmap filtered = ImageProcessing.getArtifactImg_WindowMode(img, savedArtifactArea, out int[] rows, saveImages, out bool locked);
+                        InventoryItem item = ImageProcessing.getArtifacts(filtered, rows, saveImages, threadEngines[threadIndex], locked);
+                        threadResults[threadIndex].Add(item);
+                    } else if (autoCaptureDone || softCancelAuto || hardCancelAuto)
+                    {
+                        Console.WriteLine("Thread " + threadIndex + " EXITING----------");
+                        threadRunning[threadIndex] = false;
+                        return;
+                    } else 
+                    {
+                        Console.WriteLine("Thread " + threadIndex + " sleeping");
+                        System.Threading.Thread.Sleep(1000);
+                    }
+                }
+
+                Console.WriteLine("Thread " + threadIndex + " EXITING----------");
+                threadRunning[threadIndex] = false;
+
+            }));
+        }
+
+        private void runAuto(bool saveImages, int clickSleepDuration = 100, int scrollSleepDuration = 30)
+        {
+            text_full.Text = "Starting auto-run. ALT TAB TO PAUSE/CANCEL" + Environment.NewLine + "If no artifact switching happens, you forgot to run as admin" + Environment.NewLine;
+            autoRunning = true;
+            autoCaptureDone = false;
+            //start worker threads
+            for (int i = 0; i < ThreadCount; i++)
+            {
+                threadQueues[i] = new ConcurrentQueue<Bitmap>();
+                threadResults[i] = new List<InventoryItem>();
+                runOCRThread(i);
+            }
+
+            Task.Run((() =>
+            {
+                Stopwatch runtime = new Stopwatch();
+                runtime.Start();
                 //TODO: do OCR or image capture on each step, save results somewhere, auto-scroll, refined and random sleep duration
                 bool running = true;
                 bool firstRun = true;
                 int firstY = 0;
-                const int maxIterations = 20;
-                const int scrollsPerIteration = 2;
+                int nextThread = 0;
+                Rectangle gridArea = new Rectangle(savedGameArea.X, savedGameArea.Y, savedArtifactArea.X - savedGameArea.X, savedGameArea.Height);
+                Point gridOffset = new Point(gridArea.X, gridArea.Y);
                 while (running)
                 {
                     //load current grid/scroll location
-                    Bitmap screen = ImageProcessing.CaptureScreenshot(saveImages);
-                    List<Point> artifactLocations = ImageProcessing.getArtifactGrid_WindowMode(screen, savedGameArea, savedArtifactArea, saveImages);
+                    Bitmap img = ImageProcessing.CaptureScreenshot(saveImages, gridArea, true);
+                    List<Point> artifactLocations = ImageProcessing.getArtifactGrid_WindowMode(img, saveImages, gridOffset);
                     if (artifactLocations.Count < 3)
                     {
                         running = false;
@@ -194,20 +250,28 @@ namespace GenshinArtifactOCR
                     int startBot = artifactLocations[artifactLocations.Count - 1].Y;
                     int distToScroll = startBot - startTop;
 
-                    Console.WriteLine("startbot: " + startBot + ", starttop: " + startTop + ", points: " + artifactLocations.Count);
-
                     if (!firstRun) 
                     {
-                        if (cancelAuto)
+                        while (pauseAuto)
                         {
-                            autoRunning = false;
-                            return;
+                            if (hardCancelAuto)
+                            {
+                                autoRunning = false;
+                                return;
+                            }
+                            if (softCancelAuto)
+                            {
+                                running = false;
+                                pauseAuto = false;
+                                goto soft_cancel_pos;
+                            }
+                            System.Threading.Thread.Sleep(1000);
                         }
                         //test scroll distance
                         sim.Mouse.VerticalScroll(-1);
                         System.Threading.Thread.Sleep(100);
-                        screen = ImageProcessing.CaptureScreenshot(saveImages);
-                        artifactLocations = ImageProcessing.getArtifactGrid_WindowMode(screen, savedGameArea, savedArtifactArea, saveImages);
+                        img = ImageProcessing.CaptureScreenshot(saveImages, gridArea, true);
+                        artifactLocations = ImageProcessing.getArtifactGrid_WindowMode(img, saveImages, gridOffset);
 
                         int distPerScroll = startTop - artifactLocations[0].Y;
                         int scrollsNeeded = 0;
@@ -229,43 +293,61 @@ namespace GenshinArtifactOCR
                             sim.Mouse.VerticalScroll(-1);
                             scrollsNeeded--;
                         }
-                        System.Threading.Thread.Sleep(100);
-                        screen = ImageProcessing.CaptureScreenshot(saveImages);
-                        artifactLocations = ImageProcessing.getArtifactGrid_WindowMode(screen, savedGameArea, savedArtifactArea, saveImages);
+                        System.Threading.Thread.Sleep(scrollSleepDuration);
+                        img = ImageProcessing.CaptureScreenshot(saveImages, gridArea, true);
+                        artifactLocations = ImageProcessing.getArtifactGrid_WindowMode(img, saveImages, gridOffset);
 
                         //fine adjustments
                         while (artifactLocations.Count > 0 && artifactLocations[0].Y <= firstY - distPerScroll) 
                         {
-                            if (cancelAuto)
+                            while (pauseAuto)
                             {
-                                autoRunning = false;
-                                return;
+                                if (hardCancelAuto)
+                                {
+                                    autoRunning = false;
+                                    return;
+                                }
+                                if (softCancelAuto)
+                                {
+                                    running = false;
+                                    pauseAuto = false;
+                                    goto soft_cancel_pos;
+                                }
+                                System.Threading.Thread.Sleep(1000);
                             }
                             sim.Mouse.VerticalScroll(1);
                             System.Threading.Thread.Sleep(scrollSleepDuration);
-                            screen = ImageProcessing.CaptureScreenshot(false);
-                            artifactLocations = ImageProcessing.getArtifactGrid_WindowMode(screen, savedGameArea, savedArtifactArea, false);
+                            img = ImageProcessing.CaptureScreenshot(saveImages, gridArea, true);
+                            artifactLocations = ImageProcessing.getArtifactGrid_WindowMode(img, saveImages, gridOffset);
                         }
                         while (artifactLocations.Count > 0 && artifactLocations[0].Y > firstY - distPerScroll)
                         {
-                            if (cancelAuto)
+                            while (pauseAuto)
                             {
-                                autoRunning = false;
-                                return;
+                                if (hardCancelAuto)
+                                {
+                                    autoRunning = false;
+                                    return;
+                                }
+                                if (softCancelAuto)
+                                {
+                                    running = false;
+                                    pauseAuto = false;
+                                    goto soft_cancel_pos;
+                                }
+                                System.Threading.Thread.Sleep(1000);
                             }
                             sim.Mouse.VerticalScroll(-1);
                             System.Threading.Thread.Sleep(scrollSleepDuration);
-                            screen = ImageProcessing.CaptureScreenshot(false);
-                            artifactLocations = ImageProcessing.getArtifactGrid_WindowMode(screen, savedGameArea, savedArtifactArea, false);
+                            img = ImageProcessing.CaptureScreenshot(saveImages, gridArea, true);
+                            artifactLocations = ImageProcessing.getArtifactGrid_WindowMode(img, saveImages, gridOffset);
                         }
 
                         int tmp = artifactLocations.Count > 0 ?  artifactLocations[0].Y + 50 : 99999;
-                        Console.WriteLine("tmp: " + tmp);
                         for (int i = 0; i < artifactLocations.Count; i++)
                         {
                             if (artifactLocations[i].Y < tmp)
                             {
-                                Console.WriteLine("Removing " + artifactLocations[i].ToString());
                                 artifactLocations.RemoveAt(i);
                                 i--;
                             }
@@ -278,25 +360,50 @@ namespace GenshinArtifactOCR
                     //select and OCR each artifact in list
                     foreach (Point p in artifactLocations)
                     {
-                        if (cancelAuto)
+                        while (pauseAuto)
+                        {
+                            if (hardCancelAuto)
+                            {
+                                autoRunning = false;
+                                return;
+                            }
+                            System.Threading.Thread.Sleep(1000);
+                        }
+                        clickPos(p.X, p.Y - 10);
+                        System.Threading.Thread.Sleep(clickSleepDuration);
+
+                        //queue up processing of artifact
+                        threadQueues[nextThread].Enqueue(ImageProcessing.CaptureScreenshot(saveImages, savedArtifactArea, true));
+                        nextThread = (nextThread + 1) % ThreadCount;
+                    }
+
+                }
+
+                soft_cancel_pos:
+
+                autoCaptureDone = true;
+                for (int i = 0; i < ThreadCount; i++)
+                {
+                    while (threadRunning[i] || pauseAuto)
+                    {
+                        if (hardCancelAuto)
                         {
                             autoRunning = false;
                             return;
                         }
-                        System.Threading.Thread.Sleep(clickSleepDuration);
-                        clickPos(p.X, p.Y - 10);
-                        Console.WriteLine("Clicked " + p.ToString());
-                        //Bitmap img = ImageProcessing.CaptureScreenshot(saveImages);
-                        //Bitmap filtered = ImageProcessing.getArtifactImg_WindowMode(img, savedArtifactArea, out int[] rows, saveImages);
-                        InventoryItem item = new InventoryItem();//ImageProcessing.getArtifacts(filtered, rows, saveImages, tessEngine);
-                        scannedItems.Add(item);
-                        //do something with item
+                        System.Threading.Thread.Sleep(1000);
                     }
-                    Console.WriteLine("Total items: " + scannedItems.Count);
-
+                    foreach (InventoryItem item in threadResults[i])
+                    {
+                        scannedItems.Add(item);
+                    }
                 }
 
-                Console.WriteLine("Auto Done");
+                runtime.Stop();
+                AppendStatusText("Auto finished, items scanned: " + scannedItems.Count + Environment.NewLine
+                    + "Time elapsed: " + runtime.ElapsedMilliseconds + "ms" + Environment.NewLine);
+
+
                 autoRunning = false;
             }));
         }
@@ -316,7 +423,7 @@ namespace GenshinArtifactOCR
                 img_Raw = ImageProcessing.LoadScreenshot();
             } else
             {
-                img_Raw = ImageProcessing.CaptureScreenshot(saveImages);
+                img_Raw = ImageProcessing.CaptureScreenshot(saveImages, Rectangle.Empty);
             }
 
 
@@ -351,7 +458,7 @@ namespace GenshinArtifactOCR
                 artifactImg.Save(Database.appDir + @"\images\GenshinArtifactArea " + timestamp + ".png");
             }
 
-            List<Point> artifactLocations = ImageProcessing.getArtifactGrid_WindowMode(img_Raw, savedGameArea, savedArtifactArea, saveImages);
+            //List<Point> artifactLocations = ImageProcessing.getArtifactGrid_WindowMode(img_Raw, savedGameArea, savedArtifactArea, saveImages);
 
             if (savedArtifactArea.Width == 0 || savedArtifactArea.Height == 0)
             {
@@ -382,7 +489,7 @@ namespace GenshinArtifactOCR
                 }
                 else
                 {
-                    img_Raw = ImageProcessing.CaptureScreenshot(saveImages);
+                    img_Raw = ImageProcessing.CaptureScreenshot(saveImages, Rectangle.Empty);
                 }
             }
 
@@ -397,9 +504,9 @@ namespace GenshinArtifactOCR
                 img_Filtered = ImageProcessing.getArtifactImg(img_Filtered, savedArtifactArea, out filtered_rows, saveImages);
             }
 
-            image_preview.Image = new Bitmap(img_Filtered);
-
             InventoryItem artifact = ImageProcessing.getArtifacts(img_Filtered, filtered_rows, saveImages, tessEngine, artifactLocked);
+
+            image_preview.Image = new Bitmap(img_Filtered);
             displayInventoryItem(artifact);
         }
 
@@ -410,8 +517,28 @@ namespace GenshinArtifactOCR
             {
                 text_full.Text += "Ignored, auto currently running" + Environment.NewLine;
             }
-            cancelAuto = false;
+            pauseAuto = false;
+            softCancelAuto = false;
+            hardCancelAuto = false;
             runAuto(false, 50, 17);
+        }
+
+        private void button_resume_Click(object sender, EventArgs e)
+        {
+            text_full.Text += "Resuming auto" + Environment.NewLine;
+            pauseAuto = false;
+        }
+
+        private void button_softCancel_Click(object sender, EventArgs e)
+        {
+            text_full.Text += "New scanning canceled, awaiting results" + Environment.NewLine;
+            softCancelAuto = true;
+        }
+
+        private void button_hardCancel_Click(object sender, EventArgs e)
+        {
+            text_full.Text += "Auto canceled" + Environment.NewLine;
+            hardCancelAuto = true;
         }
     }
 }

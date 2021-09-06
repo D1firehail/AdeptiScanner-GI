@@ -14,15 +14,15 @@ namespace GenshinArtifactOCR
 {
     class ImageProcessing
     {
-        public static List<Point> getArtifactGrid_WindowMode(Bitmap img, Rectangle gameArea, Rectangle artifactArea, bool saveImages)
+        public static List<Point> getArtifactGrid_WindowMode(Bitmap areaImg, bool saveImages, Point coordOffset)
         {
-            Rectangle area = new Rectangle(gameArea.X, gameArea.Y, artifactArea.X - gameArea.X, gameArea.Height);
+            //Rectangle area = new Rectangle(gameArea.X, gameArea.Y, artifactArea.X - gameArea.X, gameArea.Height);
             //Get relevant part of image
-            Bitmap areaImg = new Bitmap(area.Width, area.Height);
-            using (Graphics g = Graphics.FromImage(areaImg))
-            {
-                g.DrawImage(img, 0, 0, area, GraphicsUnit.Pixel);
-            }
+            //Bitmap areaImg = new Bitmap(area.Width, area.Height);
+            //using (Graphics g = Graphics.FromImage(areaImg))
+            //{
+            //    g.DrawImage(img, 0, 0, area, GraphicsUnit.Pixel);
+            //}
             //Prepare bytewise image processing
             BitmapData imgData = areaImg.LockBits(new Rectangle(0, 0, areaImg.Width, areaImg.Height), ImageLockMode.ReadWrite, areaImg.PixelFormat);
             int numBytes = Math.Abs(imgData.Stride) * imgData.Height;
@@ -96,7 +96,7 @@ namespace GenshinArtifactOCR
             List<Point> artifactListPoint = new List<Point>();
             foreach (Tuple<int, int, int> tup in artifactListTuple)
             {
-                artifactListPoint.Add(new Point(area.X + (tup.Item2 + tup.Item1) / 2, area.Y + tup.Item3));
+                artifactListPoint.Add(new Point(coordOffset.X + (tup.Item2 + tup.Item1) / 2, coordOffset.Y + tup.Item3));
             }
 
             string timestamp = DateTime.UtcNow.ToString("yyyy-MM-dd HH-mm-ssff");
@@ -405,17 +405,20 @@ namespace GenshinArtifactOCR
         /// Capture screenshot of main screen
         /// </summary>
         /// <returns>Screenshot of main screen</returns>
-        public static Bitmap CaptureScreenshot(bool saveImages)
+        public static Bitmap CaptureScreenshot(bool saveImages, Rectangle area, bool useArea = false )
         {
-            Bitmap img = new Bitmap(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height);
-            Size fullSize = new Size(img.Width, img.Height);
+            if (!useArea)
+                area = new Rectangle(0, 0, Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height);
+
+            Bitmap img = new Bitmap(area.Width, area.Height);
+            Size areaSize = new Size(area.Width, area.Height);
             using (Graphics g = Graphics.FromImage(img))
             {
-                g.CopyFromScreen(0, 0, 0, 0, fullSize);
+                g.CopyFromScreen(area.X, area.Y, 0, 0, areaSize);
             }
             string timestamp = DateTime.UtcNow.ToString("yyyy-MM-dd HH-mm-ssff");
             if (saveImages)
-                img.Save(Database.appDir + @"\images\GenshinFullscreen " + timestamp + ".png");
+                img.Save(Database.appDir + @"\images\GenshinScreen " + timestamp + ".png");
             return img;
         }
 

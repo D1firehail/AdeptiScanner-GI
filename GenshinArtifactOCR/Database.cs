@@ -235,7 +235,7 @@ namespace GenshinArtifactOCR
                     string text = statName;
                     Pieces.Add(text);
                     Pieces_trans.Add(Tuple.Create(text, statKey));
-                    Console.WriteLine(text);
+                    //Console.WriteLine(text);
                 }
             }
         }

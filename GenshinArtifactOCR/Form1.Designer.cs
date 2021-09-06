@@ -58,6 +58,9 @@ namespace GenshinArtifactOCR
             this.button_auto = new System.Windows.Forms.Button();
             this.label_locked = new System.Windows.Forms.Label();
             this.text_locked = new System.Windows.Forms.TextBox();
+            this.button_softCancel = new System.Windows.Forms.Button();
+            this.button_hardCancel = new System.Windows.Forms.Button();
+            this.button_resume = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.image_preview)).BeginInit();
             this.SuspendLayout();
             // 
@@ -69,7 +72,7 @@ namespace GenshinArtifactOCR
             this.image_preview.Location = new System.Drawing.Point(12, 12);
             this.image_preview.MinimumSize = new System.Drawing.Size(100, 100);
             this.image_preview.Name = "image_preview";
-            this.image_preview.Size = new System.Drawing.Size(384, 509);
+            this.image_preview.Size = new System.Drawing.Size(384, 616);
             this.image_preview.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.image_preview.TabIndex = 1;
             this.image_preview.TabStop = false;
@@ -210,7 +213,7 @@ namespace GenshinArtifactOCR
             // btn_capture
             // 
             this.btn_capture.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btn_capture.Location = new System.Drawing.Point(493, 481);
+            this.btn_capture.Location = new System.Drawing.Point(493, 576);
             this.btn_capture.Name = "btn_capture";
             this.btn_capture.Size = new System.Drawing.Size(75, 23);
             this.btn_capture.TabIndex = 16;
@@ -221,7 +224,7 @@ namespace GenshinArtifactOCR
             // btn_OCR
             // 
             this.btn_OCR.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btn_OCR.Location = new System.Drawing.Point(493, 510);
+            this.btn_OCR.Location = new System.Drawing.Point(574, 576);
             this.btn_OCR.Name = "btn_OCR";
             this.btn_OCR.Size = new System.Drawing.Size(75, 23);
             this.btn_OCR.TabIndex = 18;
@@ -237,7 +240,7 @@ namespace GenshinArtifactOCR
             this.text_full.Multiline = true;
             this.text_full.Name = "text_full";
             this.text_full.ReadOnly = true;
-            this.text_full.Size = new System.Drawing.Size(279, 229);
+            this.text_full.Size = new System.Drawing.Size(279, 260);
             this.text_full.TabIndex = 19;
             // 
             // label_full
@@ -275,7 +278,7 @@ namespace GenshinArtifactOCR
             this.checkbox_OCRcapture.AutoSize = true;
             this.checkbox_OCRcapture.Checked = true;
             this.checkbox_OCRcapture.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkbox_OCRcapture.Location = new System.Drawing.Point(574, 514);
+            this.checkbox_OCRcapture.Location = new System.Drawing.Point(493, 535);
             this.checkbox_OCRcapture.Name = "checkbox_OCRcapture";
             this.checkbox_OCRcapture.Size = new System.Drawing.Size(93, 17);
             this.checkbox_OCRcapture.TabIndex = 23;
@@ -288,7 +291,7 @@ namespace GenshinArtifactOCR
             this.checkbox_inventorymode.AutoSize = true;
             this.checkbox_inventorymode.Checked = true;
             this.checkbox_inventorymode.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkbox_inventorymode.Location = new System.Drawing.Point(574, 485);
+            this.checkbox_inventorymode.Location = new System.Drawing.Point(493, 512);
             this.checkbox_inventorymode.Name = "checkbox_inventorymode";
             this.checkbox_inventorymode.Size = new System.Drawing.Size(100, 17);
             this.checkbox_inventorymode.TabIndex = 24;
@@ -299,7 +302,7 @@ namespace GenshinArtifactOCR
             // 
             this.checkbox_saveImages.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.checkbox_saveImages.AutoSize = true;
-            this.checkbox_saveImages.Location = new System.Drawing.Point(680, 485);
+            this.checkbox_saveImages.Location = new System.Drawing.Point(622, 535);
             this.checkbox_saveImages.Name = "checkbox_saveImages";
             this.checkbox_saveImages.Size = new System.Drawing.Size(87, 17);
             this.checkbox_saveImages.TabIndex = 25;
@@ -328,7 +331,7 @@ namespace GenshinArtifactOCR
             // button_auto
             // 
             this.button_auto.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button_auto.Location = new System.Drawing.Point(680, 510);
+            this.button_auto.Location = new System.Drawing.Point(655, 576);
             this.button_auto.Name = "button_auto";
             this.button_auto.Size = new System.Drawing.Size(75, 23);
             this.button_auto.TabIndex = 28;
@@ -355,12 +358,48 @@ namespace GenshinArtifactOCR
             this.text_locked.Size = new System.Drawing.Size(106, 20);
             this.text_locked.TabIndex = 30;
             // 
+            // button_softCancel
+            // 
+            this.button_softCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.button_softCancel.Location = new System.Drawing.Point(574, 605);
+            this.button_softCancel.Name = "button_softCancel";
+            this.button_softCancel.Size = new System.Drawing.Size(75, 23);
+            this.button_softCancel.TabIndex = 31;
+            this.button_softCancel.Text = "Stop search";
+            this.button_softCancel.UseVisualStyleBackColor = true;
+            this.button_softCancel.Click += new System.EventHandler(this.button_softCancel_Click);
+            // 
+            // button_hardCancel
+            // 
+            this.button_hardCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.button_hardCancel.Location = new System.Drawing.Point(655, 605);
+            this.button_hardCancel.Name = "button_hardCancel";
+            this.button_hardCancel.Size = new System.Drawing.Size(75, 23);
+            this.button_hardCancel.TabIndex = 32;
+            this.button_hardCancel.Text = "Hard stop";
+            this.button_hardCancel.UseVisualStyleBackColor = true;
+            this.button_hardCancel.Click += new System.EventHandler(this.button_hardCancel_Click);
+            // 
+            // button_resume
+            // 
+            this.button_resume.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.button_resume.Location = new System.Drawing.Point(493, 605);
+            this.button_resume.Name = "button_resume";
+            this.button_resume.Size = new System.Drawing.Size(75, 23);
+            this.button_resume.TabIndex = 33;
+            this.button_resume.Text = "Resume Auto";
+            this.button_resume.UseVisualStyleBackColor = true;
+            this.button_resume.Click += new System.EventHandler(this.button_resume_Click);
+            // 
             // GenshinArtifactOCR
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.LightGray;
-            this.ClientSize = new System.Drawing.Size(784, 561);
+            this.ClientSize = new System.Drawing.Size(784, 668);
+            this.Controls.Add(this.button_resume);
+            this.Controls.Add(this.button_hardCancel);
+            this.Controls.Add(this.button_softCancel);
             this.Controls.Add(this.text_locked);
             this.Controls.Add(this.label_locked);
             this.Controls.Add(this.button_auto);
@@ -430,6 +469,9 @@ namespace GenshinArtifactOCR
         private System.Windows.Forms.Button button_auto;
         private System.Windows.Forms.Label label_locked;
         private System.Windows.Forms.TextBox text_locked;
+        private System.Windows.Forms.Button button_softCancel;
+        private System.Windows.Forms.Button button_hardCancel;
+        private System.Windows.Forms.Button button_resume;
     }
 }
 
