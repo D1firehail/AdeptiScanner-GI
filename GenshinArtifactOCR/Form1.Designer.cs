@@ -55,6 +55,7 @@ namespace GenshinArtifactOCR
             this.checkbox_saveImages = new System.Windows.Forms.CheckBox();
             this.label_character = new System.Windows.Forms.Label();
             this.text_character = new System.Windows.Forms.TextBox();
+            this.button_auto = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.image_preview)).BeginInit();
             this.SuspendLayout();
             // 
@@ -322,12 +323,24 @@ namespace GenshinArtifactOCR
             this.text_character.Size = new System.Drawing.Size(279, 20);
             this.text_character.TabIndex = 26;
             // 
+            // button_auto
+            // 
+            this.button_auto.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.button_auto.Location = new System.Drawing.Point(680, 510);
+            this.button_auto.Name = "button_auto";
+            this.button_auto.Size = new System.Drawing.Size(75, 23);
+            this.button_auto.TabIndex = 28;
+            this.button_auto.Text = "Start Auto";
+            this.button_auto.UseVisualStyleBackColor = true;
+            this.button_auto.Click += new System.EventHandler(this.button_auto_Click);
+            // 
             // GenshinArtifactOCR
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.LightGray;
             this.ClientSize = new System.Drawing.Size(784, 561);
+            this.Controls.Add(this.button_auto);
             this.Controls.Add(this.label_character);
             this.Controls.Add(this.text_character);
             this.Controls.Add(this.checkbox_saveImages);
@@ -391,6 +404,7 @@ namespace GenshinArtifactOCR
         private System.Windows.Forms.CheckBox checkbox_saveImages;
         private System.Windows.Forms.Label label_character;
         private System.Windows.Forms.TextBox text_character;
+        private System.Windows.Forms.Button button_auto;
     }
 }
 

@@ -219,7 +219,7 @@ namespace GenshinArtifactOCR
                     string text = "Equipped: " + statName;
                     Characters.Add(text);
                     Characters_trans.Add(Tuple.Create(text, statKey));
-                    Console.WriteLine(text);
+                    //Console.WriteLine(text);
                 }
             }
         }

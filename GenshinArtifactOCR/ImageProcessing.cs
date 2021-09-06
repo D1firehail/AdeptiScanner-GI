@@ -32,12 +32,17 @@ namespace GenshinArtifactOCR
 
             List<Tuple<int, int, int>> artifactListTuple = new List<Tuple<int, int, int>>(); //start and end x, y for found artifacts in grid
             int currStreak = 0;
-            int margin = 2;
+            int margin = 3;
             for (int i = 0; i < numBytes; i += PixelSize)
             {
                 int x = (i / PixelSize) % areaImg.Width;
                 int y = (i / PixelSize - x) / areaImg.Width;
-                if (imgBytes[i] < 60 && imgBytes[i + 1] > 100 && imgBytes[i + 2] > 170) //look for yellow (artifact background + stars
+                int y_low = Math.Min(y + 10, areaImg.Height - 1);
+                int i_low = (y_low * areaImg.Width + x) * PixelSize;
+                if ((imgBytes[i] < 60 && imgBytes[i + 1] > 100 && imgBytes[i + 2] > 170) //look for yellow (artifact background + stars
+                    && ((imgBytes[i_low] > 200 && imgBytes[i_low + 1] > 200 && imgBytes[i_low + 2] > 200) //with white-ish or black-ish line underneath
+                    || (imgBytes[i_low] > 65 && imgBytes[i_low] < 110 && imgBytes[i_low + 1] > 65 && imgBytes[i_low + 1] < 110 && imgBytes[i_low + 2] > 65 && imgBytes[i_low + 2] < 110))
+                    )
                 {
 
                     imgBytes[i] = 255;
@@ -45,7 +50,7 @@ namespace GenshinArtifactOCR
                     imgBytes[i + 2] = 255;
                     imgBytes[i + 3] = 255;
                     currStreak++;
-                    margin = 2;
+                    margin = 3;
                 }
                 else
                 {
@@ -591,7 +596,7 @@ namespace GenshinArtifactOCR
             rawText = text;
 
             string bestMatch = Database.FindClosestMatch(text, validText, out index, out dist);
-            Console.WriteLine("\nGot (" + dist + ") \"" + bestMatch + "\" from \"" + text + "\"");
+            //Console.WriteLine("\nGot (" + dist + ") \"" + bestMatch + "\" from \"" + text + "\"");
 
             return bestMatch;
         }
