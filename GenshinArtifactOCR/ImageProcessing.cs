@@ -30,6 +30,11 @@ namespace GenshinArtifactOCR
             Marshal.Copy(imgData.Scan0, imgBytes, 0, numBytes);
             int PixelSize = 4; //ARGB, reverse order
 
+            if (!saveImages)
+            {
+                areaImg.UnlockBits(imgData);
+            }
+
             List<Tuple<int, int, int>> artifactListTuple = new List<Tuple<int, int, int>>(); //start and end x, y for found artifacts in grid
             int currStreak = 0;
             int margin = 3;
@@ -44,11 +49,13 @@ namespace GenshinArtifactOCR
                     || (imgBytes[i_low] > 65 && imgBytes[i_low] < 110 && imgBytes[i_low + 1] > 65 && imgBytes[i_low + 1] < 110 && imgBytes[i_low + 2] > 65 && imgBytes[i_low + 2] < 110))
                     )
                 {
-
+                    if (saveImages)
+                    {
                     imgBytes[i] = 255;
                     imgBytes[i + 1] = 0;
                     imgBytes[i + 2] = 255;
                     imgBytes[i + 3] = 255;
+                    }
                     currStreak++;
                     margin = 3;
                 }
@@ -90,8 +97,11 @@ namespace GenshinArtifactOCR
 
 
             }
-            Marshal.Copy(imgBytes, 0, imgData.Scan0, numBytes);
-            areaImg.UnlockBits(imgData);
+            if (saveImages)
+            {
+                Marshal.Copy(imgBytes, 0, imgData.Scan0, numBytes);
+                areaImg.UnlockBits(imgData);
+            }
 
             List<Point> artifactListPoint = new List<Point>();
             foreach (Tuple<int, int, int> tup in artifactListTuple)
@@ -704,7 +714,7 @@ namespace GenshinArtifactOCR
             }
 
             //Character
-            for (i = textRows.Count - 1; i > Math.Max(0, textRows.Count - 3); i--)
+            for (i = textRows.Count - 1; i > Math.Max(0, textRows.Count - 6); i--)
             {
                 string result = OCRRow(img, textRows[i].Item1, textRows[i].Item2, Database.Characters, out int resultIndex, out int dist, out _, "", saveImages, tessEngine);
                 if (dist < 5)
