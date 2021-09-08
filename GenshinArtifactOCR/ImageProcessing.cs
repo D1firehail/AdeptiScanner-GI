@@ -152,7 +152,7 @@ namespace GenshinArtifactOCR
             for (int i = 0; i < numBytes; i += PixelSize)
             {
                 int x = (i / PixelSize) % gameArea.Width;
-                if ((imgBytes[i] > 210 && imgBytes[i + 1] > 210 && imgBytes[i + 2] > 210)) //look for white-ish text background
+                if ((imgBytes[i] > 40 && imgBytes[i] < 60 && imgBytes[i + 1] > 90 && imgBytes[i + 1] < 110 && imgBytes[i + 2] > 180 && imgBytes[i + 2] < 200)) //look for artifact name background colour
                 {
                     cols[x]++;
                 }
@@ -161,15 +161,15 @@ namespace GenshinArtifactOCR
             //Find artifact text columns
             int edgewidth = 0;
             //find right edge
-            while (cols[cols.Length - 1 - edgewidth] / (double)gameArea.Height < 0.05)
+            while (cols[cols.Length - 1 - edgewidth] / (double)gameArea.Height < 0.02)
                 edgewidth++;
-            int rightmost = cols.Length - (int)(edgewidth * 2);
+            int rightmost = cols.Length - edgewidth;
             //find left edge
             int leftmost = rightmost - edgewidth;
             int misses = 0;
             while (leftmost - misses > 0 && misses < edgewidth)
             {
-                if (cols[leftmost - misses] / (double)gameArea.Height > 0.20)
+                if (cols[leftmost - misses] / (double)gameArea.Height > 0.01)
                 {
                     leftmost -= misses + 1;
                     misses = 0;
@@ -181,7 +181,30 @@ namespace GenshinArtifactOCR
             }
             leftmost += 3;
 
-            return new Rectangle(gameArea.Left + leftmost, gameArea.Top, rightmost - leftmost, gameArea.Height);
+
+            int top = 0;
+            for (int y = top; y < gameArea.Height; y++)
+            {
+                int i = (y * gameArea.Width + (leftmost * 3 + rightmost) / 4) * PixelSize;
+                if ((imgBytes[i] > 40 && imgBytes[i] < 60 && imgBytes[i + 1] > 90 && imgBytes[i + 1] < 110 && imgBytes[i + 2] > 180 && imgBytes[i + 2] < 200)) //look for artifact name background colour
+                {
+                    top = y;
+                    break;
+                }
+            }
+
+            int height = gameArea.Height - 1;
+            for (int y = height; y > top; y--)
+            {
+                int i = (y * gameArea.Width + (leftmost*3 + rightmost )/4) * PixelSize;
+                if ((imgBytes[i] > 180 && imgBytes[i + 1] > 210 && imgBytes[i + 2] > 210)) //look for white-ish text background
+                {
+                    height = y - top;
+                    break;
+                }
+            }
+
+            return new Rectangle(gameArea.Left + leftmost, gameArea.Top + top, rightmost - leftmost, height);
         }
 
 
@@ -270,8 +293,10 @@ namespace GenshinArtifactOCR
             {
                 g.DrawImage(img, 0, 0, area, GraphicsUnit.Pixel);
             }
+            int width = areaImg.Width;
+            int height = areaImg.Height;
             //Prepare bytewise image processing
-            BitmapData imgData = areaImg.LockBits(new Rectangle(0, 0, areaImg.Width, areaImg.Height), ImageLockMode.ReadWrite, areaImg.PixelFormat);
+            BitmapData imgData = areaImg.LockBits(new Rectangle(0, 0, width, height), ImageLockMode.ReadWrite, areaImg.PixelFormat);
             int numBytes = Math.Abs(imgData.Stride) * imgData.Height;
             byte[] imgBytes = new byte[numBytes];
             Marshal.Copy(imgData.Scan0, imgBytes, 0, numBytes);
@@ -280,14 +305,16 @@ namespace GenshinArtifactOCR
             int section = 0; //0 = top part, 1 = artifact level part, 2 = substats, 3 = set, 4 = character
             int sectionStart = 0;
             int sectionEnd = 0;
+            int rightEdge = 0;
+            int leftEdge = width - 1;
             for (int i = 0; i < numBytes; i += PixelSize)
             {
-                int x = (i / PixelSize) % areaImg.Width;
-                int y = (i / PixelSize - x) / areaImg.Width;
-                int y_below = Math.Min(((y + 1) * areaImg.Width + x) * PixelSize, numBytes);
+                int x = (i / PixelSize) % width;
+                int y = (i / PixelSize - x) / width;
+                int y_below = Math.Min(((y + 1) * width + x) * PixelSize, numBytes - PixelSize - 1);
                 if (
-                    (section == 0 && (x < areaImg.Width * 0.55 && imgBytes[i] > 140 && imgBytes[i + 1] > 140 && imgBytes[i + 2] > 140)) //look for white-ish text, skip right edge (artifact image)
-                    || (section == 1 && x < areaImg.Width * 0.55 && ((imgBytes[i] > 225 && imgBytes[i + 1] > 225 && imgBytes[i + 2] > 225) || (imgBytes[y_below] > 225 && imgBytes[y_below + 1] > 225 && imgBytes[y_below + 2] > 225))) //look for bright white text, skip right edge
+                    (section == 0 && (x < width * 0.55 && imgBytes[i] > 140 && imgBytes[i + 1] > 140 && imgBytes[i + 2] > 140)) //look for white-ish text, skip right edge (artifact image)
+                    || (section == 1 && x < width * 0.55 && ((imgBytes[i] > 225 && imgBytes[i + 1] > 225 && imgBytes[i + 2] > 225) || (imgBytes[y_below] > 225 && imgBytes[y_below + 1] > 225 && imgBytes[y_below + 2] > 225))) //look for bright white text, skip right edge
                     || ((section == 2 || section == 4) && (imgBytes[i] < 150 && imgBytes[i + 1] < 150 && imgBytes[i + 2] < 150)) //look for black
                     || (section == 3 && (imgBytes[i] < 130 && imgBytes[i + 1] > 160 && imgBytes[i + 2] < 130)) //look for green
                     )
@@ -297,8 +324,11 @@ namespace GenshinArtifactOCR
                     imgBytes[i + 1] = 0;
                     imgBytes[i + 2] = 0;
                     imgBytes[i + 3] = 255;
-
                     rows[y]++;
+                    if (x > rightEdge)
+                        rightEdge = x;
+                    if (x < leftEdge && x != 0)
+                        leftEdge = x;
                 }
                 else
                 {
@@ -311,12 +341,12 @@ namespace GenshinArtifactOCR
                     {
                         //if section 2, look for green text
                         subArea = new Rectangle(0, levelArea.Bottom, levelArea.Width, y - levelArea.Bottom);
-                        setArea = new Rectangle(0, subArea.Bottom, areaImg.Width, areaImg.Height - subArea.Bottom);
+                        setArea = new Rectangle(0, subArea.Bottom, width, height - subArea.Bottom);
                         section = 3;
                     } else if (section == 3 && imgBytes[i + 2] > 250 && imgBytes[i] > 170 && imgBytes[i + 1] > 220)
                     {
                         setArea = new Rectangle(setArea.X, setArea.Y, setArea.Width, y - setArea.Y);
-                        charArea = new Rectangle(0, y, areaImg.Width, areaImg.Height - y);
+                        charArea = new Rectangle(0, y, width, height - y);
                         section = 4;
                     }
                     //Make White
@@ -331,12 +361,18 @@ namespace GenshinArtifactOCR
                     if (section == 0)
                     {
                         //check if coming row is white-ish, if so move to section 1
-                        int tmp = (y * areaImg.Width + (int)(areaImg.Width * 0.05)) * PixelSize;
+                        int tmp = (y * width + (int)(width * 0.05)) * PixelSize;
                         if ((imgBytes[tmp] > 200 && imgBytes[tmp + 1] > 200 && imgBytes[tmp + 2] > 200) && (imgBytes[tmp] < 240 && imgBytes[tmp + 1] < 240 && imgBytes[tmp + 2] < 240))
                         {
-                            typeMainArea = new Rectangle(0, 0, (int)(areaImg.Width * 0.55), y);
+                            //Make White
+                            imgBytes[i] = 255;
+                            imgBytes[i + 1] = 255;
+                            imgBytes[i + 2] = 255;
+                            imgBytes[i + 3] = 255;
+
+                            typeMainArea = new Rectangle(0, 0, (int)(width * 0.55), y);
                             section = 1;
-                            i += areaImg.Width * PixelSize;
+                            i += width * PixelSize;
                         }
 
                     }
@@ -344,7 +380,7 @@ namespace GenshinArtifactOCR
                     {
                         if (y == sectionEnd)
                         {
-                            levelArea = new Rectangle(0, sectionStart, (int)(areaImg.Width * 0.55), sectionEnd - sectionStart);
+                            levelArea = new Rectangle(0, sectionStart, (int)(width * 0.55), sectionEnd - sectionStart);
                             section = 2;
                             sectionStart = 0;
                             sectionEnd = 0;
@@ -362,6 +398,13 @@ namespace GenshinArtifactOCR
             }
             Marshal.Copy(imgBytes, 0, imgData.Scan0, numBytes);
             areaImg.UnlockBits(imgData);
+
+            Bitmap thinImg = new Bitmap(rightEdge - leftEdge, height);
+            using (Graphics g = Graphics.FromImage(thinImg))
+            {
+                g.DrawImage(areaImg, 0, 0, new Rectangle(leftEdge, 0, rightEdge - leftEdge, height), GraphicsUnit.Pixel);
+            }
+            areaImg = thinImg;
 
             string timestamp = DateTime.UtcNow.ToString("yyyy-MM-dd HH-mm-ssff");
             if (saveImages)
@@ -453,7 +496,10 @@ namespace GenshinArtifactOCR
         public static Rectangle findGameArea(Bitmap full)
         {
             //Prepare bytewise image processing
-            BitmapData imgData = full.LockBits(new Rectangle(0, 0, full.Width, full.Height), ImageLockMode.ReadWrite, full.PixelFormat);
+
+            int fullHeight = full.Height;
+            int fullWidth = full.Width;
+            BitmapData imgData = full.LockBits(new Rectangle(0, 0, fullWidth, fullHeight), ImageLockMode.ReadWrite, full.PixelFormat);
             int numBytes = Math.Abs(imgData.Stride) * imgData.Height;
             byte[] imgBytes = new byte[numBytes];
             Marshal.Copy(imgData.Scan0, imgBytes, 0, numBytes);
@@ -461,32 +507,33 @@ namespace GenshinArtifactOCR
             full.UnlockBits(imgData);
 
             int minWidth = Screen.PrimaryScreen.Bounds.Width / 4;
-            int x = full.Width / 2; //probing via middle of screen, looking for white window header
-            for (int y = full.Height / 2; y > 0; y--)
+
+            int x = fullWidth / 2; //probing via middle of screen, looking for white window header
+            for (int y = fullHeight / 2; y > 0; y--)
             {
                 int i_pos = 0;
                 int i_neg = 0;
-                int index = (y * full.Width + x) * PixelSize;
+                int index = (y * fullWidth + x) * PixelSize;
                 Color pixel = Color.FromArgb(imgBytes[index + 3], imgBytes[index + 2], imgBytes[index + 1], imgBytes[index]);
 
                 //explore white area right
-                while (x + i_pos < full.Width * 0.99 && pixel.R > 220 && pixel.G > 220 && pixel.B > 220)
+                while (x + i_pos < fullWidth * 0.99 && pixel.R > 220 && pixel.G > 220 && pixel.B > 220)
                 {
                     i_pos++;
-                    index = (y * full.Width + x + i_pos) * PixelSize;
+                    index = (y * fullWidth + x + i_pos) * PixelSize;
                     pixel = Color.FromArgb(imgBytes[index + 3], imgBytes[index + 2], imgBytes[index + 1], imgBytes[index]);
                 }
 
                 if (i_pos == 0)
                     continue;
 
-                index = (y * full.Width + x) * PixelSize;
+                index = (y * fullWidth + x) * PixelSize;
                 pixel = Color.FromArgb(imgBytes[index + 3], imgBytes[index + 2], imgBytes[index + 1], imgBytes[index]);
                 //explore white area left
-                while (x - i_neg > full.Width * 0.01 && pixel.R > 220 && pixel.G > 220 && pixel.B > 220)
+                while (x - i_neg > fullWidth * 0.01 && pixel.R > 220 && pixel.G > 220 && pixel.B > 220)
                 {
                     i_neg++;
-                    index = (y * full.Width + x - i_neg) * PixelSize;
+                    index = (y * fullWidth + x - i_neg) * PixelSize;
                     pixel = Color.FromArgb(imgBytes[index + 3], imgBytes[index + 2], imgBytes[index + 1], imgBytes[index]);
                 }
 
@@ -500,14 +547,14 @@ namespace GenshinArtifactOCR
 
                 //find bottom
                 int height = 10;
-                while (height < full.Height - y - 1)
+                while (height < fullHeight - y - 1)
                 {
                     int row = 0;
                     int currStreak = 0;
                     int maxStreak = 0;
                     for (int i = 0; i < width * 0.3; i++)
                     {
-                        index = ((y + height) * full.Width + left + i) * PixelSize;
+                        index = ((y + height) * fullWidth + left + i) * PixelSize;
                         pixel = Color.FromArgb(imgBytes[index + 3], imgBytes[index + 2], imgBytes[index + 1], imgBytes[index]);
                         if (pixel.R > 230 && pixel.G > 220 && pixel.B > 210)
                         {
@@ -529,7 +576,7 @@ namespace GenshinArtifactOCR
                 }
                 return new Rectangle(left, top, width, height);
             }
-            return new Rectangle(0, 0, full.Width, full.Height);
+            return new Rectangle(0, 0, fullWidth, fullHeight);
         }
 
         /// <summary>
@@ -630,14 +677,16 @@ namespace GenshinArtifactOCR
             //get all potential text rows
             List<Tuple<int, int>> textRows = new List<Tuple<int, int>>();
             int i = 0;
+            int height = img.Height;
+            int width = img.Width;
             while (i + 1 < img.Height)
             {
-                while (i + 1 < img.Height && rows[i] / (double)img.Width < 0.01)
+                while (i + 1 < height && rows[i] / (double)width < 0.01)
                     i++;
                 int rowTop = i;
-                while (i + 1 < img.Height && !(rows[i] / (double)img.Width < 0.01))
+                while (i + 1 < height && !(rows[i] / (double)width < 0.01))
                     i++;
-                textRows.Add(Tuple.Create(Math.Max(0, rowTop - 3), Math.Min(img.Height - 1, i + 3)));
+                textRows.Add(Tuple.Create(Math.Max(0, rowTop - 3), Math.Min(height - 1, i + 3)));
             }
 
             //first row guaranteed to be of no use (artifact name etc)
@@ -652,7 +701,7 @@ namespace GenshinArtifactOCR
                 i++;
             for (; i < textRows.Count && textRows[i].Item2 > typeMainArea.Top; i++)
             {
-                string result = OCRRow(img, textRows[i].Item1, textRows[i].Item2, Database.Pieces, out int resultIndex, out int dist, out _, "", saveImages, tessEngine);
+                string result = OCRRow(img, textRows[i].Item1, textRows[i].Item2, Database.Pieces, out int resultIndex, out int dist, out string rawText, "", saveImages, tessEngine);
                 if (dist < 3)
                 {
                     foundArtifact.piece = Database.Pieces_trans[resultIndex];
@@ -740,7 +789,7 @@ namespace GenshinArtifactOCR
             //Character
             for (i = textRows.Count - 1; i > Math.Max(0, textRows.Count - 6) && textRows[i].Item1 > charArea.Top - 10  ; i--)
             {
-                string result = OCRRow(img, textRows[i].Item1, textRows[i].Item2, Database.Characters, out int resultIndex, out int dist, out _, "", saveImages, tessEngine);
+                string result = OCRRow(img, textRows[i].Item1, textRows[i].Item2, Database.Characters, out int resultIndex, out int dist, out string rawText, "", saveImages, tessEngine);
                 if (dist < 5)
                 {
                     foundArtifact.character = Database.Characters_trans[resultIndex];

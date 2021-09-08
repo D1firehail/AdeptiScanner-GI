@@ -39,8 +39,8 @@ namespace GenshinArtifactOCR
             // For more info see: https://en.wikipedia.org/wiki/Levenshtein_distance
             s = s.ToLower();
             t = t.ToLower();
-            s = Regex.Replace(s, @"[+,. ]", "");
-            t = Regex.Replace(t, @"[+,. ]", "");
+            s = Regex.Replace(s, @"[+,.: ]", "");
+            t = Regex.Replace(t, @"[+,.: ]", "");
             int n = s.Length;
             int m = t.Length;
             int[,] d = new int[n + 1, m + 1];
