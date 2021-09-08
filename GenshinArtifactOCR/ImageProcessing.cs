@@ -254,8 +254,14 @@ namespace GenshinArtifactOCR
         /// <param name="area">Area containing the artifact info</param>
         /// <param name="rows">Filter results per row</param>
         /// <returns>Filtered image of the artifact area</returns>
-        public static Bitmap getArtifactImg_WindowMode(Bitmap img, Rectangle area, out int[] rows, bool saveImages, out bool locked)
+        public static Bitmap getArtifactImg_WindowMode(Bitmap img, Rectangle area, out int[] rows, bool saveImages, out bool locked, out Rectangle typeMainArea, out Rectangle levelArea, out Rectangle subArea, out Rectangle setArea, out Rectangle charArea)
         {
+            typeMainArea = Rectangle.Empty;
+            levelArea = Rectangle.Empty;
+            subArea = Rectangle.Empty;
+            setArea = Rectangle.Empty;
+            charArea = Rectangle.Empty;
+
             locked = false;
             rows = new int[area.Height];
             //Get relevant part of image
@@ -278,9 +284,10 @@ namespace GenshinArtifactOCR
             {
                 int x = (i / PixelSize) % areaImg.Width;
                 int y = (i / PixelSize - x) / areaImg.Width;
+                int y_below = Math.Min(((y + 1) * areaImg.Width + x) * PixelSize, numBytes);
                 if (
-                    (section == 0 && (x < areaImg.Width * 0.65 && imgBytes[i] > 140 && imgBytes[i + 1] > 140 && imgBytes[i + 2] > 140)) //look for white-ish text, skip right edge (artifact image)
-                    || (section == 1 && (x < areaImg.Width * 0.65 && imgBytes[i] > 225 && imgBytes[i + 1] > 225 && imgBytes[i + 2] > 225)) //look for bright white text, skip right edge
+                    (section == 0 && (x < areaImg.Width * 0.55 && imgBytes[i] > 140 && imgBytes[i + 1] > 140 && imgBytes[i + 2] > 140)) //look for white-ish text, skip right edge (artifact image)
+                    || (section == 1 && x < areaImg.Width * 0.55 && ((imgBytes[i] > 225 && imgBytes[i + 1] > 225 && imgBytes[i + 2] > 225) || (imgBytes[y_below] > 225 && imgBytes[y_below + 1] > 225 && imgBytes[y_below + 2] > 225))) //look for bright white text, skip right edge
                     || ((section == 2 || section == 4) && (imgBytes[i] < 150 && imgBytes[i + 1] < 150 && imgBytes[i + 2] < 150)) //look for black
                     || (section == 3 && (imgBytes[i] < 130 && imgBytes[i + 1] > 160 && imgBytes[i + 2] < 130)) //look for green
                     )
@@ -303,9 +310,13 @@ namespace GenshinArtifactOCR
                     } else if (section == 2 && (imgBytes[i] < 120 && imgBytes[i + 1] > 160 && imgBytes[i + 2] < 120))
                     {
                         //if section 2, look for green text
+                        subArea = new Rectangle(0, levelArea.Bottom, levelArea.Width, y - levelArea.Bottom);
+                        setArea = new Rectangle(0, subArea.Bottom, areaImg.Width, areaImg.Height - subArea.Bottom);
                         section = 3;
                     } else if (section == 3 && imgBytes[i + 2] > 250 && imgBytes[i] > 170 && imgBytes[i + 1] > 220)
                     {
+                        setArea = new Rectangle(setArea.X, setArea.Y, setArea.Width, y - setArea.Y);
+                        charArea = new Rectangle(0, y, areaImg.Width, areaImg.Height - y);
                         section = 4;
                     }
                     //Make White
@@ -323,6 +334,7 @@ namespace GenshinArtifactOCR
                         int tmp = (y * areaImg.Width + (int)(areaImg.Width * 0.05)) * PixelSize;
                         if ((imgBytes[tmp] > 200 && imgBytes[tmp + 1] > 200 && imgBytes[tmp + 2] > 200) && (imgBytes[tmp] < 240 && imgBytes[tmp + 1] < 240 && imgBytes[tmp + 2] < 240))
                         {
+                            typeMainArea = new Rectangle(0, 0, (int)(areaImg.Width * 0.55), y);
                             section = 1;
                             i += areaImg.Width * PixelSize;
                         }
@@ -332,6 +344,7 @@ namespace GenshinArtifactOCR
                     {
                         if (y == sectionEnd)
                         {
+                            levelArea = new Rectangle(0, sectionStart, (int)(areaImg.Width * 0.55), sectionEnd - sectionStart);
                             section = 2;
                             sectionStart = 0;
                             sectionEnd = 0;
@@ -612,7 +625,7 @@ namespace GenshinArtifactOCR
         /// </summary>
         /// <param name="img">Image of artifact area, filtered</param>
         /// <param name="rows">Filter results per row</param>
-        public static InventoryItem getArtifacts(Bitmap img, int[] rows, bool saveImages, TesseractEngine tessEngine, bool locked)
+        public static InventoryItem getArtifacts(Bitmap img, int[] rows, bool saveImages, TesseractEngine tessEngine, bool locked, Rectangle typeMainArea, Rectangle levelArea, Rectangle subArea, Rectangle setArea, Rectangle charArea)
         {
             //get all potential text rows
             List<Tuple<int, int>> textRows = new List<Tuple<int, int>>();
@@ -635,7 +648,9 @@ namespace GenshinArtifactOCR
             foundArtifact.locked = locked;
             i = 0;
             //Piece type
-            for (; i < textRows.Count; i++)
+            while (i < textRows.Count && textRows[i].Item2 <= typeMainArea.Top)
+                i++;
+            for (; i < textRows.Count && textRows[i].Item2 > typeMainArea.Top; i++)
             {
                 string result = OCRRow(img, textRows[i].Item1, textRows[i].Item2, Database.Pieces, out int resultIndex, out int dist, out _, "", saveImages, tessEngine);
                 if (dist < 3)
@@ -648,10 +663,13 @@ namespace GenshinArtifactOCR
 
             //Main stat
             string prevRaw = "";
-            for (; i < textRows.Count; i++)
+            while (i < textRows.Count && textRows[i].Item2 <= typeMainArea.Top)
+                i++;
+            for (; i < textRows.Count && textRows[i].Item2 > typeMainArea.Top; i++)
             {
                 string result = OCRRow(img, textRows[i].Item1, textRows[i].Item2, Database.MainStats, out int resultIndex, out int dist, out string rawText, prevRaw, saveImages, tessEngine);
-                if (dist < rawText.Length - 2 && rawText.Any(char.IsDigit))
+                
+                if (dist < rawText.Length - 2 && rawText.Length - 2 >= Regex.Replace(rawText, @"[0-9]", "").Length)
                 {
                     foundArtifact.main = Database.MainStats_trans[resultIndex];
                     i++;
@@ -661,7 +679,9 @@ namespace GenshinArtifactOCR
             }
 
             //Level
-            for (; i < textRows.Count; i++)
+            while (i < textRows.Count && textRows[i].Item2 <= levelArea.Top)
+                i++;
+            for (; i < textRows.Count && textRows[i].Item2 > levelArea.Top; i++)
             {
                 string result = OCRRow(img, textRows[i].Item1, textRows[i].Item2, Database.Levels, out int resultIndex, out int dist, out string rawText, "", saveImages, tessEngine);
                 if (rawText.Length != 0)
@@ -675,7 +695,9 @@ namespace GenshinArtifactOCR
             //Substats
             foundArtifact.subs = new List<Tuple<string, string, double>>();
             int substat = 0;
-            for (; i < textRows.Count; i++)
+            while (i < textRows.Count && textRows[i].Item2 <= subArea.Top)
+                i++;
+            for (; i < textRows.Count && textRows[i].Item2 > subArea.Top; i++)
             {
                 string result = OCRRow(img, textRows[i].Item1, textRows[i].Item2, Database.Substats, out int resultIndex, out int dist, out string rawText, "", saveImages, tessEngine);
                 if (dist < 3)
@@ -697,7 +719,9 @@ namespace GenshinArtifactOCR
             //Set
             int startRow = i;
             prevRaw = "";
-            for (; i < textRows.Count; i++)
+            while (i < textRows.Count && textRows[i].Item2 <= setArea.Top)
+                i++;
+            for (; i < textRows.Count && textRows[i].Item2 > setArea.Top; i++)
             {
                 string result = OCRRow(img, textRows[i].Item1, textRows[i].Item2, Database.Sets, out int resultIndex, out int dist, out string rawText, prevRaw, saveImages, tessEngine);
                 if (dist < 5)
@@ -714,7 +738,7 @@ namespace GenshinArtifactOCR
             }
 
             //Character
-            for (i = textRows.Count - 1; i > Math.Max(0, textRows.Count - 6); i--)
+            for (i = textRows.Count - 1; i > Math.Max(0, textRows.Count - 6) && textRows[i].Item1 > charArea.Top - 10  ; i--)
             {
                 string result = OCRRow(img, textRows[i].Item1, textRows[i].Item2, Database.Characters, out int resultIndex, out int dist, out _, "", saveImages, tessEngine);
                 if (dist < 5)

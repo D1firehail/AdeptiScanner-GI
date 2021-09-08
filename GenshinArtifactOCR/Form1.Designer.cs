@@ -240,6 +240,7 @@ namespace GenshinArtifactOCR
             this.text_full.Multiline = true;
             this.text_full.Name = "text_full";
             this.text_full.ReadOnly = true;
+            this.text_full.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.text_full.Size = new System.Drawing.Size(279, 260);
             this.text_full.TabIndex = 19;
             // 
