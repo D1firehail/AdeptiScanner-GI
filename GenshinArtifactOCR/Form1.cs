@@ -225,6 +225,7 @@ namespace GenshinArtifactOCR
             {
                 Stopwatch runtime = new Stopwatch();
                 runtime.Start();
+                System.Security.Cryptography.SHA1CryptoServiceProvider sha1 = new System.Security.Cryptography.SHA1CryptoServiceProvider();
                 bool running = true;
                 bool firstRun = true;
                 int firstY = 0;
@@ -232,7 +233,8 @@ namespace GenshinArtifactOCR
                 int nextThread = 0;
                 Rectangle gridArea = new Rectangle(savedGameArea.X, savedGameArea.Y, savedArtifactArea.X - savedGameArea.X, savedGameArea.Height);
                 Point gridOffset = new Point(gridArea.X, gridArea.Y);
-                List<Point> pointCache = new List<Point>();
+                List<string> foundArtifactHashes = new List<string>();
+                
                 while (running)
                 {
                     //load current grid/scroll location
@@ -258,8 +260,6 @@ namespace GenshinArtifactOCR
                     {
                         firstY = startTop;
                         firstRows = rows;
-                        pointCache = artifactLocations;
-                        gridArea = new Rectangle(gridArea.X + gridArea.Width / 4, gridArea.Y, gridArea.Width / 4, gridArea.Height);
                     }
 
                     if (rows >= 1)
@@ -318,22 +318,9 @@ namespace GenshinArtifactOCR
 
 
                     firstRun = false;
-                    if (!running)
-                    {
-                    for (int i = 0; i < pointCache.Count; )
-                        {
-                            if (rows == 0 || pointCache[i].Y < startBot + 5)
-                            {
-                                pointCache.RemoveAt(i);
-                            } else
-                            {
-                                i++;
-                            }
-                        }
-                    }
 
                     //select and OCR each artifact in list
-                    foreach (Point p in pointCache)
+                    foreach (Point p in artifactLocations)
                     {
                         while (pauseAuto)
                         {
@@ -347,8 +334,32 @@ namespace GenshinArtifactOCR
                         clickPos(p.X, p.Y - 10);
                         System.Threading.Thread.Sleep(clickSleepDuration);
 
+                        Bitmap artifactSC = ImageProcessing.CaptureScreenshot(saveImages, savedArtifactArea, true);
+
+                        //check if artifact already found using hash of pixels, without the right edge due to lock/unlock animation
+                        Bitmap withoutLock = new Bitmap(artifactSC.Width * 3 / 4, artifactSC.Height);
+                        using (Graphics g = Graphics.FromImage(withoutLock))
+                        {
+                            g.DrawImage(artifactSC, 0, 0, new Rectangle(0, 0, artifactSC.Width * 3 / 4, artifactSC.Height), GraphicsUnit.Pixel);
+                        }
+                        BitmapData imgData = withoutLock.LockBits(new Rectangle(0, 0, withoutLock.Width, withoutLock.Height), ImageLockMode.ReadWrite, withoutLock.PixelFormat);
+                        int numBytes = Math.Abs(imgData.Stride) * imgData.Height;
+                        byte[] imgBytes = new byte[numBytes];
+                        Marshal.Copy(imgData.Scan0, imgBytes, 0, numBytes);
+                        int PixelSize = 4; //ARGB, reverse order
+                        withoutLock.UnlockBits(imgData);
+                        //https://stackoverflow.com/a/800469 with some liberty
+                        string hash =  string.Concat(sha1.ComputeHash(imgBytes).Select(x => x.ToString("X2")));
+
+                        if (foundArtifactHashes.Contains(hash))
+                        {
+                            running = false;
+                            continue;
+                        }
+                        foundArtifactHashes.Add(hash);
+
                         //queue up processing of artifact
-                        threadQueues[nextThread].Enqueue(ImageProcessing.CaptureScreenshot(saveImages, savedArtifactArea, true));
+                        threadQueues[nextThread].Enqueue(artifactSC);
                         nextThread = (nextThread + 1) % ThreadCount;
                     }
 
@@ -493,7 +504,7 @@ namespace GenshinArtifactOCR
 
 
             image_preview.Image = new Bitmap(img_Filtered);
-            displayInventoryItem(artifact);
+            //displayInventoryItem(artifact);
         }
 
         private void button_auto_Click(object sender, EventArgs e)
@@ -506,7 +517,7 @@ namespace GenshinArtifactOCR
             pauseAuto = false;
             softCancelAuto = false;
             hardCancelAuto = false;
-            runAuto(false, 50, 30);
+            runAuto(false, 100, 1500);
         }
 
         private void button_resume_Click(object sender, EventArgs e)

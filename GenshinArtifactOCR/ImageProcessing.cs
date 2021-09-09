@@ -24,7 +24,9 @@ namespace GenshinArtifactOCR
             //    g.DrawImage(img, 0, 0, area, GraphicsUnit.Pixel);
             //}
             //Prepare bytewise image processing
-            BitmapData imgData = areaImg.LockBits(new Rectangle(0, 0, areaImg.Width, areaImg.Height), ImageLockMode.ReadWrite, areaImg.PixelFormat);
+            int width = areaImg.Width;
+            int height = areaImg.Height;
+            BitmapData imgData = areaImg.LockBits(new Rectangle(0, 0, width, height), ImageLockMode.ReadWrite, areaImg.PixelFormat);
             int numBytes = Math.Abs(imgData.Stride) * imgData.Height;
             byte[] imgBytes = new byte[numBytes];
             Marshal.Copy(imgData.Scan0, imgBytes, 0, numBytes);
@@ -35,15 +37,16 @@ namespace GenshinArtifactOCR
                 areaImg.UnlockBits(imgData);
             }
 
+
             List<Tuple<int, int, int>> artifactListTuple = new List<Tuple<int, int, int>>(); //start and end x, y for found artifacts in grid
             int currStreak = 0;
             int margin = 3;
             for (int i = 0; i < numBytes; i += PixelSize)
             {
-                int x = (i / PixelSize) % areaImg.Width;
-                int y = (i / PixelSize - x) / areaImg.Width;
-                int y_low = Math.Min(y + 10, areaImg.Height - 1);
-                int i_low = (y_low * areaImg.Width + x) * PixelSize;
+                int x = (i / PixelSize) % width;
+                int y = (i / PixelSize - x) / width;
+                int y_low = Math.Min(y + 10, height - 1);
+                int i_low = (y_low * width + x) * PixelSize;
                 if ((imgBytes[i] < 60 && imgBytes[i + 1] > 100 && imgBytes[i + 2] > 170) //look for yellow (artifact background + stars
                     && ((imgBytes[i_low] > 200 && imgBytes[i_low + 1] > 200 && imgBytes[i_low + 2] > 200) //with white-ish or black-ish line underneath
                     || (imgBytes[i_low] > 65 && imgBytes[i_low] < 110 && imgBytes[i_low + 1] > 65 && imgBytes[i_low + 1] < 110 && imgBytes[i_low + 2] > 65 && imgBytes[i_low + 2] < 110))
@@ -68,7 +71,7 @@ namespace GenshinArtifactOCR
                         continue;
                     }
 
-                    if (currStreak > areaImg.Width * 0.05)
+                    if (currStreak > width * 0.05)
                     {
                         bool alreadyFound = false;
                         for (int j = 0; j < artifactListTuple.Count; j++)
@@ -80,7 +83,7 @@ namespace GenshinArtifactOCR
                                 || (x - currStreak <= artifactListTuple[j].Item2 && x >= artifactListTuple[j].Item2)
                                 && true)
                             {
-                                if (Math.Abs(artifactListTuple[j].Item3 - y) < areaImg.Width * 0.07)
+                                if (Math.Abs(artifactListTuple[j].Item3 - y) < width * 0.07)
                                 {
                                     artifactListTuple[j] = Tuple.Create(Math.Min(artifactListTuple[j].Item1, x - currStreak),
                                         Math.Max(artifactListTuple[j].Item2, x), y);
