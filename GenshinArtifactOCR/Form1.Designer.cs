@@ -51,7 +51,6 @@ namespace GenshinArtifactOCR
             this.label_level = new System.Windows.Forms.Label();
             this.text_Level = new System.Windows.Forms.TextBox();
             this.checkbox_OCRcapture = new System.Windows.Forms.CheckBox();
-            this.checkbox_inventorymode = new System.Windows.Forms.CheckBox();
             this.checkbox_saveImages = new System.Windows.Forms.CheckBox();
             this.label_character = new System.Windows.Forms.Label();
             this.text_character = new System.Windows.Forms.TextBox();
@@ -241,7 +240,7 @@ namespace GenshinArtifactOCR
             this.text_full.Name = "text_full";
             this.text_full.ReadOnly = true;
             this.text_full.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.text_full.Size = new System.Drawing.Size(279, 260);
+            this.text_full.Size = new System.Drawing.Size(279, 292);
             this.text_full.TabIndex = 19;
             // 
             // label_full
@@ -279,31 +278,18 @@ namespace GenshinArtifactOCR
             this.checkbox_OCRcapture.AutoSize = true;
             this.checkbox_OCRcapture.Checked = true;
             this.checkbox_OCRcapture.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkbox_OCRcapture.Location = new System.Drawing.Point(493, 535);
+            this.checkbox_OCRcapture.Location = new System.Drawing.Point(493, 544);
             this.checkbox_OCRcapture.Name = "checkbox_OCRcapture";
             this.checkbox_OCRcapture.Size = new System.Drawing.Size(93, 17);
             this.checkbox_OCRcapture.TabIndex = 23;
             this.checkbox_OCRcapture.Text = "OCR captures";
             this.checkbox_OCRcapture.UseVisualStyleBackColor = true;
             // 
-            // checkbox_inventorymode
-            // 
-            this.checkbox_inventorymode.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.checkbox_inventorymode.AutoSize = true;
-            this.checkbox_inventorymode.Checked = true;
-            this.checkbox_inventorymode.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkbox_inventorymode.Location = new System.Drawing.Point(493, 512);
-            this.checkbox_inventorymode.Name = "checkbox_inventorymode";
-            this.checkbox_inventorymode.Size = new System.Drawing.Size(100, 17);
-            this.checkbox_inventorymode.TabIndex = 24;
-            this.checkbox_inventorymode.Text = "Inventory Mode";
-            this.checkbox_inventorymode.UseVisualStyleBackColor = true;
-            // 
             // checkbox_saveImages
             // 
             this.checkbox_saveImages.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.checkbox_saveImages.AutoSize = true;
-            this.checkbox_saveImages.Location = new System.Drawing.Point(622, 535);
+            this.checkbox_saveImages.Location = new System.Drawing.Point(622, 544);
             this.checkbox_saveImages.Name = "checkbox_saveImages";
             this.checkbox_saveImages.Size = new System.Drawing.Size(87, 17);
             this.checkbox_saveImages.TabIndex = 25;
@@ -407,7 +393,6 @@ namespace GenshinArtifactOCR
             this.Controls.Add(this.label_character);
             this.Controls.Add(this.text_character);
             this.Controls.Add(this.checkbox_saveImages);
-            this.Controls.Add(this.checkbox_inventorymode);
             this.Controls.Add(this.checkbox_OCRcapture);
             this.Controls.Add(this.label_level);
             this.Controls.Add(this.text_Level);
@@ -463,7 +448,6 @@ namespace GenshinArtifactOCR
         private System.Windows.Forms.Label label_level;
         private System.Windows.Forms.TextBox text_Level;
         private System.Windows.Forms.CheckBox checkbox_OCRcapture;
-        private System.Windows.Forms.CheckBox checkbox_inventorymode;
         private System.Windows.Forms.CheckBox checkbox_saveImages;
         private System.Windows.Forms.Label label_character;
         private System.Windows.Forms.TextBox text_character;

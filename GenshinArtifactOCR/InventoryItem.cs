@@ -12,6 +12,7 @@ namespace GenshinArtifactOCR
         public Tuple<string, string> set;
         public Tuple<string, string> character;
         public bool locked = false;
+        public int rarity = 0;
 
         public InventoryItem()
         {
@@ -33,6 +34,8 @@ namespace GenshinArtifactOCR
                 text += main + Environment.NewLine;
             else
                 text += "Null-------" + Environment.NewLine;
+
+            text += "Rarity: " + rarity + Environment.NewLine;
 
             text += "Level: ";
             if (level != null)

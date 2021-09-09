@@ -124,56 +124,46 @@ namespace GenshinArtifactOCR
 
         private void displayInventoryItem (InventoryItem item)
         {
-            text_full.Text = "";
+            text_full.Text = item.ToString();
             if (item.level != null)
             {
-                text_full.Text += item.level.Item1 + Environment.NewLine;
                 text_Level.Text = item.level.Item1;
             }
-            text_full.Text += "Locked: " + item.locked.ToString() + Environment.NewLine;
             text_locked.Text = item.locked.ToString();
 
             if (item.piece != null)
             {
-                text_full.Text += item.piece.Item1 + Environment.NewLine;
                 text_Type.Text = item.piece.Item1;
             }
             if (item.main != null)
             {
-                text_full.Text += item.main.Item1 + Environment.NewLine;
                 text_statMain.Text = item.main.Item1;
             }
             if (item.subs != null)
             {
                 if (item.subs.Count > 0)
                 {
-                    text_full.Text += item.subs[0].Item1 + Environment.NewLine;
                     text_statSub1.Text = item.subs[0].Item1;
                 }
                 if (item.subs.Count > 1)
                 {
-                    text_full.Text += item.subs[1].Item1 + Environment.NewLine;
                     text_statSub2.Text = item.subs[1].Item1;
                 }
                 if (item.subs.Count > 2)
                 {
-                    text_full.Text += item.subs[2].Item1 + Environment.NewLine;
                     text_statSub3.Text = item.subs[2].Item1;
                 }
                 if (item.subs.Count > 3)
                 {
-                    text_full.Text += item.subs[3].Item1 + Environment.NewLine;
                     text_statSub4.Text = item.subs[3].Item1;
                 }
             }
             if (item.set != null)
             {
-                text_full.Text += item.set.Item1 + Environment.NewLine;
                 text_Set.Text = item.set.Item1;
             }
             if (item.character != null)
             {
-                text_full.Text += item.character.Item1 + Environment.NewLine;
                 text_character.Text = item.character.Item1;
             }
         }
@@ -193,10 +183,11 @@ namespace GenshinArtifactOCR
                         //    img.Save(Database.appDir + @"\images\GenshinArtifactImg " + timestamp + ".png");
                         Rectangle area = new Rectangle(0, 0, img.Width, img.Height);
                         Bitmap filtered = new Bitmap(img);
-                        filtered = ImageProcessing.getArtifactImg_WindowMode(filtered, area, out int[] rows, saveImages, out bool locked, out Rectangle typeMainArea, out Rectangle levelArea, out Rectangle subArea, out Rectangle setArea, out Rectangle charArea);
-                        InventoryItem item = ImageProcessing.getArtifacts(filtered, rows, saveImages, threadEngines[threadIndex], locked, typeMainArea, levelArea, subArea, setArea, charArea);
+                        filtered = ImageProcessing.getArtifactImg(filtered, area, out int[] rows, saveImages, out bool locked, out int rarity, out Rectangle typeMainArea, out Rectangle levelArea, out Rectangle subArea, out Rectangle setArea, out Rectangle charArea);
+                        
+                        InventoryItem item = ImageProcessing.getArtifacts(filtered, rows, saveImages, threadEngines[threadIndex], locked, rarity, typeMainArea, levelArea, subArea, setArea, charArea);
 
-                        if (item.piece == null || item.main == null || item.level == null || item.subs == null || item.subs.Count < 3 || (item.subs.Count < 4 && item.level.Item2 >= 4) || item.set == null)
+                        if (rarity != 5 || item.piece == null || item.main == null || item.level == null || item.subs == null || item.subs.Count < 3 || (item.subs.Count < 4 && item.level.Item2 >= 4) || item.set == null)
                         {
                             badResults.Enqueue(img);
                         } else
@@ -246,7 +237,7 @@ namespace GenshinArtifactOCR
                 {
                     //load current grid/scroll location
                     Bitmap img = ImageProcessing.CaptureScreenshot(saveImages, gridArea, true);
-                    List<Point> artifactLocations = ImageProcessing.getArtifactGrid_WindowMode(img, saveImages, gridOffset);
+                    List<Point> artifactLocations = ImageProcessing.getArtifactGrid(img, saveImages, gridOffset);
 
                     if (artifactLocations.Count == 0)
                     {
@@ -297,7 +288,7 @@ namespace GenshinArtifactOCR
                         sim.Mouse.VerticalScroll(-1);
                         System.Threading.Thread.Sleep(100);
                         img = ImageProcessing.CaptureScreenshot(saveImages, gridArea, true);
-                        artifactLocations = ImageProcessing.getArtifactGrid_WindowMode(img, saveImages, gridOffset);
+                        artifactLocations = ImageProcessing.getArtifactGrid(img, saveImages, gridOffset);
 
                         if (artifactLocations.Count == 0)
                         {
@@ -322,7 +313,7 @@ namespace GenshinArtifactOCR
                         }
                         System.Threading.Thread.Sleep(scrollSleepDuration);
                         img = ImageProcessing.CaptureScreenshot(saveImages, gridArea, true);
-                        artifactLocations = ImageProcessing.getArtifactGrid_WindowMode(img, saveImages, gridOffset);
+                        artifactLocations = ImageProcessing.getArtifactGrid(img, saveImages, gridOffset);
                     }
 
 
@@ -396,8 +387,10 @@ namespace GenshinArtifactOCR
                 {
                     Rectangle area = new Rectangle(0, 0, img.Width, img.Height);
                     Bitmap filtered = new Bitmap(img);
-                    filtered = ImageProcessing.getArtifactImg_WindowMode(filtered, area, out int[] rows, true, out bool locked, out Rectangle typeMainArea, out Rectangle levelArea, out Rectangle subArea, out Rectangle setArea, out Rectangle charArea);
-                    InventoryItem item = ImageProcessing.getArtifacts(filtered, rows, true, tessEngine, locked, typeMainArea, levelArea, subArea, setArea, charArea);
+                    string timestamp = DateTime.UtcNow.ToString("yyyy-MM-dd HH-mm-ssff");
+                    filtered.Save(Database.appDir + @"\images\GenshinArtifactImg " + timestamp + ".png");
+                    filtered = ImageProcessing.getArtifactImg(filtered, area, out int[] rows, true, out bool locked, out int rarity, out Rectangle typeMainArea, out Rectangle levelArea, out Rectangle subArea, out Rectangle setArea, out Rectangle charArea);
+                    InventoryItem item = ImageProcessing.getArtifacts(filtered, rows, true, tessEngine, locked, rarity, typeMainArea, levelArea, subArea, setArea, charArea);
                     AppendStatusText(item.ToString() + Environment.NewLine);
                 }
 
@@ -431,13 +424,8 @@ namespace GenshinArtifactOCR
 
 
             savedGameArea = ImageProcessing.findGameArea(img_Raw);
-            if (checkbox_inventorymode.Checked)
-            {
-                savedArtifactArea = ImageProcessing.findArtifactArea_WindowMode(img_Raw, savedGameArea);
-            } else
-            {
-                savedArtifactArea = ImageProcessing.findArtifactArea(img_Raw, savedGameArea);
-            }
+            savedArtifactArea = ImageProcessing.findArtifactArea(img_Raw, savedGameArea);
+
             if (savedArtifactArea.Width == 0 || savedArtifactArea.Height == 0)
             {
                 savedArtifactArea = savedGameArea;
@@ -461,7 +449,7 @@ namespace GenshinArtifactOCR
                 artifactImg.Save(Database.appDir + @"\images\GenshinArtifactArea " + timestamp + ".png");
             }
 
-            //List<Point> artifactLocations = ImageProcessing.getArtifactGrid_WindowMode(img_Raw, savedGameArea, savedArtifactArea, saveImages);
+            //List<Point> artifactLocations = ImageProcessing.getArtifactGrid(img_Raw, savedGameArea, savedArtifactArea, saveImages);
 
             if (savedArtifactArea.Width == 0 || savedArtifactArea.Height == 0)
             {
@@ -498,18 +486,11 @@ namespace GenshinArtifactOCR
 
 
             img_Filtered = new Bitmap(img_Raw);
-            bool artifactLocked = false;
             InventoryItem artifact;
-            if (checkbox_inventorymode.Checked)
-            {
-                img_Filtered = ImageProcessing.getArtifactImg_WindowMode(img_Filtered, savedArtifactArea, out filtered_rows, saveImages, out artifactLocked, out Rectangle typeMainArea, out Rectangle levelArea, out Rectangle subArea, out Rectangle setArea, out Rectangle charArea);
-                artifact = ImageProcessing.getArtifacts(img_Filtered, filtered_rows, saveImages, tessEngine, artifactLocked, typeMainArea, levelArea, subArea, setArea, charArea);
-            } else
-            {
-                img_Filtered = ImageProcessing.getArtifactImg(img_Filtered, savedArtifactArea, out filtered_rows, saveImages);
-                Rectangle tmpRect = new Rectangle(0, 0, img_Filtered.Width, img_Filtered.Height);
-                artifact = ImageProcessing.getArtifacts(img_Filtered, filtered_rows, saveImages, tessEngine, artifactLocked, tmpRect, tmpRect, tmpRect, tmpRect, tmpRect);
-            }
+
+            img_Filtered = ImageProcessing.getArtifactImg(img_Filtered, savedArtifactArea, out filtered_rows, saveImages, out bool locked, out int rarity, out Rectangle typeMainArea, out Rectangle levelArea, out Rectangle subArea, out Rectangle setArea, out Rectangle charArea);
+            artifact = ImageProcessing.getArtifacts(img_Filtered, filtered_rows, saveImages, tessEngine, locked, rarity, typeMainArea, levelArea, subArea, setArea, charArea);
+
 
             image_preview.Image = new Bitmap(img_Filtered);
             displayInventoryItem(artifact);

@@ -14,7 +14,7 @@ namespace GenshinArtifactOCR
 {
     class ImageProcessing
     {
-        public static List<Point> getArtifactGrid_WindowMode(Bitmap areaImg, bool saveImages, Point coordOffset)
+        public static List<Point> getArtifactGrid(Bitmap areaImg, bool saveImages, Point coordOffset)
         {
             //Rectangle area = new Rectangle(gameArea.X, gameArea.Y, artifactArea.X - gameArea.X, gameArea.Height);
             //Get relevant part of image
@@ -130,7 +130,7 @@ namespace GenshinArtifactOCR
         /// <param name="img">Full screenshot containing game</param>
         /// <param name="gameArea">Area of the screenshot containing only the game</param>
         /// <returns>Area of <paramref name="img"/> containing the artifact info</returns>
-        public static Rectangle findArtifactArea_WindowMode(Bitmap img, Rectangle gameArea)
+        public static Rectangle findArtifactArea(Bitmap img, Rectangle gameArea)
         {
             //Cut out relevant part of image
             gameArea = new Rectangle(gameArea.X + gameArea.Width / 2, gameArea.Y, gameArea.Width / 2, gameArea.Height);
@@ -209,81 +209,20 @@ namespace GenshinArtifactOCR
 
 
         /// <summary>
-        /// Find artifact area from an image of the character equipment
-        /// </summary>
-        /// <param name="img">Full screenshot containing game</param>
-        /// <param name="gameArea">Area of the screenshot containing only the game</param>
-        /// <returns>Area of <paramref name="img"/> containing the artifact info</returns>
-        public static Rectangle findArtifactArea(Bitmap img, Rectangle gameArea)
-        {
-            //Cut out relevant part of image
-            gameArea = new Rectangle(gameArea.X + gameArea.Width / 2, gameArea.Y, gameArea.Width / 2, gameArea.Height);
-            Bitmap areaImg = new Bitmap(gameArea.Width, gameArea.Height);
-            using (Graphics g = Graphics.FromImage(areaImg))
-            {
-                g.DrawImage(img, 0, 0, gameArea, GraphicsUnit.Pixel);
-            }
-
-            int[] cols = new int[gameArea.Width];
-
-            //prepare bytewise image processing
-            BitmapData imgData = areaImg.LockBits(new Rectangle(0, 0, gameArea.Width, gameArea.Height), ImageLockMode.ReadWrite, areaImg.PixelFormat);
-            int numBytes = Math.Abs(imgData.Stride) * imgData.Height;
-            byte[] imgBytes = new byte[numBytes];
-            Marshal.Copy(imgData.Scan0, imgBytes, 0, numBytes);
-            areaImg.UnlockBits(imgData);
-            int PixelSize = 4; //ARGB, reverse order
-
-            for (int i = 0; i < numBytes; i += PixelSize)
-            {
-                int x = (i / PixelSize) % gameArea.Width;
-                if (imgBytes[i + 1] > 220 || (imgBytes[i] > 160 && imgBytes[i + 1] > 160 && imgBytes[i + 2] > 160)) //look for green or white-ish text
-                {
-                    cols[x]++;
-                }
-            }
-
-            //Find artifact text columns
-            int edgewidth = 0;
-            //find right edge
-            while (cols[cols.Length - 1 - edgewidth] / (double)gameArea.Height < 0.01)
-                edgewidth++;
-            int rightmost = cols.Length - edgewidth * 2;
-            //find left edge
-            int leftmost = rightmost - edgewidth;
-            int misses = 0;
-            while (leftmost - misses > 0 && misses < edgewidth * 2)
-            {
-                if (cols[leftmost - misses] / (double)gameArea.Height > 0.05)
-                {
-                    leftmost -= misses + 1;
-                    misses = 0;
-                }
-                else
-                {
-                    misses++;
-                }
-            }
-            leftmost -= edgewidth / 2;
-
-            return new Rectangle(gameArea.Left + leftmost, gameArea.Top, rightmost - leftmost, gameArea.Height);
-        }
-
-
-        /// <summary>
         /// Extract and filter the artifact area from an image of the backpack
         /// </summary>
         /// <param name="img">Full screenshot containing game</param>
         /// <param name="area">Area containing the artifact info</param>
         /// <param name="rows">Filter results per row</param>
         /// <returns>Filtered image of the artifact area</returns>
-        public static Bitmap getArtifactImg_WindowMode(Bitmap img, Rectangle area, out int[] rows, bool saveImages, out bool locked, out Rectangle typeMainArea, out Rectangle levelArea, out Rectangle subArea, out Rectangle setArea, out Rectangle charArea)
+        public static Bitmap getArtifactImg(Bitmap img, Rectangle area, out int[] rows, bool saveImages, out bool locked, out int rarity, out Rectangle typeMainArea, out Rectangle levelArea, out Rectangle subArea, out Rectangle setArea, out Rectangle charArea)
         {
             typeMainArea = Rectangle.Empty;
             levelArea = Rectangle.Empty;
             subArea = Rectangle.Empty;
             setArea = Rectangle.Empty;
             charArea = Rectangle.Empty;
+            rarity = 0;
 
             locked = false;
             rows = new int[area.Height];
@@ -307,6 +246,7 @@ namespace GenshinArtifactOCR
             int sectionEnd = 0;
             int rightEdge = 0;
             int leftEdge = width - 1;
+            int line_rarity = 0;
             for (int i = 0; i < numBytes; i += PixelSize)
             {
                 int x = (i / PixelSize) % width;
@@ -332,6 +272,12 @@ namespace GenshinArtifactOCR
                 }
                 else
                 {
+                    if (section == 0 && line_rarity >= 0 && x < width/2 && (imgBytes[i] < 60 && imgBytes[i + 1] > 190 && imgBytes[i + 2] > 240) 
+                        && !(imgBytes[i + PixelSize] < 60 && imgBytes[i + PixelSize + 1] > 190 && imgBytes[i + PixelSize + 2] > 240)) 
+                    {
+                        //if section 0, look for yellow with non-yellow before
+                        line_rarity++;
+                    }
 
                     if ( section == 1 && imgBytes[i] < 150 && imgBytes[i + 1] > 120 && imgBytes[i + 2] > 200)
                     {
@@ -358,6 +304,17 @@ namespace GenshinArtifactOCR
 
                 if (x == 0)
                 {
+                    if (line_rarity > 0)
+                    {
+                        //set rarity on two consecutive identical results
+                        if (rarity == line_rarity)
+                            rarity = line_rarity;
+                        else 
+                        {
+                            rarity = line_rarity;
+                            line_rarity = -1;
+                        }
+                    }
                     if (section == 0)
                     {
                         //check if coming row is white-ish, if so move to section 1
@@ -409,61 +366,6 @@ namespace GenshinArtifactOCR
             string timestamp = DateTime.UtcNow.ToString("yyyy-MM-dd HH-mm-ssff");
             if (saveImages)
                 areaImg.Save(Database.appDir + @"\images\GenshinArtifactImgFiltered " + timestamp + ".png");
-            return areaImg;
-        }
-
-        /// <summary>
-        /// Extract and filter the artifact area from an image of the character equipment
-        /// </summary>
-        /// <param name="img">Full screenshot containing game</param>
-        /// <param name="area">Area containing the artifact info</param>
-        /// <param name="rows">Filter results per row</param>
-        /// <returns>Filtered image of the artifact area</returns>
-        public static Bitmap getArtifactImg(Bitmap img, Rectangle area, out int[] rows, bool saveImages)
-        {
-            rows = new int[area.Height];
-            //Get relevant part of image
-            Bitmap areaImg = new Bitmap(area.Width, area.Height);
-            using (Graphics g = Graphics.FromImage(areaImg))
-            {
-                g.DrawImage(img, 0, 0, area, GraphicsUnit.Pixel);
-            }
-            //Prepare bytewise image processing
-            BitmapData imgData = areaImg.LockBits(new Rectangle(0, 0, areaImg.Width, areaImg.Height), ImageLockMode.ReadWrite, areaImg.PixelFormat);
-            int numBytes = Math.Abs(imgData.Stride) * imgData.Height;
-            byte[] imgBytes = new byte[numBytes];
-            Marshal.Copy(imgData.Scan0, imgBytes, 0, numBytes);
-            int PixelSize = 4; //ARGB, reverse order
-
-            for (int i = 0; i < numBytes; i += PixelSize)
-            {
-                int x = (i / PixelSize) % areaImg.Width;
-                int y = (i / PixelSize - x) / areaImg.Width;
-                if (imgBytes[i + 1] > 220 || (imgBytes[i] > 160 && imgBytes[i + 1] > 160 && imgBytes[i + 2] > 160)) //look for green or white-ish text
-                {
-                    //Make Black
-                    imgBytes[i] = 0;
-                    imgBytes[i + 1] = 0;
-                    imgBytes[i + 2] = 0;
-                    imgBytes[i + 3] = 255;
-
-                    rows[y]++;
-                }
-                else
-                {
-                    //Make White
-                    imgBytes[i] = 255;
-                    imgBytes[i + 1] = 255;
-                    imgBytes[i + 2] = 255;
-                    imgBytes[i + 3] = 255;
-                }
-            }
-            Marshal.Copy(imgBytes, 0, imgData.Scan0, numBytes);
-            areaImg.UnlockBits(imgData);
-
-            string timestamp = DateTime.UtcNow.ToString("yyyy-MM-dd HH-mm-ssff");
-            if (saveImages)
-                areaImg.Save(Database.appDir + @"\images\GenshinArtifactArea " + timestamp + ".png");
             return areaImg;
         }
 
@@ -672,7 +574,7 @@ namespace GenshinArtifactOCR
         /// </summary>
         /// <param name="img">Image of artifact area, filtered</param>
         /// <param name="rows">Filter results per row</param>
-        public static InventoryItem getArtifacts(Bitmap img, int[] rows, bool saveImages, TesseractEngine tessEngine, bool locked, Rectangle typeMainArea, Rectangle levelArea, Rectangle subArea, Rectangle setArea, Rectangle charArea)
+        public static InventoryItem getArtifacts(Bitmap img, int[] rows, bool saveImages, TesseractEngine tessEngine, bool locked, int rarity, Rectangle typeMainArea, Rectangle levelArea, Rectangle subArea, Rectangle setArea, Rectangle charArea)
         {
             //get all potential text rows
             List<Tuple<int, int>> textRows = new List<Tuple<int, int>>();
@@ -695,6 +597,7 @@ namespace GenshinArtifactOCR
 
             InventoryItem foundArtifact = new InventoryItem();
             foundArtifact.locked = locked;
+            foundArtifact.rarity = rarity;
             i = 0;
             //Piece type
             while (i < textRows.Count && textRows[i].Item2 <= typeMainArea.Top)
