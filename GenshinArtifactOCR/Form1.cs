@@ -1,9 +1,11 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
@@ -208,7 +210,7 @@ namespace GenshinArtifactOCR
             }));
         }
 
-        private void runAuto(bool saveImages, int clickSleepDuration = 100, int scrollSleepDuration = 30)
+        private void runAuto(bool saveImages, int clickSleepDuration = 100, int scrollSleepDuration = 1500, int recheckSleepDuration = 300)
         {
             text_full.Text = "Starting auto-run. ALT TAB TO PAUSE/CANCEL" + Environment.NewLine + "If no artifact switching happens, you forgot to run as admin" + Environment.NewLine;
             autoRunning = true;
@@ -320,8 +322,10 @@ namespace GenshinArtifactOCR
                     firstRun = false;
 
                     //select and OCR each artifact in list
-                    foreach (Point p in artifactLocations)
+                    bool repeat = false;
+                    for (int i = 0; i < artifactLocations.Count; )
                     {
+                        Point p = artifactLocations[i];
                         while (pauseAuto)
                         {
                             if (hardCancelAuto)
@@ -353,14 +357,30 @@ namespace GenshinArtifactOCR
 
                         if (foundArtifactHashes.Contains(hash))
                         {
-                            running = false;
-                            continue;
+                            if (repeat)
+                            {
+                                running = false;
+                                Console.WriteLine("Duplicate at " + p.ToString());
+                                repeat = false;
+                                i++;
+                                continue;
+                            } else
+                            {
+                                repeat = true;
+                                Console.WriteLine("Rechecking at " + p.ToString());
+                                System.Threading.Thread.Sleep(recheckSleepDuration);
+                                continue;
+                            }
+
                         }
                         foundArtifactHashes.Add(hash);
 
                         //queue up processing of artifact
                         threadQueues[nextThread].Enqueue(artifactSC);
                         nextThread = (nextThread + 1) % ThreadCount;
+
+                        i++;
+                        repeat = false;
                     }
 
                 }
@@ -481,6 +501,7 @@ namespace GenshinArtifactOCR
             if (autoRunning)
             {
                 text_full.Text += "Ignored, auto currently running" + Environment.NewLine;
+                return;
             }
 
             if (checkbox_OCRcapture.Checked)
@@ -501,10 +522,10 @@ namespace GenshinArtifactOCR
 
             img_Filtered = ImageProcessing.getArtifactImg(img_Filtered, savedArtifactArea, out filtered_rows, saveImages, out bool locked, out int rarity, out Rectangle typeMainArea, out Rectangle levelArea, out Rectangle subArea, out Rectangle setArea, out Rectangle charArea);
             artifact = ImageProcessing.getArtifacts(img_Filtered, filtered_rows, saveImages, tessEngine, locked, rarity, typeMainArea, levelArea, subArea, setArea, charArea);
-
+            scannedItems.Add(artifact);
 
             image_preview.Image = new Bitmap(img_Filtered);
-            //displayInventoryItem(artifact);
+            displayInventoryItem(artifact);
         }
 
         private void button_auto_Click(object sender, EventArgs e)
@@ -513,6 +534,7 @@ namespace GenshinArtifactOCR
             if (autoRunning)
             {
                 text_full.Text += "Ignored, auto currently running" + Environment.NewLine;
+                return;
             }
             pauseAuto = false;
             softCancelAuto = false;
@@ -536,6 +558,27 @@ namespace GenshinArtifactOCR
         {
             text_full.Text += "Auto canceled" + Environment.NewLine;
             hardCancelAuto = true;
+        }
+
+        private void button_export_Click(object sender, EventArgs e)
+        {
+            if (autoRunning)
+            {
+                text_full.Text += "Ignored, auto currently running" + Environment.NewLine;
+                return;
+            }
+            string timestamp = DateTime.UtcNow.ToString("yyyy-MM-dd HH-mm-ssff");
+            JObject currData = InventoryItem.listToGOODArtifacts(scannedItems);
+            currData.Add("format", "GOOD");
+            currData.Add("version", 1);
+            currData.Add("source", "");
+            currData.Add("characters", new JArray());
+            currData.Add("weapons", new JArray());
+
+            string fileName = Database.appDir + @"\export" + timestamp + ".json";
+            File.WriteAllText(fileName, currData.ToString());
+            text_full.Text += "Exported to \"" + fileName + "\"";
+
         }
     }
 }

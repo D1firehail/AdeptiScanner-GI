@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 
 namespace GenshinArtifactOCR
@@ -74,6 +75,50 @@ namespace GenshinArtifactOCR
 
 
             return text;
+        }
+
+        public JObject toGOODArtifact()
+        {
+            JObject result = new JObject();
+
+            if (set != null)
+                result.Add("setKey", JToken.FromObject(set.Item2));
+            result.Add("rarity", JToken.FromObject(rarity));
+            if (level != null)
+                result.Add("level", JToken.FromObject(level.Item2));
+            if (piece != null)
+                result.Add("slotKey", JToken.FromObject(piece.Item2));
+            if (main != null)
+                result.Add("mainStatKey", JToken.FromObject(main.Item2));
+            if (subs != null)
+            {
+                JArray subsJArr = new JArray();
+                foreach(Tuple<string, string, double> sub in subs)
+                {
+                    JObject subJObj = new JObject();
+                    subJObj.Add("key", JToken.FromObject(sub.Item2));
+                    subJObj.Add("value", JToken.FromObject(sub.Item3));
+                    subsJArr.Add(subJObj);
+                }
+                result.Add("substats", subsJArr);
+            }
+            if (character != null)
+                result.Add("location", JToken.FromObject(character.Item2));
+
+            result.Add("lock", JToken.FromObject(locked));
+            return result;
+        }
+
+        public static JObject listToGOODArtifacts(List<InventoryItem> items)
+        {
+            JObject result = new JObject();
+            JArray artifactJArr = new JArray();
+            foreach (InventoryItem item in items)
+            {
+                artifactJArr.Add(item.toGOODArtifact());
+            }
+            result.Add("artifacts", artifactJArr);
+            return result;
         }
     }
 }

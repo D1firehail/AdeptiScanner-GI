@@ -60,6 +60,7 @@ namespace GenshinArtifactOCR
             this.button_softCancel = new System.Windows.Forms.Button();
             this.button_hardCancel = new System.Windows.Forms.Button();
             this.button_resume = new System.Windows.Forms.Button();
+            this.button_export = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.image_preview)).BeginInit();
             this.SuspendLayout();
             // 
@@ -378,12 +379,24 @@ namespace GenshinArtifactOCR
             this.button_resume.UseVisualStyleBackColor = true;
             this.button_resume.Click += new System.EventHandler(this.button_resume_Click);
             // 
+            // button_export
+            // 
+            this.button_export.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.button_export.Location = new System.Drawing.Point(493, 633);
+            this.button_export.Name = "button_export";
+            this.button_export.Size = new System.Drawing.Size(75, 23);
+            this.button_export.TabIndex = 34;
+            this.button_export.Text = "Export";
+            this.button_export.UseVisualStyleBackColor = true;
+            this.button_export.Click += new System.EventHandler(this.button_export_Click);
+            // 
             // GenshinArtifactOCR
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.LightGray;
             this.ClientSize = new System.Drawing.Size(784, 668);
+            this.Controls.Add(this.button_export);
             this.Controls.Add(this.button_resume);
             this.Controls.Add(this.button_hardCancel);
             this.Controls.Add(this.button_softCancel);
@@ -457,6 +470,7 @@ namespace GenshinArtifactOCR
         private System.Windows.Forms.Button button_softCancel;
         private System.Windows.Forms.Button button_hardCancel;
         private System.Windows.Forms.Button button_resume;
+        private System.Windows.Forms.Button button_export;
     }
 }
 
