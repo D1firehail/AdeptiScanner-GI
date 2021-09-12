@@ -246,7 +246,7 @@ namespace GenshinArtifactOCR
         public static void GenerateFilters()
         {
             //Main stat filter
-            JObject allJson = JsonConvert.DeserializeObject<JObject>(File.ReadAllText(appDir + @"\filterdata\ArtifactInfo.json"));
+            JObject allJson = JsonConvert.DeserializeObject<JObject>(File.ReadAllText(appDir + @"\ArtifactInfo.json"));
             foreach (KeyValuePair<string, JToken> entry in allJson)
             {
                 JArray entry_arr = entry.Value.ToObject<JArray>();

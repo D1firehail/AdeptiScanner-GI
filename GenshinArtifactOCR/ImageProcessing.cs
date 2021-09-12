@@ -534,7 +534,7 @@ namespace GenshinArtifactOCR
         public static string OCRRow(Bitmap img, int start, int stop, List<string> validText, out int index, out int dist, out string rawText, string prevRaw, bool saveImages, TesseractEngine tessEngine)
         {
 
-            tessEngine.SetVariable("tessedit_char_whitelist", @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ9876543210+%,:() ");
+            //tessEngine.SetVariable("tessedit_char_whitelist", @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ9876543210+%,:() ");
             //Copy relevant part of image
             int height = stop - start;
             Bitmap scanArea = new Bitmap(img.Width, height);

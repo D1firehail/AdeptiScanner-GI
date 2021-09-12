@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -48,7 +49,7 @@ namespace GenshinArtifactOCR
         {
             InitializeComponent();
             Activated += eventGotFocus;
-            tessEngine = new TesseractEngine(Database.appDir + @"/tessdata", "en")
+            tessEngine = new TesseractEngine(Database.appDir + @"/tessdata", "genshin")
             {
                 DefaultPageSegMode = PageSegMode.SingleLine
             };
@@ -58,7 +59,7 @@ namespace GenshinArtifactOCR
             {
                 threadRunning[i] = false;
                 threadQueues[i] = new ConcurrentQueue<Bitmap>();
-                threadEngines[i] = new TesseractEngine(Database.appDir + @"/tessdata", "en")
+                threadEngines[i] = new TesseractEngine(Database.appDir + @"/tessdata", "genshin")
                 {
                     DefaultPageSegMode = PageSegMode.SingleLine
                 };
@@ -568,12 +569,22 @@ namespace GenshinArtifactOCR
                 return;
             }
             string timestamp = DateTime.UtcNow.ToString("yyyy-MM-dd HH-mm-ssff");
-            JObject currData = InventoryItem.listToGOODArtifacts(scannedItems);
-            currData.Add("format", "GOOD");
-            currData.Add("version", 1);
-            currData.Add("source", "");
-            currData.Add("characters", new JArray());
-            currData.Add("weapons", new JArray());
+            int minLevel = checkbox_IgnoreUnleveled.Checked ? 1 : 0;
+            JObject currData = InventoryItem.listToGOODArtifacts(scannedItems, minLevel);
+            if (checkbox_exportTemplate.Checked)
+            {
+                JObject template = JsonConvert.DeserializeObject<JObject>(File.ReadAllText(Database.appDir + @"\ExportTemplate.json"));
+                template.Remove("artifacts");
+                template.Add("artifacts", currData["artifacts"]);
+                currData = template;
+            } else
+            {
+                currData.Add("format", "GOOD");
+                currData.Add("version", 1);
+                currData.Add("source", "");
+                currData.Add("characters", new JArray());
+                currData.Add("weapons", new JArray());
+            }
 
             string fileName = Database.appDir + @"\export" + timestamp + ".json";
             File.WriteAllText(fileName, currData.ToString());

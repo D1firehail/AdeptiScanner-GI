@@ -61,6 +61,8 @@ namespace GenshinArtifactOCR
             this.button_hardCancel = new System.Windows.Forms.Button();
             this.button_resume = new System.Windows.Forms.Button();
             this.button_export = new System.Windows.Forms.Button();
+            this.checkbox_exportTemplate = new System.Windows.Forms.CheckBox();
+            this.checkbox_IgnoreUnleveled = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.image_preview)).BeginInit();
             this.SuspendLayout();
             // 
@@ -390,12 +392,40 @@ namespace GenshinArtifactOCR
             this.button_export.UseVisualStyleBackColor = true;
             this.button_export.Click += new System.EventHandler(this.button_export_Click);
             // 
+            // checkbox_exportTemplate
+            // 
+            this.checkbox_exportTemplate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.checkbox_exportTemplate.AutoSize = true;
+            this.checkbox_exportTemplate.Checked = true;
+            this.checkbox_exportTemplate.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkbox_exportTemplate.Location = new System.Drawing.Point(574, 637);
+            this.checkbox_exportTemplate.Name = "checkbox_exportTemplate";
+            this.checkbox_exportTemplate.Size = new System.Drawing.Size(88, 17);
+            this.checkbox_exportTemplate.TabIndex = 35;
+            this.checkbox_exportTemplate.Text = "Use template";
+            this.checkbox_exportTemplate.UseVisualStyleBackColor = true;
+            // 
+            // checkbox_IgnoreUnleveled
+            // 
+            this.checkbox_IgnoreUnleveled.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.checkbox_IgnoreUnleveled.AutoSize = true;
+            this.checkbox_IgnoreUnleveled.Checked = true;
+            this.checkbox_IgnoreUnleveled.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkbox_IgnoreUnleveled.Location = new System.Drawing.Point(661, 637);
+            this.checkbox_IgnoreUnleveled.Name = "checkbox_IgnoreUnleveled";
+            this.checkbox_IgnoreUnleveled.Size = new System.Drawing.Size(113, 17);
+            this.checkbox_IgnoreUnleveled.TabIndex = 36;
+            this.checkbox_IgnoreUnleveled.Text = "Exclude unleveled";
+            this.checkbox_IgnoreUnleveled.UseVisualStyleBackColor = true;
+            // 
             // GenshinArtifactOCR
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.LightGray;
             this.ClientSize = new System.Drawing.Size(784, 668);
+            this.Controls.Add(this.checkbox_IgnoreUnleveled);
+            this.Controls.Add(this.checkbox_exportTemplate);
             this.Controls.Add(this.button_export);
             this.Controls.Add(this.button_resume);
             this.Controls.Add(this.button_hardCancel);
@@ -471,6 +501,8 @@ namespace GenshinArtifactOCR
         private System.Windows.Forms.Button button_hardCancel;
         private System.Windows.Forms.Button button_resume;
         private System.Windows.Forms.Button button_export;
+        private System.Windows.Forms.CheckBox checkbox_exportTemplate;
+        private System.Windows.Forms.CheckBox checkbox_IgnoreUnleveled;
     }
 }
 
