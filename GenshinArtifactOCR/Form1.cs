@@ -82,7 +82,7 @@ namespace GenshinArtifactOCR
             if (!pauseAuto && autoRunning)
             {
                 pauseAuto = true;
-                text_full.Text += "Auto scanning paused, select action" + Environment.NewLine;
+                text_full.AppendText("Auto scanning paused, select action" + Environment.NewLine);
                 button_hardCancel.Enabled = true;
                 button_softCancel.Enabled = true;
                 button_resume.Enabled = true;
@@ -96,7 +96,7 @@ namespace GenshinArtifactOCR
                 this.Invoke(new Action<string, bool>(AppendStatusText), new object[] { value, setButtons });
                 return;
             }
-            text_full.Text += value;
+            text_full.AppendText(value);
             if (setButtons)
             {
                 btn_capture.Enabled = true;
@@ -468,7 +468,7 @@ namespace GenshinArtifactOCR
             bool saveImages = checkbox_saveImages.Checked;
             if (autoRunning)
             {
-                text_full.Text += "Ignored, auto currently running" + Environment.NewLine;
+                text_full.AppendText("Ignored, auto currently running" + Environment.NewLine);
             }
             resetTextBoxes();
             if (Keyboard.IsKeyDown(Key.LeftShift))
@@ -522,7 +522,7 @@ namespace GenshinArtifactOCR
                 g.DrawImage(img_Raw, 0, 0, savedArtifactArea, GraphicsUnit.Pixel);
             }
 
-            text_full.Text += "Items found: " + scannedItems.Count + Environment.NewLine;
+            text_full.AppendText("Items found: " + scannedItems.Count + Environment.NewLine);
         }
 
         private void btn_OCR_Click(object sender, EventArgs e)
@@ -530,7 +530,7 @@ namespace GenshinArtifactOCR
             bool saveImages = checkbox_saveImages.Checked;
             if (autoRunning)
             {
-                text_full.Text += "Ignored, auto currently running" + Environment.NewLine;
+                text_full.AppendText("Ignored, auto currently running" + Environment.NewLine);
                 return;
             }
 
@@ -563,7 +563,7 @@ namespace GenshinArtifactOCR
             bool saveImages = checkbox_saveImages.Checked;
             if (autoRunning)
             {
-                text_full.Text += "Ignored, auto currently running" + Environment.NewLine;
+                text_full.AppendText("Ignored, auto currently running" + Environment.NewLine);
                 return;
             }
             btn_OCR.Enabled = false;
@@ -577,19 +577,19 @@ namespace GenshinArtifactOCR
 
         private void button_resume_Click(object sender, EventArgs e)
         {
-            text_full.Text += "Resuming auto" + Environment.NewLine;
+            text_full.AppendText("Resuming auto" + Environment.NewLine);
             pauseAuto = false;
         }
 
         private void button_softCancel_Click(object sender, EventArgs e)
         {
-            text_full.Text += "New scanning canceled, awaiting results" + Environment.NewLine;
+            text_full.AppendText("New scanning canceled, awaiting results" + Environment.NewLine);
             softCancelAuto = true;
         }
 
         private void button_hardCancel_Click(object sender, EventArgs e)
         {
-            text_full.Text += "Auto canceled" + Environment.NewLine;
+            text_full.AppendText("Auto canceled" + Environment.NewLine);
             hardCancelAuto = true;
         }
 
@@ -597,7 +597,7 @@ namespace GenshinArtifactOCR
         {
             if (autoRunning)
             {
-                text_full.Text += "Ignored, auto currently running" + Environment.NewLine;
+                text_full.AppendText("Ignored, auto currently running" + Environment.NewLine);
                 return;
             }
             string timestamp = DateTime.UtcNow.ToString("yyyy-MM-dd HH-mm-ssff");
@@ -620,7 +620,7 @@ namespace GenshinArtifactOCR
 
             string fileName = Database.appDir + @"\export" + timestamp + ".json";
             File.WriteAllText(fileName, currData.ToString());
-            text_full.Text += "Exported to \"" + fileName + "\"" + Environment.NewLine;
+            text_full.AppendText("Exported to \"" + fileName + "\"" + Environment.NewLine);
 
         }
     }
