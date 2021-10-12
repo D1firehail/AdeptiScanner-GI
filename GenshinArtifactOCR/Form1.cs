@@ -79,21 +79,33 @@ namespace GenshinArtifactOCR
 
         private void eventGotFocus(object sender, EventArgs e)
         {
-            if (!pauseAuto)
+            if (!pauseAuto && autoRunning)
             {
                 pauseAuto = true;
                 text_full.Text += "Auto scanning paused, select action" + Environment.NewLine;
+                button_hardCancel.Enabled = true;
+                button_softCancel.Enabled = true;
+                button_resume.Enabled = true;
             }
         }
 
-        public void AppendStatusText(string value)
+        public void AppendStatusText(string value, bool setButtons)
         {
             if (InvokeRequired)
             {
-                this.Invoke(new Action<string>(AppendStatusText), new object[] { value });
+                this.Invoke(new Action<string, bool>(AppendStatusText), new object[] { value, setButtons });
                 return;
             }
             text_full.Text += value;
+            if (setButtons)
+            {
+                btn_capture.Enabled = true;
+                btn_OCR.Enabled = true;
+                button_auto.Enabled = true;
+                button_hardCancel.Enabled = false;
+                button_softCancel.Enabled = false;
+                button_resume.Enabled = false;
+            }
         }
 
 
@@ -116,6 +128,7 @@ namespace GenshinArtifactOCR
             text_full.Text = "";
             text_Set.Text = "";
             text_Level.Text = "";
+            text_locked.Text = "";
             text_Type.Text = "";
             text_statMain.Text = "";
             text_statSub1.Text = "";
@@ -276,6 +289,7 @@ namespace GenshinArtifactOCR
                         {
                             if (hardCancelAuto)
                             {
+                                AppendStatusText("", true);
                                 autoRunning = false;
                                 return;
                             }
@@ -331,8 +345,16 @@ namespace GenshinArtifactOCR
                         {
                             if (hardCancelAuto)
                             {
+                                AppendStatusText("", true);
                                 autoRunning = false;
                                 return;
+                            }
+
+                            if (softCancelAuto)
+                            {
+                                running = false;
+                                pauseAuto = false;
+                                goto soft_cancel_pos;
                             }
                             System.Threading.Thread.Sleep(1000);
                         }
@@ -360,6 +382,10 @@ namespace GenshinArtifactOCR
                         {
                             if (repeat)
                             {
+                                if (running)
+                                {
+                                    AppendStatusText("Duplicate artifact found, stopping after this screen", false);
+                                }
                                 running = false;
                                 Console.WriteLine("Duplicate at " + p.ToString());
                                 repeat = false;
@@ -392,13 +418,14 @@ namespace GenshinArtifactOCR
 
 
                 AppendStatusText("Scanning complete, awaiting results" + Environment.NewLine
-                    + "Time elapsed: " + runtime.ElapsedMilliseconds + "ms" + Environment.NewLine);
+                    + "Time elapsed: " + runtime.ElapsedMilliseconds + "ms" + Environment.NewLine, false);
                 for (int i = 0; i < ThreadCount; i++)
                 {
                     while (threadRunning[i] || pauseAuto)
                     {
                         if (hardCancelAuto)
                         {
+                            AppendStatusText("", true);
                             autoRunning = false;
                             return;
                         }
@@ -413,7 +440,7 @@ namespace GenshinArtifactOCR
 
                 AppendStatusText("Auto finished" + Environment.NewLine
                     + " Good results: " + scannedItems.Count + ", Bad results: " + badResults.Count + Environment.NewLine
-                    + "Time elapsed: " + runtime.ElapsedMilliseconds + "ms" + Environment.NewLine + Environment.NewLine);
+                    + "Time elapsed: " + runtime.ElapsedMilliseconds + "ms" + Environment.NewLine + Environment.NewLine, false);
 
                 while ( badResults.TryDequeue(out Bitmap img))
                 {
@@ -423,15 +450,13 @@ namespace GenshinArtifactOCR
                     filtered.Save(Database.appDir + @"\images\GenshinArtifactImg " + timestamp + ".png");
                     filtered = ImageProcessing.getArtifactImg(filtered, area, out int[] rows, true, out bool locked, out int rarity, out Rectangle typeMainArea, out Rectangle levelArea, out Rectangle subArea, out Rectangle setArea, out Rectangle charArea);
                     InventoryItem item = ImageProcessing.getArtifacts(filtered, rows, true, tessEngine, locked, rarity, typeMainArea, levelArea, subArea, setArea, charArea);
-                    AppendStatusText(item.ToString() + Environment.NewLine);
+                    AppendStatusText(item.ToString() + Environment.NewLine, false);
                 }
 
 
                 runtime.Stop();
                 AppendStatusText("All bad results displayed" + Environment.NewLine
-                    + "Time elapsed: " + runtime.ElapsedMilliseconds + "ms" + Environment.NewLine);
-
-
+                    + "Time elapsed: " + runtime.ElapsedMilliseconds + "ms" + Environment.NewLine, true);
                 autoRunning = false;
             }));
         }
@@ -462,6 +487,10 @@ namespace GenshinArtifactOCR
             {
                 savedArtifactArea = savedGameArea;
                 image_preview.Image = new Bitmap(img_Raw);
+            } else
+            {
+                btn_OCR.Enabled = true;
+                button_auto.Enabled = true;
             }
 
             string timestamp = DateTime.UtcNow.ToString("yyyy-MM-dd HH-mm-ssff");
@@ -537,6 +566,9 @@ namespace GenshinArtifactOCR
                 text_full.Text += "Ignored, auto currently running" + Environment.NewLine;
                 return;
             }
+            btn_OCR.Enabled = false;
+            btn_capture.Enabled = false;
+            button_auto.Enabled = false;
             pauseAuto = false;
             softCancelAuto = false;
             hardCancelAuto = false;
@@ -588,7 +620,7 @@ namespace GenshinArtifactOCR
 
             string fileName = Database.appDir + @"\export" + timestamp + ".json";
             File.WriteAllText(fileName, currData.ToString());
-            text_full.Text += "Exported to \"" + fileName + "\"";
+            text_full.Text += "Exported to \"" + fileName + "\"" + Environment.NewLine;
 
         }
     }

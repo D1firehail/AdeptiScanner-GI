@@ -104,6 +104,8 @@ namespace GenshinArtifactOCR
             }
             if (character != null)
                 result.Add("location", JToken.FromObject(character.Item2));
+            else
+                result.Add("location", JToken.FromObject(""));
 
             result.Add("lock", JToken.FromObject(locked));
             return result;

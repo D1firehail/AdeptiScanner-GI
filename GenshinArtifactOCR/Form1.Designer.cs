@@ -226,6 +226,7 @@ namespace GenshinArtifactOCR
             // btn_OCR
             // 
             this.btn_OCR.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btn_OCR.Enabled = false;
             this.btn_OCR.Location = new System.Drawing.Point(574, 576);
             this.btn_OCR.Name = "btn_OCR";
             this.btn_OCR.Size = new System.Drawing.Size(75, 23);
@@ -321,6 +322,7 @@ namespace GenshinArtifactOCR
             // button_auto
             // 
             this.button_auto.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.button_auto.Enabled = false;
             this.button_auto.Location = new System.Drawing.Point(655, 576);
             this.button_auto.Name = "button_auto";
             this.button_auto.Size = new System.Drawing.Size(75, 23);
@@ -351,6 +353,7 @@ namespace GenshinArtifactOCR
             // button_softCancel
             // 
             this.button_softCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.button_softCancel.Enabled = false;
             this.button_softCancel.Location = new System.Drawing.Point(574, 605);
             this.button_softCancel.Name = "button_softCancel";
             this.button_softCancel.Size = new System.Drawing.Size(75, 23);
@@ -362,6 +365,7 @@ namespace GenshinArtifactOCR
             // button_hardCancel
             // 
             this.button_hardCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.button_hardCancel.Enabled = false;
             this.button_hardCancel.Location = new System.Drawing.Point(655, 605);
             this.button_hardCancel.Name = "button_hardCancel";
             this.button_hardCancel.Size = new System.Drawing.Size(75, 23);
@@ -373,6 +377,7 @@ namespace GenshinArtifactOCR
             // button_resume
             // 
             this.button_resume.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.button_resume.Enabled = false;
             this.button_resume.Location = new System.Drawing.Point(493, 605);
             this.button_resume.Name = "button_resume";
             this.button_resume.Size = new System.Drawing.Size(75, 23);
