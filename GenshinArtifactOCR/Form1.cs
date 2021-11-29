@@ -49,10 +49,19 @@ namespace GenshinArtifactOCR
         {
             InitializeComponent();
             Activated += eventGotFocus;
-            tessEngine = new TesseractEngine(Database.appDir + @"/tessdata", "genshin")
+            try
             {
-                DefaultPageSegMode = PageSegMode.SingleLine
-            };
+                tessEngine = new TesseractEngine(Database.appDir + @"/tessdata", "genshin")
+                {
+                    DefaultPageSegMode = PageSegMode.SingleLine
+                };
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("Error trying to access Tessdata file" + Environment.NewLine + "Exact error:" + Environment.NewLine + e.Message,
+                    "Scanner could not start", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Environment.Exit(-1);
+            }
 
             //worker thread stuff
             for (int i = 0; i < ThreadCount; i++)
@@ -606,7 +615,13 @@ namespace GenshinArtifactOCR
             string timestamp = DateTime.UtcNow.ToString("yyyy-MM-dd HH-mm-ssff");
             int minLevel = checkbox_IgnoreUnleveled.Checked ? 1 : 0;
             JObject currData = InventoryItem.listToGOODArtifacts(scannedItems, minLevel);
-            if (checkbox_exportTemplate.Checked)
+            bool useTemplate = checkbox_exportTemplate.Checked;
+            if (useTemplate && !File.Exists(Database.appDir + @"\ExportTemplate.json"))
+            {
+                MessageBox.Show("No export template found, exporting without one", "No export template found", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                useTemplate = false;
+            }
+            if (useTemplate)
             {
                 JObject template = JsonConvert.DeserializeObject<JObject>(File.ReadAllText(Database.appDir + @"\ExportTemplate.json"));
                 template.Remove("artifacts");

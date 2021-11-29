@@ -4,13 +4,14 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
+using System.Windows.Forms;
 
 namespace GenshinArtifactOCR
 {
     class Database
     {
         private static System.Globalization.CultureInfo culture = new System.Globalization.CultureInfo("en-GB", false);
-        public static string appDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\GenshinArtifactOCR";
+        public static string appDir = Application.StartupPath + @"\ScannerFiles";
         //These get filled on startup by other file
         public static List<string> Pieces = new List<string>();
         public static List<string> MainStats = new List<string>();
@@ -246,7 +247,17 @@ namespace GenshinArtifactOCR
         public static void GenerateFilters()
         {
             //Main stat filter
-            JObject allJson = JsonConvert.DeserializeObject<JObject>(File.ReadAllText(appDir + @"\ArtifactInfo.json"));
+            JObject allJson = new JObject();
+            try
+            {
+                allJson = JsonConvert.DeserializeObject<JObject>(File.ReadAllText(appDir + @"\ArtifactInfo.json"));
+            } 
+            catch (Exception e)
+            {
+                MessageBox.Show("Error trying to access ArtifactInfo file" + Environment.NewLine + "Exact error:" + Environment.NewLine + e.Message,
+                    "Scanner could not start", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Environment.Exit(-1);
+            }
             foreach (KeyValuePair<string, JToken> entry in allJson)
             {
                 JArray entry_arr = entry.Value.ToObject<JArray>();
