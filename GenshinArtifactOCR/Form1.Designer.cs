@@ -63,6 +63,8 @@ namespace GenshinArtifactOCR
             this.button_export = new System.Windows.Forms.Button();
             this.checkbox_exportTemplate = new System.Windows.Forms.CheckBox();
             this.checkbox_IgnoreUnleveled = new System.Windows.Forms.CheckBox();
+            this.label_traveler = new System.Windows.Forms.Label();
+            this.text_traveler = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.image_preview)).BeginInit();
             this.SuspendLayout();
             // 
@@ -244,7 +246,7 @@ namespace GenshinArtifactOCR
             this.text_full.Name = "text_full";
             this.text_full.ReadOnly = true;
             this.text_full.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.text_full.Size = new System.Drawing.Size(279, 292);
+            this.text_full.Size = new System.Drawing.Size(279, 275);
             this.text_full.TabIndex = 19;
             // 
             // label_full
@@ -282,7 +284,7 @@ namespace GenshinArtifactOCR
             this.checkbox_OCRcapture.AutoSize = true;
             this.checkbox_OCRcapture.Checked = true;
             this.checkbox_OCRcapture.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkbox_OCRcapture.Location = new System.Drawing.Point(493, 544);
+            this.checkbox_OCRcapture.Location = new System.Drawing.Point(493, 527);
             this.checkbox_OCRcapture.Name = "checkbox_OCRcapture";
             this.checkbox_OCRcapture.Size = new System.Drawing.Size(93, 17);
             this.checkbox_OCRcapture.TabIndex = 23;
@@ -293,7 +295,7 @@ namespace GenshinArtifactOCR
             // 
             this.checkbox_saveImages.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.checkbox_saveImages.AutoSize = true;
-            this.checkbox_saveImages.Location = new System.Drawing.Point(622, 544);
+            this.checkbox_saveImages.Location = new System.Drawing.Point(622, 527);
             this.checkbox_saveImages.Name = "checkbox_saveImages";
             this.checkbox_saveImages.Size = new System.Drawing.Size(87, 17);
             this.checkbox_saveImages.TabIndex = 25;
@@ -423,12 +425,32 @@ namespace GenshinArtifactOCR
             this.checkbox_IgnoreUnleveled.Text = "Exclude unleveled";
             this.checkbox_IgnoreUnleveled.UseVisualStyleBackColor = true;
             // 
+            // label_traveler
+            // 
+            this.label_traveler.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.label_traveler.AutoSize = true;
+            this.label_traveler.Location = new System.Drawing.Point(490, 553);
+            this.label_traveler.Name = "label_traveler";
+            this.label_traveler.Size = new System.Drawing.Size(80, 13);
+            this.label_traveler.TabIndex = 38;
+            this.label_traveler.Text = "Traveler Name:";
+            // 
+            // text_traveler
+            // 
+            this.text_traveler.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.text_traveler.Location = new System.Drawing.Point(574, 550);
+            this.text_traveler.Name = "text_traveler";
+            this.text_traveler.Size = new System.Drawing.Size(200, 20);
+            this.text_traveler.TabIndex = 37;
+            // 
             // GenshinArtifactOCR
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.LightGray;
             this.ClientSize = new System.Drawing.Size(784, 668);
+            this.Controls.Add(this.label_traveler);
+            this.Controls.Add(this.text_traveler);
             this.Controls.Add(this.checkbox_IgnoreUnleveled);
             this.Controls.Add(this.checkbox_exportTemplate);
             this.Controls.Add(this.button_export);
@@ -508,6 +530,8 @@ namespace GenshinArtifactOCR
         private System.Windows.Forms.Button button_export;
         private System.Windows.Forms.CheckBox checkbox_exportTemplate;
         private System.Windows.Forms.CheckBox checkbox_IgnoreUnleveled;
+        private System.Windows.Forms.Label label_traveler;
+        private System.Windows.Forms.TextBox text_traveler;
     }
 }
 

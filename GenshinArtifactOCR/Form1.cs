@@ -534,6 +534,8 @@ namespace GenshinArtifactOCR
                 return;
             }
 
+            Database.SetTravelerName(text_traveler.Text);
+
             if (checkbox_OCRcapture.Checked)
             {
                 if (Keyboard.IsKeyDown(Key.LeftShift))
@@ -566,6 +568,7 @@ namespace GenshinArtifactOCR
                 text_full.AppendText("Ignored, auto currently running" + Environment.NewLine);
                 return;
             }
+            Database.SetTravelerName(text_traveler.Text);
             btn_OCR.Enabled = false;
             btn_capture.Enabled = false;
             button_auto.Enabled = false;
@@ -614,8 +617,8 @@ namespace GenshinArtifactOCR
                 currData.Add("format", "GOOD");
                 currData.Add("version", 1);
                 currData.Add("source", "");
-                currData.Add("characters", new JArray());
-                currData.Add("weapons", new JArray());
+                //currData.Add("characters", new JArray());
+                //currData.Add("weapons", new JArray());
             }
 
             string fileName = Database.appDir + @"\export" + timestamp + ".json";

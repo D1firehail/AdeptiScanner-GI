@@ -286,5 +286,21 @@ namespace GenshinArtifactOCR
                 Levels_trans.Add(Tuple.Create(text, statValue));
             }
         }
+
+        public static void SetTravelerName(string name)
+        {
+            for (int i = 0; i < Characters_trans.Count; i++)
+            {
+                if ( Characters_trans[i].Item2 == "Traveler")
+                {
+                    Characters_trans.RemoveAt(i);
+                    Characters_trans.Insert(i, Tuple.Create("Equipped: " + name, "Traveler"));
+                    Characters.RemoveAt(i);
+                    Characters.Insert(i, "Equipped: " + name);
+                    break;
+                }
+            }
+        }
     }
+
 }
