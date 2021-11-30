@@ -483,14 +483,17 @@ namespace GenshinArtifactOCR
             if (Keyboard.IsKeyDown(Key.LeftShift))
             {
                 img_Raw = ImageProcessing.LoadScreenshot();
+                savedGameArea = new Rectangle(0, 0, img_Raw.Width, img_Raw.Height);
+                savedArtifactArea = new Rectangle(0, 0, img_Raw.Width, img_Raw.Height);
             } else
             {
                 img_Raw = ImageProcessing.CaptureScreenshot(saveImages, Rectangle.Empty);
+                savedGameArea = ImageProcessing.findGameArea(img_Raw);
+                savedArtifactArea = ImageProcessing.findArtifactArea(img_Raw, savedGameArea);
             }
 
 
-            savedGameArea = ImageProcessing.findGameArea(img_Raw);
-            savedArtifactArea = ImageProcessing.findArtifactArea(img_Raw, savedGameArea);
+
 
             if (savedArtifactArea.Width == 0 || savedArtifactArea.Height == 0)
             {
@@ -550,10 +553,14 @@ namespace GenshinArtifactOCR
                 if (Keyboard.IsKeyDown(Key.LeftShift))
                 {
                     img_Raw = ImageProcessing.LoadScreenshot();
+                    savedGameArea = new Rectangle(0, 0, img_Raw.Width, img_Raw.Height);
+                    savedArtifactArea = new Rectangle(0, 0, img_Raw.Width, img_Raw.Height);
                 }
                 else
                 {
                     img_Raw = ImageProcessing.CaptureScreenshot(saveImages, Rectangle.Empty);
+                    savedGameArea = ImageProcessing.findGameArea(img_Raw);
+                    savedArtifactArea = ImageProcessing.findArtifactArea(img_Raw, savedGameArea);
                 }
             }
 
