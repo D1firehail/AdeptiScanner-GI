@@ -230,6 +230,7 @@
 				"Sets": [
 					{ "name": { "Resolution of Sojourner": "ResolutionOfSojourner" } },
 					{ "name": { "Tiny Miracle": "TinyMiracle" } },
+					{ "name": { "Berserker": "Berserker" } },
 					{ "name": { "Instructor": "Instructor" } },
 					{ "name": { "The Exile": "TheExile" } },
 					{ "name": { "Defender's Will'": "DefendersWill" } },
@@ -364,6 +365,7 @@
 					{ "name": { "Traveling Doctor": "TravelingDoctor" } },
 					{ "name": { "Resolution of Sojourner": "ResolutionOfSojourner" } },
 					{ "name": { "Tiny Miracle": "TinyMiracle" } },
+					{ "name": { "Berserker": "Berserker" } },
 					{ "name": { "Instructor": "Instructor" } },
 					{ "name": { "The Exile": "TheExile" } },
 					{ "name": { "Defender's Will'": "DefendersWill" } },

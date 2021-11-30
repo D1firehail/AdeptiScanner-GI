@@ -212,7 +212,7 @@ namespace GenshinArtifactOCR
 
                         InventoryItem item = ImageProcessing.getArtifacts(filtered, rows, saveImages, threadEngines[threadIndex], locked, rarity, typeMainArea, levelArea, subArea, setArea, charArea);
 
-                        if (rarity != 5 || item.piece == null || item.main == null || item.level == null || item.subs == null || item.subs.Count < 3 || (item.subs.Count < 4 && item.level.Item2 >= 4) || item.set == null)
+                        if (Database.artifactInvalid(rarity, item))
                         {
                             badResults.Enqueue(img);
                         }
@@ -529,8 +529,6 @@ namespace GenshinArtifactOCR
                 artifactImg.Save(Database.appDir + @"\images\GenshinArtifactArea " + timestamp + ".png");
             }
 
-            //List<Point> artifactLocations = ImageProcessing.getArtifactGrid(img_Raw, savedGameArea, savedArtifactArea, saveImages);
-
             if (savedArtifactArea.Width == 0 || savedArtifactArea.Height == 0)
             {
                 image_preview.Image = new Bitmap(img_Raw);
@@ -540,8 +538,6 @@ namespace GenshinArtifactOCR
             {
                 g.DrawImage(img_Raw, 0, 0, savedArtifactArea, GraphicsUnit.Pixel);
             }
-
-            text_full.AppendText("Items found: " + scannedItems.Count + Environment.NewLine);
         }
 
         private void btn_OCR_Click(object sender, EventArgs e)
@@ -576,10 +572,18 @@ namespace GenshinArtifactOCR
 
             img_Filtered = ImageProcessing.getArtifactImg(img_Filtered, savedArtifactArea, out filtered_rows, saveImages, out bool locked, out int rarity, out Rectangle typeMainArea, out Rectangle levelArea, out Rectangle subArea, out Rectangle setArea, out Rectangle charArea);
             artifact = ImageProcessing.getArtifacts(img_Filtered, filtered_rows, saveImages, tessEngine, locked, rarity, typeMainArea, levelArea, subArea, setArea, charArea);
-            scannedItems.Add(artifact);
+            if (Database.artifactInvalid(rarity, artifact))
+            {
+                displayInventoryItem(artifact);
+                text_full.AppendText(Environment.NewLine + "---This artifact is invalid---" + Environment.NewLine);
+            } else
+            {
+                scannedItems.Add(artifact);
+                displayInventoryItem(artifact);
+            }
+            text_full.AppendText(Environment.NewLine + "Total stored artifacts:" + scannedItems.Count + Environment.NewLine);
 
             image_preview.Image = new Bitmap(img_Filtered);
-            displayInventoryItem(artifact);
         }
 
         private void button_auto_Click(object sender, EventArgs e)

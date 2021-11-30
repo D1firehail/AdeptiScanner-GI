@@ -67,25 +67,25 @@ namespace GenshinArtifactOCR
             this.panel_artifactdetails = new System.Windows.Forms.Panel();
             this.button_panelcycle = new System.Windows.Forms.Button();
             this.panel_filters = new System.Windows.Forms.Panel();
+            this.trackBar_maxrarity = new System.Windows.Forms.TrackBar();
+            this.trackBar_minrarity = new System.Windows.Forms.TrackBar();
+            this.label_maxraritynumber = new System.Windows.Forms.Label();
+            this.label_maxraritytext = new System.Windows.Forms.Label();
+            this.label_minraritynumber = new System.Windows.Forms.Label();
+            this.label_minraritytext = new System.Windows.Forms.Label();
             this.label_maxlevelnumber = new System.Windows.Forms.Label();
             this.label_maxleveltext = new System.Windows.Forms.Label();
             this.trackBar_maxlevel = new System.Windows.Forms.TrackBar();
             this.label_minlevelnumber = new System.Windows.Forms.Label();
             this.label_minleveltext = new System.Windows.Forms.Label();
             this.trackBar_minlevel = new System.Windows.Forms.TrackBar();
-            this.label_minraritynumber = new System.Windows.Forms.Label();
-            this.label_minraritytext = new System.Windows.Forms.Label();
-            this.label_maxraritynumber = new System.Windows.Forms.Label();
-            this.label_maxraritytext = new System.Windows.Forms.Label();
-            this.trackBar_minrarity = new System.Windows.Forms.TrackBar();
-            this.trackBar_maxrarity = new System.Windows.Forms.TrackBar();
             ((System.ComponentModel.ISupportInitialize)(this.image_preview)).BeginInit();
             this.panel_artifactdetails.SuspendLayout();
             this.panel_filters.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar_maxrarity)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar_minrarity)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar_maxlevel)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar_minlevel)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar_minrarity)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar_maxrarity)).BeginInit();
             this.SuspendLayout();
             // 
             // image_preview
@@ -478,6 +478,7 @@ namespace GenshinArtifactOCR
             // 
             // button_panelcycle
             // 
+            this.button_panelcycle.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.button_panelcycle.Location = new System.Drawing.Point(701, 246);
             this.button_panelcycle.Name = "button_panelcycle";
             this.button_panelcycle.Size = new System.Drawing.Size(75, 23);
@@ -506,6 +507,62 @@ namespace GenshinArtifactOCR
             this.panel_filters.Size = new System.Drawing.Size(349, 228);
             this.panel_filters.TabIndex = 40;
             this.panel_filters.Visible = false;
+            // 
+            // trackBar_maxrarity
+            // 
+            this.trackBar_maxrarity.Location = new System.Drawing.Point(250, 109);
+            this.trackBar_maxrarity.Maximum = 5;
+            this.trackBar_maxrarity.Name = "trackBar_maxrarity";
+            this.trackBar_maxrarity.Size = new System.Drawing.Size(77, 45);
+            this.trackBar_maxrarity.TabIndex = 11;
+            this.trackBar_maxrarity.Value = 5;
+            this.trackBar_maxrarity.Scroll += new System.EventHandler(this.trackBar_maxrarity_Scroll);
+            // 
+            // trackBar_minrarity
+            // 
+            this.trackBar_minrarity.Location = new System.Drawing.Point(85, 109);
+            this.trackBar_minrarity.Maximum = 5;
+            this.trackBar_minrarity.Name = "trackBar_minrarity";
+            this.trackBar_minrarity.Size = new System.Drawing.Size(77, 45);
+            this.trackBar_minrarity.TabIndex = 10;
+            this.trackBar_minrarity.Value = 5;
+            this.trackBar_minrarity.Scroll += new System.EventHandler(this.trackBar_minrarity_Scroll);
+            // 
+            // label_maxraritynumber
+            // 
+            this.label_maxraritynumber.AutoSize = true;
+            this.label_maxraritynumber.Location = new System.Drawing.Point(206, 141);
+            this.label_maxraritynumber.Name = "label_maxraritynumber";
+            this.label_maxraritynumber.Size = new System.Drawing.Size(13, 13);
+            this.label_maxraritynumber.TabIndex = 9;
+            this.label_maxraritynumber.Text = "5";
+            // 
+            // label_maxraritytext
+            // 
+            this.label_maxraritytext.AutoSize = true;
+            this.label_maxraritytext.Location = new System.Drawing.Point(168, 119);
+            this.label_maxraritytext.Name = "label_maxraritytext";
+            this.label_maxraritytext.Size = new System.Drawing.Size(79, 13);
+            this.label_maxraritytext.TabIndex = 8;
+            this.label_maxraritytext.Text = "Maximum rarity:";
+            // 
+            // label_minraritynumber
+            // 
+            this.label_minraritynumber.AutoSize = true;
+            this.label_minraritynumber.Location = new System.Drawing.Point(41, 141);
+            this.label_minraritynumber.Name = "label_minraritynumber";
+            this.label_minraritynumber.Size = new System.Drawing.Size(13, 13);
+            this.label_minraritynumber.TabIndex = 7;
+            this.label_minraritynumber.Text = "5";
+            // 
+            // label_minraritytext
+            // 
+            this.label_minraritytext.AutoSize = true;
+            this.label_minraritytext.Location = new System.Drawing.Point(3, 119);
+            this.label_minraritytext.Name = "label_minraritytext";
+            this.label_minraritytext.Size = new System.Drawing.Size(76, 13);
+            this.label_minraritytext.TabIndex = 6;
+            this.label_minraritytext.Text = "Minimum rarity:";
             // 
             // label_maxlevelnumber
             // 
@@ -562,62 +619,6 @@ namespace GenshinArtifactOCR
             this.trackBar_minlevel.TabIndex = 0;
             this.trackBar_minlevel.Scroll += new System.EventHandler(this.trackBar_minlevel_Scroll);
             // 
-            // label_minraritynumber
-            // 
-            this.label_minraritynumber.AutoSize = true;
-            this.label_minraritynumber.Location = new System.Drawing.Point(41, 141);
-            this.label_minraritynumber.Name = "label_minraritynumber";
-            this.label_minraritynumber.Size = new System.Drawing.Size(13, 13);
-            this.label_minraritynumber.TabIndex = 7;
-            this.label_minraritynumber.Text = "5";
-            // 
-            // label_minraritytext
-            // 
-            this.label_minraritytext.AutoSize = true;
-            this.label_minraritytext.Location = new System.Drawing.Point(3, 119);
-            this.label_minraritytext.Name = "label_minraritytext";
-            this.label_minraritytext.Size = new System.Drawing.Size(76, 13);
-            this.label_minraritytext.TabIndex = 6;
-            this.label_minraritytext.Text = "Minimum rarity:";
-            // 
-            // label_maxraritynumber
-            // 
-            this.label_maxraritynumber.AutoSize = true;
-            this.label_maxraritynumber.Location = new System.Drawing.Point(206, 141);
-            this.label_maxraritynumber.Name = "label_maxraritynumber";
-            this.label_maxraritynumber.Size = new System.Drawing.Size(13, 13);
-            this.label_maxraritynumber.TabIndex = 9;
-            this.label_maxraritynumber.Text = "5";
-            // 
-            // label_maxraritytext
-            // 
-            this.label_maxraritytext.AutoSize = true;
-            this.label_maxraritytext.Location = new System.Drawing.Point(168, 119);
-            this.label_maxraritytext.Name = "label_maxraritytext";
-            this.label_maxraritytext.Size = new System.Drawing.Size(79, 13);
-            this.label_maxraritytext.TabIndex = 8;
-            this.label_maxraritytext.Text = "Maximum rarity:";
-            // 
-            // trackBar_minrarity
-            // 
-            this.trackBar_minrarity.Location = new System.Drawing.Point(85, 109);
-            this.trackBar_minrarity.Maximum = 5;
-            this.trackBar_minrarity.Name = "trackBar_minrarity";
-            this.trackBar_minrarity.Size = new System.Drawing.Size(77, 45);
-            this.trackBar_minrarity.TabIndex = 10;
-            this.trackBar_minrarity.Value = 5;
-            this.trackBar_minrarity.Scroll += new System.EventHandler(this.trackBar_minrarity_Scroll);
-            // 
-            // trackBar_maxrarity
-            // 
-            this.trackBar_maxrarity.Location = new System.Drawing.Point(250, 109);
-            this.trackBar_maxrarity.Maximum = 5;
-            this.trackBar_maxrarity.Name = "trackBar_maxrarity";
-            this.trackBar_maxrarity.Size = new System.Drawing.Size(77, 45);
-            this.trackBar_maxrarity.TabIndex = 11;
-            this.trackBar_maxrarity.Value = 5;
-            this.trackBar_maxrarity.Scroll += new System.EventHandler(this.trackBar_maxrarity_Scroll);
-            // 
             // GenshinArtifactOCR
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -650,10 +651,10 @@ namespace GenshinArtifactOCR
             this.panel_artifactdetails.PerformLayout();
             this.panel_filters.ResumeLayout(false);
             this.panel_filters.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar_maxrarity)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar_minrarity)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar_maxlevel)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar_minlevel)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar_minrarity)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar_maxrarity)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 

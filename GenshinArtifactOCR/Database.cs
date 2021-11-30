@@ -336,6 +336,16 @@ namespace GenshinArtifactOCR
                 }
             }
         }
+
+        public static bool artifactInvalid(int rarity, InventoryItem item)
+        {
+            return rarity < 0 || rarity > 5 || item.piece == null || item.main == null || item.level == null || item.subs == null || item.set == null
+                || (rarity == 1 && (item.level.Item2 > 4 || item.subs.Count > 1)) 
+                || (rarity == 2 && (item.level.Item2 > 4 || item.subs.Count > 2)) 
+                || (rarity == 3 && (item.level.Item2 > 12 || item.subs.Count > 4 || item.subs.Count < 1))
+                || (rarity == 4 && (item.level.Item2 > 16 || item.subs.Count > 4 || item.subs.Count < 2)) 
+                || (rarity == 5 && (item.level.Item2 > 20 || item.subs.Count > 4 || item.subs.Count < 3));
+        }
     }
 
 }
