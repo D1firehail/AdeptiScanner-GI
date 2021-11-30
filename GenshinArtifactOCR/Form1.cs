@@ -635,7 +635,8 @@ namespace GenshinArtifactOCR
             bool useTemplate = checkbox_exportTemplate.Checked;
             if (useTemplate && !File.Exists(Database.appDir + @"\ExportTemplate.json"))
             {
-                MessageBox.Show("No export template found, exporting without one", "No export template found", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("No export template found, exporting without one" + Environment.NewLine + "To use an export template, place valid GOOD-format json in ScannerFiles and rename to \"ExportTemplate.json\"", 
+                    "No export template found", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 useTemplate = false;
             }
             if (useTemplate)
