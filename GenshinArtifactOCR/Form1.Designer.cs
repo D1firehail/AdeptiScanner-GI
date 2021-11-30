@@ -423,8 +423,6 @@ namespace GenshinArtifactOCR
             // 
             this.checkbox_exportTemplate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.checkbox_exportTemplate.AutoSize = true;
-            this.checkbox_exportTemplate.Checked = true;
-            this.checkbox_exportTemplate.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkbox_exportTemplate.Location = new System.Drawing.Point(574, 730);
             this.checkbox_exportTemplate.Name = "checkbox_exportTemplate";
             this.checkbox_exportTemplate.Size = new System.Drawing.Size(88, 17);

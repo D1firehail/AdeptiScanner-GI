@@ -629,7 +629,9 @@ namespace GenshinArtifactOCR
             string timestamp = DateTime.UtcNow.ToString("yyyy-MM-dd HH-mm-ssff");
             int minLevel = trackBar_minlevel.Value;
             int maxLevel = trackBar_maxlevel.Value;
-            JObject currData = InventoryItem.listToGOODArtifacts(scannedItems, minLevel, maxLevel);
+            int minRarity = trackBar_minrarity.Value;
+            int maxRarity = trackBar_maxrarity.Value;
+            JObject currData = InventoryItem.listToGOODArtifacts(scannedItems, minLevel, maxLevel, minRarity, maxRarity);
             bool useTemplate = checkbox_exportTemplate.Checked;
             if (useTemplate && !File.Exists(Database.appDir + @"\ExportTemplate.json"))
             {
