@@ -622,11 +622,11 @@ namespace GenshinArtifactOCR
                 i++;
             for (; i < textRows.Count && textRows[i].Item2 > typeMainArea.Top; i++)
             {
-                string result = OCRRow(img, textRows[i].Item1, textRows[i].Item2, Database.MainStats, out int resultIndex, out int dist, out string rawText, prevRaw, saveImages, tessEngine);
+                string result = OCRRow(img, textRows[i].Item1, textRows[i].Item2, Database.rarityData[rarity-1].MainStats, out int resultIndex, out int dist, out string rawText, prevRaw, saveImages, tessEngine);
                 
                 if (dist < rawText.Length - 2 && rawText.Length - 2 >= Regex.Replace(rawText, @"[0-9]", "").Length)
                 {
-                    foundArtifact.main = Database.MainStats_trans[resultIndex];
+                    foundArtifact.main = Database.rarityData[rarity-1].MainStats_trans[resultIndex];
                     i++;
                     break;
                 }
@@ -654,10 +654,10 @@ namespace GenshinArtifactOCR
                 i++;
             for (; i < textRows.Count && textRows[i].Item2 > subArea.Top; i++)
             {
-                string result = OCRRow(img, textRows[i].Item1, textRows[i].Item2, Database.Substats, out int resultIndex, out int dist, out string rawText, "", saveImages, tessEngine);
+                string result = OCRRow(img, textRows[i].Item1, textRows[i].Item2, Database.rarityData[rarity-1].Substats, out int resultIndex, out int dist, out string rawText, "", saveImages, tessEngine);
                 if (dist < 3)
                 {
-                    foundArtifact.subs.Add(Database.Substats_trans[resultIndex]);
+                    foundArtifact.subs.Add(Database.rarityData[rarity-1].Substats_trans[resultIndex]);
                     if (substat > 2)
                     {
                         i++;
@@ -665,7 +665,7 @@ namespace GenshinArtifactOCR
                     }
                     substat++;
                 }
-                else if (substat > 2 && rawText.Length > 5)
+                else if (rawText.Length > 5)
                 {
                     break;
                 }
@@ -678,10 +678,10 @@ namespace GenshinArtifactOCR
                 i++;
             for (; i < textRows.Count && textRows[i].Item2 > setArea.Top; i++)
             {
-                string result = OCRRow(img, textRows[i].Item1, textRows[i].Item2, Database.Sets, out int resultIndex, out int dist, out string rawText, prevRaw, saveImages, tessEngine);
+                string result = OCRRow(img, textRows[i].Item1, textRows[i].Item2, Database.rarityData[rarity-1].Sets, out int resultIndex, out int dist, out string rawText, prevRaw, saveImages, tessEngine);
                 if (dist < 5)
                 {
-                    foundArtifact.set = Database.Sets_trans[resultIndex];
+                    foundArtifact.set = Database.rarityData[rarity-1].Sets_trans[resultIndex];
                     break;
                 }
                 else

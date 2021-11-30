@@ -553,6 +553,7 @@ namespace GenshinArtifactOCR
                 return;
             }
 
+            resetTextBoxes();
             Database.SetTravelerName(text_traveler.Text);
 
             if (checkbox_OCRcapture.Checked)
@@ -566,8 +567,6 @@ namespace GenshinArtifactOCR
                 else
                 {
                     img_Raw = ImageProcessing.CaptureScreenshot(saveImages, Rectangle.Empty);
-                    savedGameArea = ImageProcessing.findGameArea(img_Raw);
-                    savedArtifactArea = ImageProcessing.findArtifactArea(img_Raw, savedGameArea);
                 }
             }
 

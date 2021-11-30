@@ -14,18 +14,24 @@ namespace GenshinArtifactOCR
         public static string appDir = Application.StartupPath + @"\ScannerFiles";
         //These get filled on startup by other file
         public static List<string> Pieces = new List<string>();
-        public static List<string> MainStats = new List<string>();
-        public static List<string> Levels = new List<string>();
-        public static List<string> Substats = new List<string>();
-        public static List<string> Sets = new List<string>();
-        public static List<string> Characters = new List<string>();
         public static List<Tuple<string, string>> Pieces_trans = new List<Tuple<string, string>>();
-        public static List<Tuple<string, string, double>> MainStats_trans = new List<Tuple<string, string, double>>();
-        public static List<Tuple<string, int>> Levels_trans = new List<Tuple<string, int>>();
-        public static List<Tuple<string, string, double>> Substats_trans = new List<Tuple<string, string, double>>();
-        public static List<Tuple<string, string>> Sets_trans = new List<Tuple<string, string>>();
+        public static List<string> Characters = new List<string>();
         public static List<Tuple<string, string>> Characters_trans = new List<Tuple<string, string>>();
+        public static List<string> Levels = new List<string>();
+        public static List<Tuple<string, int>> Levels_trans = new List<Tuple<string, int>>();
+        public static Database[] rarityData = new Database[5];
 
+        public List<string> MainStats = new List<string>();
+        public List<Tuple<string, string, double>> MainStats_trans = new List<Tuple<string, string, double>>();
+        public List<string> Substats = new List<string>();
+        public List<Tuple<string, string, double>> Substats_trans = new List<Tuple<string, string, double>>();
+        public List<string> Sets = new List<string>();
+        public List<Tuple<string, string>> Sets_trans = new List<Tuple<string, string>>();
+
+        public Database()
+        {
+
+        }
 
 
         /// <summary>
@@ -112,7 +118,7 @@ namespace GenshinArtifactOCR
         }
 
 
-        static void ReadMainStats(JArray mainStats)
+        void ReadMainStats(JArray mainStats)
         {
             foreach (JObject mainStat in mainStats)
             {
@@ -137,7 +143,7 @@ namespace GenshinArtifactOCR
             }
         }
 
-        static void readSubstats(JArray substats)
+        void readSubstats(JArray substats)
         {
             foreach (JObject substat in substats)
             {
@@ -187,7 +193,7 @@ namespace GenshinArtifactOCR
             }
         }
 
-        static void readSets(JArray sets)
+        void readSets(JArray sets)
         {
             foreach (JObject set in sets)
             {
@@ -246,6 +252,10 @@ namespace GenshinArtifactOCR
         /// </summary>
         public static void GenerateFilters()
         {
+            for (int i = 0; i < rarityData.Length; i++)
+            {
+                rarityData[i] = new Database();
+            }
             //Main stat filter
             JObject allJson = new JObject();
             try
@@ -261,19 +271,33 @@ namespace GenshinArtifactOCR
             foreach (KeyValuePair<string, JToken> entry in allJson)
             {
                 JArray entry_arr = entry.Value.ToObject<JArray>();
-                if (entry.Key == "MainStats")
+                if (entry.Key == "ArtifactTiers")
                 {
-                    ReadMainStats(entry_arr);
-                }
+                    foreach (JObject rarityTier in entry_arr)
+                    {
+                        int rarity = rarityTier["rarity"].ToObject<int>();
+                        JObject tierData = rarityTier["data"].ToObject<JObject>();
 
-                if (entry.Key == "Substats")
-                {
-                    readSubstats(entry_arr);
-                }
+                        foreach (KeyValuePair<string, JToken> rarityEntry in tierData)
+                        {
+                            JArray rarityEntry_arr = rarityEntry.Value.ToObject<JArray>();
+                            if (rarityEntry.Key == "MainStats")
+                            {
+                                rarityData[rarity - 1].ReadMainStats(rarityEntry_arr);
+                            }
 
-                if (entry.Key == "Sets")
-                {
-                    readSets(entry_arr);
+                            if (rarityEntry.Key == "Substats")
+                            {
+                                rarityData[rarity - 1].readSubstats(rarityEntry_arr);
+                            }
+
+                            if (rarityEntry.Key == "Sets")
+                            {
+                                rarityData[rarity - 1].readSets(rarityEntry_arr);
+                            }
+                        }
+                    }
+
                 }
 
                 if (entry.Key == "Characters")
