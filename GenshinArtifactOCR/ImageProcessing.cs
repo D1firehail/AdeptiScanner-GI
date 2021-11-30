@@ -155,7 +155,11 @@ namespace GenshinArtifactOCR
             for (int i = 0; i < numBytes; i += PixelSize)
             {
                 int x = (i / PixelSize) % gameArea.Width;
-                if ((imgBytes[i] > 40 && imgBytes[i] < 60 && imgBytes[i + 1] > 90 && imgBytes[i + 1] < 110 && imgBytes[i + 2] > 180 && imgBytes[i + 2] < 200)) //look for artifact name background colour
+                if ((imgBytes[i] > 40 && imgBytes[i] < 60 && imgBytes[i + 1] > 90 && imgBytes[i + 1] < 110 && imgBytes[i + 2] > 180 && imgBytes[i + 2] < 200) 
+                    || (imgBytes[i] > 220 && imgBytes[i] < 230 && imgBytes[i + 1] > 80 && imgBytes[i + 1] < 90 && imgBytes[i + 2] > 155 && imgBytes[i + 2] < 165)
+                    || (imgBytes[i] > 200 && imgBytes[i] < 210 && imgBytes[i + 1] > 120 && imgBytes[i + 1] < 130 && imgBytes[i + 2] > 75 && imgBytes[i + 2] < 85)
+                    || (imgBytes[i] > 110 && imgBytes[i] < 120 && imgBytes[i + 1] > 140 && imgBytes[i + 1] < 150 && imgBytes[i + 2] > 35 && imgBytes[i + 2] < 45)
+                    || (imgBytes[i] > 135 && imgBytes[i] < 145 && imgBytes[i + 1] > 115 && imgBytes[i + 1] < 125 && imgBytes[i + 2] > 110 && imgBytes[i + 2] < 120)) //look for artifact name background colour
                 {
                     cols[x]++;
                 }
