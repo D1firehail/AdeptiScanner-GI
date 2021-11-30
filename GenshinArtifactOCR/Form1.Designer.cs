@@ -62,10 +62,30 @@ namespace GenshinArtifactOCR
             this.button_resume = new System.Windows.Forms.Button();
             this.button_export = new System.Windows.Forms.Button();
             this.checkbox_exportTemplate = new System.Windows.Forms.CheckBox();
-            this.checkbox_IgnoreUnleveled = new System.Windows.Forms.CheckBox();
             this.label_traveler = new System.Windows.Forms.Label();
             this.text_traveler = new System.Windows.Forms.TextBox();
+            this.panel_artifactdetails = new System.Windows.Forms.Panel();
+            this.button_panelcycle = new System.Windows.Forms.Button();
+            this.panel_filters = new System.Windows.Forms.Panel();
+            this.label_maxlevelnumber = new System.Windows.Forms.Label();
+            this.label_maxleveltext = new System.Windows.Forms.Label();
+            this.trackBar_maxlevel = new System.Windows.Forms.TrackBar();
+            this.label_minlevelnumber = new System.Windows.Forms.Label();
+            this.label_minleveltext = new System.Windows.Forms.Label();
+            this.trackBar_minlevel = new System.Windows.Forms.TrackBar();
+            this.label_minraritynumber = new System.Windows.Forms.Label();
+            this.label_minraritytext = new System.Windows.Forms.Label();
+            this.label_maxraritynumber = new System.Windows.Forms.Label();
+            this.label_maxraritytext = new System.Windows.Forms.Label();
+            this.trackBar_minrarity = new System.Windows.Forms.TrackBar();
+            this.trackBar_maxrarity = new System.Windows.Forms.TrackBar();
             ((System.ComponentModel.ISupportInitialize)(this.image_preview)).BeginInit();
+            this.panel_artifactdetails.SuspendLayout();
+            this.panel_filters.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar_maxlevel)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar_minlevel)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar_minrarity)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar_maxrarity)).BeginInit();
             this.SuspendLayout();
             // 
             // image_preview
@@ -76,7 +96,7 @@ namespace GenshinArtifactOCR
             this.image_preview.Location = new System.Drawing.Point(12, 12);
             this.image_preview.MinimumSize = new System.Drawing.Size(100, 100);
             this.image_preview.Name = "image_preview";
-            this.image_preview.Size = new System.Drawing.Size(384, 616);
+            this.image_preview.Size = new System.Drawing.Size(407, 709);
             this.image_preview.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.image_preview.TabIndex = 1;
             this.image_preview.TabStop = false;
@@ -84,7 +104,7 @@ namespace GenshinArtifactOCR
             // text_Set
             // 
             this.text_Set.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.text_Set.Location = new System.Drawing.Point(493, 194);
+            this.text_Set.Location = new System.Drawing.Point(67, 182);
             this.text_Set.Name = "text_Set";
             this.text_Set.ReadOnly = true;
             this.text_Set.Size = new System.Drawing.Size(279, 20);
@@ -93,7 +113,7 @@ namespace GenshinArtifactOCR
             // text_Type
             // 
             this.text_Type.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.text_Type.Location = new System.Drawing.Point(493, 12);
+            this.text_Type.Location = new System.Drawing.Point(67, 3);
             this.text_Type.Name = "text_Type";
             this.text_Type.ReadOnly = true;
             this.text_Type.Size = new System.Drawing.Size(279, 20);
@@ -102,7 +122,7 @@ namespace GenshinArtifactOCR
             // text_statMain
             // 
             this.text_statMain.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.text_statMain.Location = new System.Drawing.Point(493, 38);
+            this.text_statMain.Location = new System.Drawing.Point(67, 26);
             this.text_statMain.Name = "text_statMain";
             this.text_statMain.ReadOnly = true;
             this.text_statMain.Size = new System.Drawing.Size(279, 20);
@@ -111,7 +131,7 @@ namespace GenshinArtifactOCR
             // text_statSub1
             // 
             this.text_statSub1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.text_statSub1.Location = new System.Drawing.Point(493, 90);
+            this.text_statSub1.Location = new System.Drawing.Point(67, 78);
             this.text_statSub1.Name = "text_statSub1";
             this.text_statSub1.ReadOnly = true;
             this.text_statSub1.Size = new System.Drawing.Size(279, 20);
@@ -120,7 +140,7 @@ namespace GenshinArtifactOCR
             // text_statSub2
             // 
             this.text_statSub2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.text_statSub2.Location = new System.Drawing.Point(493, 116);
+            this.text_statSub2.Location = new System.Drawing.Point(67, 104);
             this.text_statSub2.Name = "text_statSub2";
             this.text_statSub2.ReadOnly = true;
             this.text_statSub2.Size = new System.Drawing.Size(279, 20);
@@ -129,7 +149,7 @@ namespace GenshinArtifactOCR
             // text_statSub3
             // 
             this.text_statSub3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.text_statSub3.Location = new System.Drawing.Point(493, 142);
+            this.text_statSub3.Location = new System.Drawing.Point(67, 130);
             this.text_statSub3.Name = "text_statSub3";
             this.text_statSub3.ReadOnly = true;
             this.text_statSub3.Size = new System.Drawing.Size(279, 20);
@@ -138,7 +158,7 @@ namespace GenshinArtifactOCR
             // text_statSub4
             // 
             this.text_statSub4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.text_statSub4.Location = new System.Drawing.Point(493, 168);
+            this.text_statSub4.Location = new System.Drawing.Point(67, 156);
             this.text_statSub4.Name = "text_statSub4";
             this.text_statSub4.ReadOnly = true;
             this.text_statSub4.Size = new System.Drawing.Size(279, 20);
@@ -148,7 +168,7 @@ namespace GenshinArtifactOCR
             // 
             this.label_Set.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label_Set.AutoSize = true;
-            this.label_Set.Location = new System.Drawing.Point(464, 197);
+            this.label_Set.Location = new System.Drawing.Point(38, 185);
             this.label_Set.Name = "label_Set";
             this.label_Set.Size = new System.Drawing.Size(23, 13);
             this.label_Set.TabIndex = 8;
@@ -158,7 +178,7 @@ namespace GenshinArtifactOCR
             // 
             this.label_Type.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label_Type.AutoSize = true;
-            this.label_Type.Location = new System.Drawing.Point(456, 15);
+            this.label_Type.Location = new System.Drawing.Point(30, 3);
             this.label_Type.Name = "label_Type";
             this.label_Type.Size = new System.Drawing.Size(31, 13);
             this.label_Type.TabIndex = 9;
@@ -168,7 +188,7 @@ namespace GenshinArtifactOCR
             // 
             this.label_statMain.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label_statMain.AutoSize = true;
-            this.label_statMain.Location = new System.Drawing.Point(435, 41);
+            this.label_statMain.Location = new System.Drawing.Point(9, 29);
             this.label_statMain.Name = "label_statMain";
             this.label_statMain.Size = new System.Drawing.Size(52, 13);
             this.label_statMain.TabIndex = 10;
@@ -178,7 +198,7 @@ namespace GenshinArtifactOCR
             // 
             this.label_statSub1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label_statSub1.AutoSize = true;
-            this.label_statSub1.Location = new System.Drawing.Point(435, 93);
+            this.label_statSub1.Location = new System.Drawing.Point(9, 81);
             this.label_statSub1.Name = "label_statSub1";
             this.label_statSub1.Size = new System.Drawing.Size(52, 13);
             this.label_statSub1.TabIndex = 11;
@@ -188,7 +208,7 @@ namespace GenshinArtifactOCR
             // 
             this.label_statSub2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label_statSub2.AutoSize = true;
-            this.label_statSub2.Location = new System.Drawing.Point(435, 119);
+            this.label_statSub2.Location = new System.Drawing.Point(9, 107);
             this.label_statSub2.Name = "label_statSub2";
             this.label_statSub2.Size = new System.Drawing.Size(52, 13);
             this.label_statSub2.TabIndex = 12;
@@ -198,7 +218,7 @@ namespace GenshinArtifactOCR
             // 
             this.label_statSub3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label_statSub3.AutoSize = true;
-            this.label_statSub3.Location = new System.Drawing.Point(435, 145);
+            this.label_statSub3.Location = new System.Drawing.Point(9, 133);
             this.label_statSub3.Name = "label_statSub3";
             this.label_statSub3.Size = new System.Drawing.Size(52, 13);
             this.label_statSub3.TabIndex = 13;
@@ -208,7 +228,7 @@ namespace GenshinArtifactOCR
             // 
             this.label_statSub4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label_statSub4.AutoSize = true;
-            this.label_statSub4.Location = new System.Drawing.Point(435, 171);
+            this.label_statSub4.Location = new System.Drawing.Point(9, 159);
             this.label_statSub4.Name = "label_statSub4";
             this.label_statSub4.Size = new System.Drawing.Size(52, 13);
             this.label_statSub4.TabIndex = 15;
@@ -217,7 +237,7 @@ namespace GenshinArtifactOCR
             // btn_capture
             // 
             this.btn_capture.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btn_capture.Location = new System.Drawing.Point(493, 576);
+            this.btn_capture.Location = new System.Drawing.Point(493, 669);
             this.btn_capture.Name = "btn_capture";
             this.btn_capture.Size = new System.Drawing.Size(75, 23);
             this.btn_capture.TabIndex = 16;
@@ -229,7 +249,7 @@ namespace GenshinArtifactOCR
             // 
             this.btn_OCR.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btn_OCR.Enabled = false;
-            this.btn_OCR.Location = new System.Drawing.Point(574, 576);
+            this.btn_OCR.Location = new System.Drawing.Point(574, 669);
             this.btn_OCR.Name = "btn_OCR";
             this.btn_OCR.Size = new System.Drawing.Size(75, 23);
             this.btn_OCR.TabIndex = 18;
@@ -241,19 +261,19 @@ namespace GenshinArtifactOCR
             // 
             this.text_full.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.text_full.Location = new System.Drawing.Point(493, 246);
+            this.text_full.Location = new System.Drawing.Point(493, 275);
             this.text_full.Multiline = true;
             this.text_full.Name = "text_full";
             this.text_full.ReadOnly = true;
             this.text_full.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.text_full.Size = new System.Drawing.Size(279, 275);
+            this.text_full.Size = new System.Drawing.Size(279, 339);
             this.text_full.TabIndex = 19;
             // 
             // label_full
             // 
             this.label_full.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label_full.AutoSize = true;
-            this.label_full.Location = new System.Drawing.Point(464, 249);
+            this.label_full.Location = new System.Drawing.Point(465, 278);
             this.label_full.Name = "label_full";
             this.label_full.Size = new System.Drawing.Size(23, 13);
             this.label_full.TabIndex = 20;
@@ -263,7 +283,7 @@ namespace GenshinArtifactOCR
             // 
             this.label_level.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label_level.AutoSize = true;
-            this.label_level.Location = new System.Drawing.Point(454, 67);
+            this.label_level.Location = new System.Drawing.Point(28, 55);
             this.label_level.Name = "label_level";
             this.label_level.Size = new System.Drawing.Size(33, 13);
             this.label_level.TabIndex = 22;
@@ -272,7 +292,7 @@ namespace GenshinArtifactOCR
             // text_Level
             // 
             this.text_Level.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.text_Level.Location = new System.Drawing.Point(493, 64);
+            this.text_Level.Location = new System.Drawing.Point(67, 52);
             this.text_Level.Name = "text_Level";
             this.text_Level.ReadOnly = true;
             this.text_Level.Size = new System.Drawing.Size(120, 20);
@@ -284,7 +304,7 @@ namespace GenshinArtifactOCR
             this.checkbox_OCRcapture.AutoSize = true;
             this.checkbox_OCRcapture.Checked = true;
             this.checkbox_OCRcapture.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkbox_OCRcapture.Location = new System.Drawing.Point(493, 527);
+            this.checkbox_OCRcapture.Location = new System.Drawing.Point(493, 620);
             this.checkbox_OCRcapture.Name = "checkbox_OCRcapture";
             this.checkbox_OCRcapture.Size = new System.Drawing.Size(93, 17);
             this.checkbox_OCRcapture.TabIndex = 23;
@@ -295,7 +315,7 @@ namespace GenshinArtifactOCR
             // 
             this.checkbox_saveImages.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.checkbox_saveImages.AutoSize = true;
-            this.checkbox_saveImages.Location = new System.Drawing.Point(622, 527);
+            this.checkbox_saveImages.Location = new System.Drawing.Point(622, 620);
             this.checkbox_saveImages.Name = "checkbox_saveImages";
             this.checkbox_saveImages.Size = new System.Drawing.Size(87, 17);
             this.checkbox_saveImages.TabIndex = 25;
@@ -306,7 +326,7 @@ namespace GenshinArtifactOCR
             // 
             this.label_character.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label_character.AutoSize = true;
-            this.label_character.Location = new System.Drawing.Point(434, 223);
+            this.label_character.Location = new System.Drawing.Point(8, 211);
             this.label_character.Name = "label_character";
             this.label_character.Size = new System.Drawing.Size(53, 13);
             this.label_character.TabIndex = 27;
@@ -315,7 +335,7 @@ namespace GenshinArtifactOCR
             // text_character
             // 
             this.text_character.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.text_character.Location = new System.Drawing.Point(493, 220);
+            this.text_character.Location = new System.Drawing.Point(67, 208);
             this.text_character.Name = "text_character";
             this.text_character.ReadOnly = true;
             this.text_character.Size = new System.Drawing.Size(279, 20);
@@ -325,7 +345,7 @@ namespace GenshinArtifactOCR
             // 
             this.button_auto.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.button_auto.Enabled = false;
-            this.button_auto.Location = new System.Drawing.Point(655, 576);
+            this.button_auto.Location = new System.Drawing.Point(655, 669);
             this.button_auto.Name = "button_auto";
             this.button_auto.Size = new System.Drawing.Size(75, 23);
             this.button_auto.TabIndex = 28;
@@ -337,7 +357,7 @@ namespace GenshinArtifactOCR
             // 
             this.label_locked.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label_locked.AutoSize = true;
-            this.label_locked.Location = new System.Drawing.Point(619, 67);
+            this.label_locked.Location = new System.Drawing.Point(193, 55);
             this.label_locked.Name = "label_locked";
             this.label_locked.Size = new System.Drawing.Size(43, 13);
             this.label_locked.TabIndex = 29;
@@ -346,7 +366,7 @@ namespace GenshinArtifactOCR
             // text_locked
             // 
             this.text_locked.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.text_locked.Location = new System.Drawing.Point(668, 64);
+            this.text_locked.Location = new System.Drawing.Point(240, 52);
             this.text_locked.Name = "text_locked";
             this.text_locked.ReadOnly = true;
             this.text_locked.Size = new System.Drawing.Size(106, 20);
@@ -356,7 +376,7 @@ namespace GenshinArtifactOCR
             // 
             this.button_softCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.button_softCancel.Enabled = false;
-            this.button_softCancel.Location = new System.Drawing.Point(574, 605);
+            this.button_softCancel.Location = new System.Drawing.Point(574, 698);
             this.button_softCancel.Name = "button_softCancel";
             this.button_softCancel.Size = new System.Drawing.Size(75, 23);
             this.button_softCancel.TabIndex = 31;
@@ -368,7 +388,7 @@ namespace GenshinArtifactOCR
             // 
             this.button_hardCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.button_hardCancel.Enabled = false;
-            this.button_hardCancel.Location = new System.Drawing.Point(655, 605);
+            this.button_hardCancel.Location = new System.Drawing.Point(655, 698);
             this.button_hardCancel.Name = "button_hardCancel";
             this.button_hardCancel.Size = new System.Drawing.Size(75, 23);
             this.button_hardCancel.TabIndex = 32;
@@ -380,7 +400,7 @@ namespace GenshinArtifactOCR
             // 
             this.button_resume.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.button_resume.Enabled = false;
-            this.button_resume.Location = new System.Drawing.Point(493, 605);
+            this.button_resume.Location = new System.Drawing.Point(493, 698);
             this.button_resume.Name = "button_resume";
             this.button_resume.Size = new System.Drawing.Size(75, 23);
             this.button_resume.TabIndex = 33;
@@ -391,7 +411,7 @@ namespace GenshinArtifactOCR
             // button_export
             // 
             this.button_export.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button_export.Location = new System.Drawing.Point(493, 633);
+            this.button_export.Location = new System.Drawing.Point(493, 726);
             this.button_export.Name = "button_export";
             this.button_export.Size = new System.Drawing.Size(75, 23);
             this.button_export.TabIndex = 34;
@@ -405,31 +425,18 @@ namespace GenshinArtifactOCR
             this.checkbox_exportTemplate.AutoSize = true;
             this.checkbox_exportTemplate.Checked = true;
             this.checkbox_exportTemplate.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkbox_exportTemplate.Location = new System.Drawing.Point(574, 637);
+            this.checkbox_exportTemplate.Location = new System.Drawing.Point(574, 730);
             this.checkbox_exportTemplate.Name = "checkbox_exportTemplate";
             this.checkbox_exportTemplate.Size = new System.Drawing.Size(88, 17);
             this.checkbox_exportTemplate.TabIndex = 35;
             this.checkbox_exportTemplate.Text = "Use template";
             this.checkbox_exportTemplate.UseVisualStyleBackColor = true;
             // 
-            // checkbox_IgnoreUnleveled
-            // 
-            this.checkbox_IgnoreUnleveled.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.checkbox_IgnoreUnleveled.AutoSize = true;
-            this.checkbox_IgnoreUnleveled.Checked = true;
-            this.checkbox_IgnoreUnleveled.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkbox_IgnoreUnleveled.Location = new System.Drawing.Point(661, 637);
-            this.checkbox_IgnoreUnleveled.Name = "checkbox_IgnoreUnleveled";
-            this.checkbox_IgnoreUnleveled.Size = new System.Drawing.Size(113, 17);
-            this.checkbox_IgnoreUnleveled.TabIndex = 36;
-            this.checkbox_IgnoreUnleveled.Text = "Exclude unleveled";
-            this.checkbox_IgnoreUnleveled.UseVisualStyleBackColor = true;
-            // 
             // label_traveler
             // 
-            this.label_traveler.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.label_traveler.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.label_traveler.AutoSize = true;
-            this.label_traveler.Location = new System.Drawing.Point(490, 553);
+            this.label_traveler.Location = new System.Drawing.Point(490, 646);
             this.label_traveler.Name = "label_traveler";
             this.label_traveler.Size = new System.Drawing.Size(80, 13);
             this.label_traveler.TabIndex = 38;
@@ -437,58 +444,218 @@ namespace GenshinArtifactOCR
             // 
             // text_traveler
             // 
-            this.text_traveler.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.text_traveler.Location = new System.Drawing.Point(574, 550);
+            this.text_traveler.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.text_traveler.Location = new System.Drawing.Point(574, 643);
             this.text_traveler.Name = "text_traveler";
             this.text_traveler.Size = new System.Drawing.Size(200, 20);
             this.text_traveler.TabIndex = 37;
+            // 
+            // panel_artifactdetails
+            // 
+            this.panel_artifactdetails.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel_artifactdetails.Controls.Add(this.text_Type);
+            this.panel_artifactdetails.Controls.Add(this.text_Set);
+            this.panel_artifactdetails.Controls.Add(this.text_statMain);
+            this.panel_artifactdetails.Controls.Add(this.text_statSub1);
+            this.panel_artifactdetails.Controls.Add(this.text_statSub2);
+            this.panel_artifactdetails.Controls.Add(this.text_statSub3);
+            this.panel_artifactdetails.Controls.Add(this.label_Set);
+            this.panel_artifactdetails.Controls.Add(this.label_Type);
+            this.panel_artifactdetails.Controls.Add(this.label_statMain);
+            this.panel_artifactdetails.Controls.Add(this.text_locked);
+            this.panel_artifactdetails.Controls.Add(this.label_statSub1);
+            this.panel_artifactdetails.Controls.Add(this.label_locked);
+            this.panel_artifactdetails.Controls.Add(this.label_statSub2);
+            this.panel_artifactdetails.Controls.Add(this.label_statSub3);
+            this.panel_artifactdetails.Controls.Add(this.label_character);
+            this.panel_artifactdetails.Controls.Add(this.text_statSub4);
+            this.panel_artifactdetails.Controls.Add(this.text_character);
+            this.panel_artifactdetails.Controls.Add(this.label_statSub4);
+            this.panel_artifactdetails.Controls.Add(this.text_Level);
+            this.panel_artifactdetails.Controls.Add(this.label_level);
+            this.panel_artifactdetails.Location = new System.Drawing.Point(427, 12);
+            this.panel_artifactdetails.Name = "panel_artifactdetails";
+            this.panel_artifactdetails.Size = new System.Drawing.Size(349, 228);
+            this.panel_artifactdetails.TabIndex = 39;
+            // 
+            // button_panelcycle
+            // 
+            this.button_panelcycle.Location = new System.Drawing.Point(701, 246);
+            this.button_panelcycle.Name = "button_panelcycle";
+            this.button_panelcycle.Size = new System.Drawing.Size(75, 23);
+            this.button_panelcycle.TabIndex = 40;
+            this.button_panelcycle.Text = "Filters";
+            this.button_panelcycle.UseVisualStyleBackColor = true;
+            this.button_panelcycle.Click += new System.EventHandler(this.button_panelcycle_Click);
+            // 
+            // panel_filters
+            // 
+            this.panel_filters.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel_filters.Controls.Add(this.trackBar_maxrarity);
+            this.panel_filters.Controls.Add(this.trackBar_minrarity);
+            this.panel_filters.Controls.Add(this.label_maxraritynumber);
+            this.panel_filters.Controls.Add(this.label_maxraritytext);
+            this.panel_filters.Controls.Add(this.label_minraritynumber);
+            this.panel_filters.Controls.Add(this.label_minraritytext);
+            this.panel_filters.Controls.Add(this.label_maxlevelnumber);
+            this.panel_filters.Controls.Add(this.label_maxleveltext);
+            this.panel_filters.Controls.Add(this.trackBar_maxlevel);
+            this.panel_filters.Controls.Add(this.label_minlevelnumber);
+            this.panel_filters.Controls.Add(this.label_minleveltext);
+            this.panel_filters.Controls.Add(this.trackBar_minlevel);
+            this.panel_filters.Location = new System.Drawing.Point(427, 12);
+            this.panel_filters.Name = "panel_filters";
+            this.panel_filters.Size = new System.Drawing.Size(349, 228);
+            this.panel_filters.TabIndex = 40;
+            this.panel_filters.Visible = false;
+            // 
+            // label_maxlevelnumber
+            // 
+            this.label_maxlevelnumber.AutoSize = true;
+            this.label_maxlevelnumber.Location = new System.Drawing.Point(41, 93);
+            this.label_maxlevelnumber.Name = "label_maxlevelnumber";
+            this.label_maxlevelnumber.Size = new System.Drawing.Size(19, 13);
+            this.label_maxlevelnumber.TabIndex = 5;
+            this.label_maxlevelnumber.Text = "20";
+            // 
+            // label_maxleveltext
+            // 
+            this.label_maxleveltext.AutoSize = true;
+            this.label_maxleveltext.Location = new System.Drawing.Point(3, 71);
+            this.label_maxleveltext.Name = "label_maxleveltext";
+            this.label_maxleveltext.Size = new System.Drawing.Size(76, 13);
+            this.label_maxleveltext.TabIndex = 4;
+            this.label_maxleveltext.Text = "Minimum level:";
+            // 
+            // trackBar_maxlevel
+            // 
+            this.trackBar_maxlevel.Location = new System.Drawing.Point(82, 71);
+            this.trackBar_maxlevel.Maximum = 20;
+            this.trackBar_maxlevel.Name = "trackBar_maxlevel";
+            this.trackBar_maxlevel.Size = new System.Drawing.Size(257, 45);
+            this.trackBar_maxlevel.TabIndex = 3;
+            this.trackBar_maxlevel.Value = 20;
+            this.trackBar_maxlevel.Scroll += new System.EventHandler(this.trackBar_maxlevel_Scroll);
+            // 
+            // label_minlevelnumber
+            // 
+            this.label_minlevelnumber.AutoSize = true;
+            this.label_minlevelnumber.Location = new System.Drawing.Point(41, 46);
+            this.label_minlevelnumber.Name = "label_minlevelnumber";
+            this.label_minlevelnumber.Size = new System.Drawing.Size(13, 13);
+            this.label_minlevelnumber.TabIndex = 2;
+            this.label_minlevelnumber.Text = "0";
+            // 
+            // label_minleveltext
+            // 
+            this.label_minleveltext.AutoSize = true;
+            this.label_minleveltext.Location = new System.Drawing.Point(3, 24);
+            this.label_minleveltext.Name = "label_minleveltext";
+            this.label_minleveltext.Size = new System.Drawing.Size(76, 13);
+            this.label_minleveltext.TabIndex = 1;
+            this.label_minleveltext.Text = "Minimum level:";
+            // 
+            // trackBar_minlevel
+            // 
+            this.trackBar_minlevel.Location = new System.Drawing.Point(82, 24);
+            this.trackBar_minlevel.Maximum = 20;
+            this.trackBar_minlevel.Name = "trackBar_minlevel";
+            this.trackBar_minlevel.Size = new System.Drawing.Size(257, 45);
+            this.trackBar_minlevel.TabIndex = 0;
+            this.trackBar_minlevel.Scroll += new System.EventHandler(this.trackBar_minlevel_Scroll);
+            // 
+            // label_minraritynumber
+            // 
+            this.label_minraritynumber.AutoSize = true;
+            this.label_minraritynumber.Location = new System.Drawing.Point(41, 141);
+            this.label_minraritynumber.Name = "label_minraritynumber";
+            this.label_minraritynumber.Size = new System.Drawing.Size(13, 13);
+            this.label_minraritynumber.TabIndex = 7;
+            this.label_minraritynumber.Text = "5";
+            // 
+            // label_minraritytext
+            // 
+            this.label_minraritytext.AutoSize = true;
+            this.label_minraritytext.Location = new System.Drawing.Point(3, 119);
+            this.label_minraritytext.Name = "label_minraritytext";
+            this.label_minraritytext.Size = new System.Drawing.Size(76, 13);
+            this.label_minraritytext.TabIndex = 6;
+            this.label_minraritytext.Text = "Minimum rarity:";
+            // 
+            // label_maxraritynumber
+            // 
+            this.label_maxraritynumber.AutoSize = true;
+            this.label_maxraritynumber.Location = new System.Drawing.Point(206, 141);
+            this.label_maxraritynumber.Name = "label_maxraritynumber";
+            this.label_maxraritynumber.Size = new System.Drawing.Size(13, 13);
+            this.label_maxraritynumber.TabIndex = 9;
+            this.label_maxraritynumber.Text = "5";
+            // 
+            // label_maxraritytext
+            // 
+            this.label_maxraritytext.AutoSize = true;
+            this.label_maxraritytext.Location = new System.Drawing.Point(168, 119);
+            this.label_maxraritytext.Name = "label_maxraritytext";
+            this.label_maxraritytext.Size = new System.Drawing.Size(79, 13);
+            this.label_maxraritytext.TabIndex = 8;
+            this.label_maxraritytext.Text = "Maximum rarity:";
+            // 
+            // trackBar_minrarity
+            // 
+            this.trackBar_minrarity.Location = new System.Drawing.Point(85, 109);
+            this.trackBar_minrarity.Maximum = 5;
+            this.trackBar_minrarity.Name = "trackBar_minrarity";
+            this.trackBar_minrarity.Size = new System.Drawing.Size(77, 45);
+            this.trackBar_minrarity.TabIndex = 10;
+            this.trackBar_minrarity.Value = 5;
+            this.trackBar_minrarity.Scroll += new System.EventHandler(this.trackBar_minrarity_Scroll);
+            // 
+            // trackBar_maxrarity
+            // 
+            this.trackBar_maxrarity.Location = new System.Drawing.Point(250, 109);
+            this.trackBar_maxrarity.Maximum = 5;
+            this.trackBar_maxrarity.Name = "trackBar_maxrarity";
+            this.trackBar_maxrarity.Size = new System.Drawing.Size(77, 45);
+            this.trackBar_maxrarity.TabIndex = 11;
+            this.trackBar_maxrarity.Value = 5;
+            this.trackBar_maxrarity.Scroll += new System.EventHandler(this.trackBar_maxrarity_Scroll);
             // 
             // GenshinArtifactOCR
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.LightGray;
-            this.ClientSize = new System.Drawing.Size(784, 668);
+            this.ClientSize = new System.Drawing.Size(784, 761);
+            this.Controls.Add(this.panel_filters);
+            this.Controls.Add(this.button_panelcycle);
+            this.Controls.Add(this.panel_artifactdetails);
             this.Controls.Add(this.label_traveler);
             this.Controls.Add(this.text_traveler);
-            this.Controls.Add(this.checkbox_IgnoreUnleveled);
             this.Controls.Add(this.checkbox_exportTemplate);
             this.Controls.Add(this.button_export);
             this.Controls.Add(this.button_resume);
             this.Controls.Add(this.button_hardCancel);
             this.Controls.Add(this.button_softCancel);
-            this.Controls.Add(this.text_locked);
-            this.Controls.Add(this.label_locked);
             this.Controls.Add(this.button_auto);
-            this.Controls.Add(this.label_character);
-            this.Controls.Add(this.text_character);
             this.Controls.Add(this.checkbox_saveImages);
             this.Controls.Add(this.checkbox_OCRcapture);
-            this.Controls.Add(this.label_level);
-            this.Controls.Add(this.text_Level);
             this.Controls.Add(this.label_full);
             this.Controls.Add(this.text_full);
             this.Controls.Add(this.btn_OCR);
             this.Controls.Add(this.btn_capture);
-            this.Controls.Add(this.label_statSub4);
-            this.Controls.Add(this.text_statSub4);
-            this.Controls.Add(this.label_statSub3);
-            this.Controls.Add(this.label_statSub2);
-            this.Controls.Add(this.label_statSub1);
-            this.Controls.Add(this.label_statMain);
-            this.Controls.Add(this.label_Type);
-            this.Controls.Add(this.label_Set);
-            this.Controls.Add(this.text_statSub3);
-            this.Controls.Add(this.text_statSub2);
-            this.Controls.Add(this.text_statSub1);
-            this.Controls.Add(this.text_statMain);
-            this.Controls.Add(this.text_Type);
-            this.Controls.Add(this.text_Set);
             this.Controls.Add(this.image_preview);
             this.MinimumSize = new System.Drawing.Size(600, 600);
             this.Name = "GenshinArtifactOCR";
             this.Text = "GenshinArtifactOCR";
             ((System.ComponentModel.ISupportInitialize)(this.image_preview)).EndInit();
+            this.panel_artifactdetails.ResumeLayout(false);
+            this.panel_artifactdetails.PerformLayout();
+            this.panel_filters.ResumeLayout(false);
+            this.panel_filters.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar_maxlevel)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar_minlevel)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar_minrarity)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar_maxrarity)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -529,9 +696,23 @@ namespace GenshinArtifactOCR
         private System.Windows.Forms.Button button_resume;
         private System.Windows.Forms.Button button_export;
         private System.Windows.Forms.CheckBox checkbox_exportTemplate;
-        private System.Windows.Forms.CheckBox checkbox_IgnoreUnleveled;
         private System.Windows.Forms.Label label_traveler;
         private System.Windows.Forms.TextBox text_traveler;
+        private System.Windows.Forms.Panel panel_artifactdetails;
+        private System.Windows.Forms.Button button_panelcycle;
+        private System.Windows.Forms.Panel panel_filters;
+        private System.Windows.Forms.TrackBar trackBar_minlevel;
+        private System.Windows.Forms.Label label_minlevelnumber;
+        private System.Windows.Forms.Label label_minleveltext;
+        private System.Windows.Forms.Label label_maxlevelnumber;
+        private System.Windows.Forms.Label label_maxleveltext;
+        private System.Windows.Forms.TrackBar trackBar_maxlevel;
+        private System.Windows.Forms.Label label_maxraritynumber;
+        private System.Windows.Forms.Label label_maxraritytext;
+        private System.Windows.Forms.Label label_minraritynumber;
+        private System.Windows.Forms.Label label_minraritytext;
+        private System.Windows.Forms.TrackBar trackBar_maxrarity;
+        private System.Windows.Forms.TrackBar trackBar_minrarity;
     }
 }
 

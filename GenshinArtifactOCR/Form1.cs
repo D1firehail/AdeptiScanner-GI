@@ -132,7 +132,7 @@ namespace GenshinArtifactOCR
         /// <summary>
         /// Empties all text boxes
         /// </summary>
-        private void resetTextBoxes ()
+        private void resetTextBoxes()
         {
             text_full.Text = "";
             text_Set.Text = "";
@@ -147,7 +147,7 @@ namespace GenshinArtifactOCR
             text_character.Text = "";
         }
 
-        private void displayInventoryItem (InventoryItem item)
+        private void displayInventoryItem(InventoryItem item)
         {
             text_full.Text = item.ToString();
             if (item.level != null)
@@ -199,9 +199,9 @@ namespace GenshinArtifactOCR
             {
                 threadRunning[threadIndex] = true;
                 bool saveImages = false;
-                while ( autoRunning && !cancelOCRThreads )
+                while (autoRunning && !cancelOCRThreads)
                 {
-                    if ( threadQueues[threadIndex].TryDequeue(out Bitmap img))
+                    if (threadQueues[threadIndex].TryDequeue(out Bitmap img))
                     {
                         //string timestamp = DateTime.UtcNow.ToString("yyyy-MM-dd HH-mm-ssff");
                         //if (saveImages)
@@ -209,21 +209,24 @@ namespace GenshinArtifactOCR
                         Rectangle area = new Rectangle(0, 0, img.Width, img.Height);
                         Bitmap filtered = new Bitmap(img);
                         filtered = ImageProcessing.getArtifactImg(filtered, area, out int[] rows, saveImages, out bool locked, out int rarity, out Rectangle typeMainArea, out Rectangle levelArea, out Rectangle subArea, out Rectangle setArea, out Rectangle charArea);
-                        
+
                         InventoryItem item = ImageProcessing.getArtifacts(filtered, rows, saveImages, threadEngines[threadIndex], locked, rarity, typeMainArea, levelArea, subArea, setArea, charArea);
 
                         if (rarity != 5 || item.piece == null || item.main == null || item.level == null || item.subs == null || item.subs.Count < 3 || (item.subs.Count < 4 && item.level.Item2 >= 4) || item.set == null)
                         {
                             badResults.Enqueue(img);
-                        } else
+                        }
+                        else
                         {
                             threadResults[threadIndex].Add(item);
                         }
-                    } else if (autoCaptureDone || softCancelAuto || hardCancelAuto)
+                    }
+                    else if (autoCaptureDone || softCancelAuto || hardCancelAuto)
                     {
                         threadRunning[threadIndex] = false;
                         return;
-                    } else 
+                    }
+                    else
                     {
                         System.Threading.Thread.Sleep(1000);
                     }
@@ -259,7 +262,7 @@ namespace GenshinArtifactOCR
                 Rectangle gridArea = new Rectangle(savedGameArea.X, savedGameArea.Y, savedArtifactArea.X - savedGameArea.X, savedGameArea.Height);
                 Point gridOffset = new Point(gridArea.X, gridArea.Y);
                 List<string> foundArtifactHashes = new List<string>();
-                
+
                 while (running)
                 {
                     //load current grid/scroll location
@@ -271,12 +274,13 @@ namespace GenshinArtifactOCR
                         break;
                     }
                     int startTop = artifactLocations[0].Y;
-                    int startBot = startTop; 
+                    int startBot = startTop;
                     int rows = 1;
                     int distToScroll = 0;
                     foreach (Point p in artifactLocations)
                     {
-                        if (p.Y > startBot + 3) {
+                        if (p.Y > startBot + 3)
+                        {
                             startBot = p.Y;
                             rows++;
                         }
@@ -292,7 +296,7 @@ namespace GenshinArtifactOCR
                         distToScroll = (int)((startBot - (double)firstY) / rows * (rows + 1));
                     }
 
-                    if (!firstRun) 
+                    if (!firstRun)
                     {
                         while (pauseAuto)
                         {
@@ -322,7 +326,7 @@ namespace GenshinArtifactOCR
                         }
                         int distPerScroll = startTop - artifactLocations[0].Y;
                         int scrollsNeeded = 0;
-                        if ( distPerScroll > 0)
+                        if (distPerScroll > 0)
                         {
                             scrollsNeeded = distToScroll / distPerScroll;
                         }
@@ -347,7 +351,7 @@ namespace GenshinArtifactOCR
 
                     //select and OCR each artifact in list
                     bool repeat = false;
-                    for (int i = 0; i < artifactLocations.Count; )
+                    for (int i = 0; i < artifactLocations.Count;)
                     {
                         Point p = artifactLocations[i];
                         while (pauseAuto)
@@ -385,7 +389,7 @@ namespace GenshinArtifactOCR
                         int PixelSize = 4; //ARGB, reverse order
                         withoutLock.UnlockBits(imgData);
                         //https://stackoverflow.com/a/800469 with some liberty
-                        string hash =  string.Concat(sha1.ComputeHash(imgBytes).Select(x => x.ToString("X2")));
+                        string hash = string.Concat(sha1.ComputeHash(imgBytes).Select(x => x.ToString("X2")));
 
                         if (foundArtifactHashes.Contains(hash))
                         {
@@ -400,7 +404,8 @@ namespace GenshinArtifactOCR
                                 repeat = false;
                                 i++;
                                 continue;
-                            } else
+                            }
+                            else
                             {
                                 repeat = true;
                                 Console.WriteLine("Rechecking at " + p.ToString());
@@ -451,7 +456,7 @@ namespace GenshinArtifactOCR
                     + " Good results: " + scannedItems.Count + ", Bad results: " + badResults.Count + Environment.NewLine
                     + "Time elapsed: " + runtime.ElapsedMilliseconds + "ms" + Environment.NewLine + Environment.NewLine, false);
 
-                while ( badResults.TryDequeue(out Bitmap img))
+                while (badResults.TryDequeue(out Bitmap img))
                 {
                     Rectangle area = new Rectangle(0, 0, img.Width, img.Height);
                     Bitmap filtered = new Bitmap(img);
@@ -470,7 +475,7 @@ namespace GenshinArtifactOCR
             }));
         }
 
-        
+
 
         private void btn_capture_Click(object sender, EventArgs e)
         {
@@ -485,7 +490,8 @@ namespace GenshinArtifactOCR
                 img_Raw = ImageProcessing.LoadScreenshot();
                 savedGameArea = new Rectangle(0, 0, img_Raw.Width, img_Raw.Height);
                 savedArtifactArea = new Rectangle(0, 0, img_Raw.Width, img_Raw.Height);
-            } else
+            }
+            else
             {
                 img_Raw = ImageProcessing.CaptureScreenshot(saveImages, Rectangle.Empty);
                 savedGameArea = ImageProcessing.findGameArea(img_Raw);
@@ -499,7 +505,8 @@ namespace GenshinArtifactOCR
             {
                 savedArtifactArea = savedGameArea;
                 image_preview.Image = new Bitmap(img_Raw);
-            } else
+            }
+            else
             {
                 btn_OCR.Enabled = true;
                 button_auto.Enabled = true;
@@ -620,8 +627,9 @@ namespace GenshinArtifactOCR
                 return;
             }
             string timestamp = DateTime.UtcNow.ToString("yyyy-MM-dd HH-mm-ssff");
-            int minLevel = checkbox_IgnoreUnleveled.Checked ? 1 : 0;
-            JObject currData = InventoryItem.listToGOODArtifacts(scannedItems, minLevel);
+            int minLevel = trackBar_minlevel.Value;
+            int maxLevel = trackBar_maxlevel.Value;
+            JObject currData = InventoryItem.listToGOODArtifacts(scannedItems, minLevel, maxLevel);
             bool useTemplate = checkbox_exportTemplate.Checked;
             if (useTemplate && !File.Exists(Database.appDir + @"\ExportTemplate.json"))
             {
@@ -634,7 +642,8 @@ namespace GenshinArtifactOCR
                 template.Remove("artifacts");
                 template.Add("artifacts", currData["artifacts"]);
                 currData = template;
-            } else
+            }
+            else
             {
                 currData.Add("format", "GOOD");
                 currData.Add("version", 1);
@@ -647,6 +656,43 @@ namespace GenshinArtifactOCR
             File.WriteAllText(fileName, currData.ToString());
             text_full.AppendText("Exported to \"" + fileName + "\"" + Environment.NewLine);
 
+        }
+
+        private void button_panelcycle_Click(object sender, EventArgs e)
+        {
+            if (button_panelcycle.Text == "Filters")
+            {
+                button_panelcycle.Text = "Artifact details";
+                panel_artifactdetails.Visible = false;
+                panel_filters.Visible = true;
+            }
+            else if (button_panelcycle.Text == "Artifact details")
+            {
+                button_panelcycle.Text = "Filters";
+                panel_artifactdetails.Visible = true;
+                panel_filters.Visible = false;
+            }
+
+        }
+
+        private void trackBar_minlevel_Scroll(object sender, EventArgs e)
+        {
+            label_minlevelnumber.Text = "" + trackBar_minlevel.Value;
+        }
+
+        private void trackBar_maxlevel_Scroll(object sender, EventArgs e)
+        {
+            label_maxlevelnumber.Text = "" + trackBar_maxlevel.Value;
+        }
+
+        private void trackBar_minrarity_Scroll(object sender, EventArgs e)
+        {
+            label_minraritynumber.Text = "" + trackBar_minrarity.Value;
+        }
+
+        private void trackBar_maxrarity_Scroll(object sender, EventArgs e)
+        {
+            label_maxraritynumber.Text = "" + trackBar_maxrarity.Value;
         }
     }
 }

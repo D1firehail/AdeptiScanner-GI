@@ -111,13 +111,13 @@ namespace GenshinArtifactOCR
             return result;
         }
 
-        public static JObject listToGOODArtifacts(List<InventoryItem> items, int minLevel)
+        public static JObject listToGOODArtifacts(List<InventoryItem> items, int minLevel, int maxLevel, int minRarity, int maxRarity)
         {
             JObject result = new JObject();
             JArray artifactJArr = new JArray();
             foreach (InventoryItem item in items)
             {
-                if (minLevel == 0 || item.level.Item2 >= minLevel)
+                if (item.level.Item2 >= minLevel && item.level.Item2 <= maxLevel && item.rarity >= minRarity && item.rarity <= maxRarity)
                     artifactJArr.Add(item.toGOODArtifact());
             }
             result.Add("artifacts", artifactJArr);
