@@ -42,6 +42,16 @@ namespace GenshinArtifactOCR
         private TesseractEngine[] threadEngines = new TesseractEngine[ThreadCount];
         private List<InventoryItem>[] threadResults = new List<InventoryItem>[ThreadCount];
 
+        enum panelChoices
+        {
+            ExportFilters,
+            ArtifactDetails
+        };
+        readonly string[] panelChoiceText = new string[]
+        {
+            "Export filters",
+            "Artifact details"
+        };
 
         private static InputSimulator sim = new InputSimulator();
 
@@ -718,18 +728,19 @@ namespace GenshinArtifactOCR
 
         private void button_panelcycle_Click(object sender, EventArgs e)
         {
-            if (button_panelcycle.Text == "Filters")
+            if (button_panelcycle.Text == panelChoiceText[(int)panelChoices.ExportFilters])
             {
-                button_panelcycle.Text = "Artifact details";
+                button_panelcycle.Text = panelChoiceText[(int)panelChoices.ArtifactDetails];
                 panel_artifactdetails.Visible = false;
                 panel_filters.Visible = true;
             }
-            else if (button_panelcycle.Text == "Artifact details")
+            else
             {
-                button_panelcycle.Text = "Filters";
+                //default switch to ExportFilters
+                button_panelcycle.Text = panelChoiceText[(int)panelChoices.ExportFilters];
                 panel_artifactdetails.Visible = true;
                 panel_filters.Visible = false;
-            }
+            } 
 
         }
 

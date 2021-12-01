@@ -67,6 +67,7 @@ namespace GenshinArtifactOCR
             this.panel_artifactdetails = new System.Windows.Forms.Panel();
             this.button_panelcycle = new System.Windows.Forms.Button();
             this.panel_filters = new System.Windows.Forms.Panel();
+            this.label_filterheadline = new System.Windows.Forms.Label();
             this.trackBar_maxrarity = new System.Windows.Forms.TrackBar();
             this.trackBar_minrarity = new System.Windows.Forms.TrackBar();
             this.label_maxraritynumber = new System.Windows.Forms.Label();
@@ -411,9 +412,9 @@ namespace GenshinArtifactOCR
             // button_export
             // 
             this.button_export.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button_export.Location = new System.Drawing.Point(493, 726);
+            this.button_export.Location = new System.Drawing.Point(494, 727);
             this.button_export.Name = "button_export";
-            this.button_export.Size = new System.Drawing.Size(75, 23);
+            this.button_export.Size = new System.Drawing.Size(236, 23);
             this.button_export.TabIndex = 34;
             this.button_export.Text = "Export";
             this.button_export.UseVisualStyleBackColor = true;
@@ -423,7 +424,7 @@ namespace GenshinArtifactOCR
             // 
             this.checkbox_exportTemplate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.checkbox_exportTemplate.AutoSize = true;
-            this.checkbox_exportTemplate.Location = new System.Drawing.Point(574, 730);
+            this.checkbox_exportTemplate.Location = new System.Drawing.Point(6, 191);
             this.checkbox_exportTemplate.Name = "checkbox_exportTemplate";
             this.checkbox_exportTemplate.Size = new System.Drawing.Size(88, 17);
             this.checkbox_exportTemplate.TabIndex = 35;
@@ -475,25 +476,28 @@ namespace GenshinArtifactOCR
             this.panel_artifactdetails.Name = "panel_artifactdetails";
             this.panel_artifactdetails.Size = new System.Drawing.Size(349, 228);
             this.panel_artifactdetails.TabIndex = 39;
+            this.panel_artifactdetails.Visible = false;
             // 
             // button_panelcycle
             // 
             this.button_panelcycle.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button_panelcycle.Location = new System.Drawing.Point(701, 246);
+            this.button_panelcycle.Location = new System.Drawing.Point(636, 246);
             this.button_panelcycle.Name = "button_panelcycle";
-            this.button_panelcycle.Size = new System.Drawing.Size(75, 23);
+            this.button_panelcycle.Size = new System.Drawing.Size(140, 23);
             this.button_panelcycle.TabIndex = 40;
-            this.button_panelcycle.Text = "Filters";
+            this.button_panelcycle.Text = "Artifact details";
             this.button_panelcycle.UseVisualStyleBackColor = true;
             this.button_panelcycle.Click += new System.EventHandler(this.button_panelcycle_Click);
             // 
             // panel_filters
             // 
             this.panel_filters.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel_filters.Controls.Add(this.label_filterheadline);
             this.panel_filters.Controls.Add(this.trackBar_maxrarity);
             this.panel_filters.Controls.Add(this.trackBar_minrarity);
             this.panel_filters.Controls.Add(this.label_maxraritynumber);
             this.panel_filters.Controls.Add(this.label_maxraritytext);
+            this.panel_filters.Controls.Add(this.checkbox_exportTemplate);
             this.panel_filters.Controls.Add(this.label_minraritynumber);
             this.panel_filters.Controls.Add(this.label_minraritytext);
             this.panel_filters.Controls.Add(this.label_maxlevelnumber);
@@ -506,11 +510,21 @@ namespace GenshinArtifactOCR
             this.panel_filters.Name = "panel_filters";
             this.panel_filters.Size = new System.Drawing.Size(349, 228);
             this.panel_filters.TabIndex = 40;
-            this.panel_filters.Visible = false;
+            // 
+            // label_filterheadline
+            // 
+            this.label_filterheadline.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.label_filterheadline.AutoSize = true;
+            this.label_filterheadline.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_filterheadline.Location = new System.Drawing.Point(8, 16);
+            this.label_filterheadline.Name = "label_filterheadline";
+            this.label_filterheadline.Size = new System.Drawing.Size(97, 20);
+            this.label_filterheadline.TabIndex = 12;
+            this.label_filterheadline.Text = "Export filters";
             // 
             // trackBar_maxrarity
             // 
-            this.trackBar_maxrarity.Location = new System.Drawing.Point(250, 109);
+            this.trackBar_maxrarity.Location = new System.Drawing.Point(250, 139);
             this.trackBar_maxrarity.Maximum = 5;
             this.trackBar_maxrarity.Name = "trackBar_maxrarity";
             this.trackBar_maxrarity.Size = new System.Drawing.Size(77, 45);
@@ -520,7 +534,7 @@ namespace GenshinArtifactOCR
             // 
             // trackBar_minrarity
             // 
-            this.trackBar_minrarity.Location = new System.Drawing.Point(85, 109);
+            this.trackBar_minrarity.Location = new System.Drawing.Point(85, 139);
             this.trackBar_minrarity.Maximum = 5;
             this.trackBar_minrarity.Name = "trackBar_minrarity";
             this.trackBar_minrarity.Size = new System.Drawing.Size(77, 45);
@@ -531,7 +545,7 @@ namespace GenshinArtifactOCR
             // label_maxraritynumber
             // 
             this.label_maxraritynumber.AutoSize = true;
-            this.label_maxraritynumber.Location = new System.Drawing.Point(206, 141);
+            this.label_maxraritynumber.Location = new System.Drawing.Point(206, 171);
             this.label_maxraritynumber.Name = "label_maxraritynumber";
             this.label_maxraritynumber.Size = new System.Drawing.Size(13, 13);
             this.label_maxraritynumber.TabIndex = 9;
@@ -540,7 +554,7 @@ namespace GenshinArtifactOCR
             // label_maxraritytext
             // 
             this.label_maxraritytext.AutoSize = true;
-            this.label_maxraritytext.Location = new System.Drawing.Point(168, 119);
+            this.label_maxraritytext.Location = new System.Drawing.Point(168, 149);
             this.label_maxraritytext.Name = "label_maxraritytext";
             this.label_maxraritytext.Size = new System.Drawing.Size(79, 13);
             this.label_maxraritytext.TabIndex = 8;
@@ -549,7 +563,7 @@ namespace GenshinArtifactOCR
             // label_minraritynumber
             // 
             this.label_minraritynumber.AutoSize = true;
-            this.label_minraritynumber.Location = new System.Drawing.Point(41, 141);
+            this.label_minraritynumber.Location = new System.Drawing.Point(41, 171);
             this.label_minraritynumber.Name = "label_minraritynumber";
             this.label_minraritynumber.Size = new System.Drawing.Size(13, 13);
             this.label_minraritynumber.TabIndex = 7;
@@ -558,7 +572,7 @@ namespace GenshinArtifactOCR
             // label_minraritytext
             // 
             this.label_minraritytext.AutoSize = true;
-            this.label_minraritytext.Location = new System.Drawing.Point(3, 119);
+            this.label_minraritytext.Location = new System.Drawing.Point(3, 149);
             this.label_minraritytext.Name = "label_minraritytext";
             this.label_minraritytext.Size = new System.Drawing.Size(76, 13);
             this.label_minraritytext.TabIndex = 6;
@@ -567,7 +581,7 @@ namespace GenshinArtifactOCR
             // label_maxlevelnumber
             // 
             this.label_maxlevelnumber.AutoSize = true;
-            this.label_maxlevelnumber.Location = new System.Drawing.Point(41, 93);
+            this.label_maxlevelnumber.Location = new System.Drawing.Point(60, 120);
             this.label_maxlevelnumber.Name = "label_maxlevelnumber";
             this.label_maxlevelnumber.Size = new System.Drawing.Size(19, 13);
             this.label_maxlevelnumber.TabIndex = 5;
@@ -576,7 +590,7 @@ namespace GenshinArtifactOCR
             // label_maxleveltext
             // 
             this.label_maxleveltext.AutoSize = true;
-            this.label_maxleveltext.Location = new System.Drawing.Point(3, 71);
+            this.label_maxleveltext.Location = new System.Drawing.Point(3, 101);
             this.label_maxleveltext.Name = "label_maxleveltext";
             this.label_maxleveltext.Size = new System.Drawing.Size(76, 13);
             this.label_maxleveltext.TabIndex = 4;
@@ -584,7 +598,7 @@ namespace GenshinArtifactOCR
             // 
             // trackBar_maxlevel
             // 
-            this.trackBar_maxlevel.Location = new System.Drawing.Point(82, 71);
+            this.trackBar_maxlevel.Location = new System.Drawing.Point(82, 101);
             this.trackBar_maxlevel.Maximum = 20;
             this.trackBar_maxlevel.Name = "trackBar_maxlevel";
             this.trackBar_maxlevel.Size = new System.Drawing.Size(257, 45);
@@ -595,7 +609,7 @@ namespace GenshinArtifactOCR
             // label_minlevelnumber
             // 
             this.label_minlevelnumber.AutoSize = true;
-            this.label_minlevelnumber.Location = new System.Drawing.Point(41, 46);
+            this.label_minlevelnumber.Location = new System.Drawing.Point(63, 75);
             this.label_minlevelnumber.Name = "label_minlevelnumber";
             this.label_minlevelnumber.Size = new System.Drawing.Size(13, 13);
             this.label_minlevelnumber.TabIndex = 2;
@@ -604,7 +618,7 @@ namespace GenshinArtifactOCR
             // label_minleveltext
             // 
             this.label_minleveltext.AutoSize = true;
-            this.label_minleveltext.Location = new System.Drawing.Point(3, 24);
+            this.label_minleveltext.Location = new System.Drawing.Point(3, 54);
             this.label_minleveltext.Name = "label_minleveltext";
             this.label_minleveltext.Size = new System.Drawing.Size(76, 13);
             this.label_minleveltext.TabIndex = 1;
@@ -612,7 +626,7 @@ namespace GenshinArtifactOCR
             // 
             // trackBar_minlevel
             // 
-            this.trackBar_minlevel.Location = new System.Drawing.Point(82, 24);
+            this.trackBar_minlevel.Location = new System.Drawing.Point(82, 54);
             this.trackBar_minlevel.Maximum = 20;
             this.trackBar_minlevel.Name = "trackBar_minlevel";
             this.trackBar_minlevel.Size = new System.Drawing.Size(257, 45);
@@ -630,7 +644,6 @@ namespace GenshinArtifactOCR
             this.Controls.Add(this.panel_artifactdetails);
             this.Controls.Add(this.label_traveler);
             this.Controls.Add(this.text_traveler);
-            this.Controls.Add(this.checkbox_exportTemplate);
             this.Controls.Add(this.button_export);
             this.Controls.Add(this.button_resume);
             this.Controls.Add(this.button_hardCancel);
@@ -712,6 +725,7 @@ namespace GenshinArtifactOCR
         private System.Windows.Forms.Label label_minraritytext;
         private System.Windows.Forms.TrackBar trackBar_maxrarity;
         private System.Windows.Forms.TrackBar trackBar_minrarity;
+        private System.Windows.Forms.Label label_filterheadline;
     }
 }
 
