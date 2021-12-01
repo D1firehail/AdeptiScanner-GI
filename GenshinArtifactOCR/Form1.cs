@@ -86,7 +86,7 @@ namespace GenshinArtifactOCR
             image_preview.Image = new Bitmap(img_Raw);
         }
 
-        private void eventGotFocus(object sender, EventArgs e)
+        private bool TryPauseAuto()
         {
             if (!pauseAuto && autoRunning)
             {
@@ -95,7 +95,14 @@ namespace GenshinArtifactOCR
                 button_hardCancel.Enabled = true;
                 button_softCancel.Enabled = true;
                 button_resume.Enabled = true;
+                return true;
             }
+            return false;
+        }
+
+        private void eventGotFocus(object sender, EventArgs e)
+        {
+            TryPauseAuto();
         }
 
         public void AppendStatusText(string value, bool setButtons)
@@ -238,7 +245,7 @@ namespace GenshinArtifactOCR
 
         private void runAuto(bool saveImages, int clickSleepDuration = 100, int scrollSleepDuration = 1500, int recheckSleepDuration = 300)
         {
-            text_full.Text = "Starting auto-run. ALT TAB TO PAUSE/CANCEL" + Environment.NewLine + "If no artifact switching happens, you forgot to run as admin" + Environment.NewLine;
+            text_full.Text = "Starting auto-run. ---ALT TAB TO PAUSE/CANCEL---" + Environment.NewLine + "If no artifact switching happens, you forgot to run as admin" + Environment.NewLine;
             autoRunning = true;
             autoCaptureDone = false;
             //start worker threads
@@ -262,6 +269,13 @@ namespace GenshinArtifactOCR
                 Rectangle gridArea = new Rectangle(savedGameArea.X, savedGameArea.Y, savedArtifactArea.X - savedGameArea.X, savedGameArea.Height);
                 Point gridOffset = new Point(gridArea.X, gridArea.Y);
                 List<string> foundArtifactHashes = new List<string>();
+
+                //make sure cursor is on the correct screen
+                System.Threading.Thread.Sleep(50);
+                System.Windows.Forms.Cursor.Position = new Point(0, 0);
+                System.Threading.Thread.Sleep(50);
+                System.Windows.Forms.Cursor.Position = new Point(0, 0);
+                System.Threading.Thread.Sleep(50);
 
                 while (running)
                 {
@@ -302,9 +316,7 @@ namespace GenshinArtifactOCR
                         {
                             if (hardCancelAuto)
                             {
-                                AppendStatusText("", true);
-                                autoRunning = false;
-                                return;
+                                goto hard_cancel_pos;
                             }
                             if (softCancelAuto)
                             {
@@ -358,9 +370,7 @@ namespace GenshinArtifactOCR
                         {
                             if (hardCancelAuto)
                             {
-                                AppendStatusText("", true);
-                                autoRunning = false;
-                                return;
+                                goto hard_cancel_pos;
                             }
 
                             if (softCancelAuto)
@@ -371,7 +381,7 @@ namespace GenshinArtifactOCR
                             }
                             System.Threading.Thread.Sleep(1000);
                         }
-                        clickPos(p.X, p.Y - 10);
+                        clickPos(p.X, p.Y);
                         System.Threading.Thread.Sleep(clickSleepDuration);
 
                         Bitmap artifactSC = ImageProcessing.CaptureScreenshot(saveImages, savedArtifactArea, true);
@@ -439,9 +449,7 @@ namespace GenshinArtifactOCR
                     {
                         if (hardCancelAuto)
                         {
-                            AppendStatusText("", true);
-                            autoRunning = false;
-                            return;
+                            goto hard_cancel_pos;
                         }
                         System.Threading.Thread.Sleep(1000);
                     }
@@ -467,10 +475,11 @@ namespace GenshinArtifactOCR
                     AppendStatusText(item.ToString() + Environment.NewLine, false);
                 }
 
-
+                AppendStatusText("All bad results displayed" + Environment.NewLine, false);
+            
+            hard_cancel_pos:
                 runtime.Stop();
-                AppendStatusText("All bad results displayed" + Environment.NewLine
-                    + "Time elapsed: " + runtime.ElapsedMilliseconds + "ms" + Environment.NewLine, true);
+                AppendStatusText("Time elapsed: " + runtime.ElapsedMilliseconds + "ms" + Environment.NewLine, true);
                 autoRunning = false;
             }));
         }
