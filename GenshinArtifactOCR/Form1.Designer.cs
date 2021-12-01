@@ -254,7 +254,7 @@ namespace GenshinArtifactOCR
             this.btn_OCR.Name = "btn_OCR";
             this.btn_OCR.Size = new System.Drawing.Size(75, 23);
             this.btn_OCR.TabIndex = 18;
-            this.btn_OCR.Text = "OCR";
+            this.btn_OCR.Text = "Read Stats";
             this.btn_OCR.UseVisualStyleBackColor = true;
             this.btn_OCR.Click += new System.EventHandler(this.btn_OCR_Click);
             // 
@@ -305,11 +305,11 @@ namespace GenshinArtifactOCR
             this.checkbox_OCRcapture.AutoSize = true;
             this.checkbox_OCRcapture.Checked = true;
             this.checkbox_OCRcapture.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkbox_OCRcapture.Location = new System.Drawing.Point(493, 620);
+            this.checkbox_OCRcapture.Location = new System.Drawing.Point(494, 620);
             this.checkbox_OCRcapture.Name = "checkbox_OCRcapture";
-            this.checkbox_OCRcapture.Size = new System.Drawing.Size(93, 17);
+            this.checkbox_OCRcapture.Size = new System.Drawing.Size(102, 17);
             this.checkbox_OCRcapture.TabIndex = 23;
-            this.checkbox_OCRcapture.Text = "OCR captures";
+            this.checkbox_OCRcapture.Text = "Capture on read";
             this.checkbox_OCRcapture.UseVisualStyleBackColor = true;
             // 
             // checkbox_saveImages
@@ -377,11 +377,11 @@ namespace GenshinArtifactOCR
             // 
             this.button_softCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.button_softCancel.Enabled = false;
-            this.button_softCancel.Location = new System.Drawing.Point(574, 698);
+            this.button_softCancel.Location = new System.Drawing.Point(493, 726);
             this.button_softCancel.Name = "button_softCancel";
-            this.button_softCancel.Size = new System.Drawing.Size(75, 23);
+            this.button_softCancel.Size = new System.Drawing.Size(153, 23);
             this.button_softCancel.TabIndex = 31;
-            this.button_softCancel.Text = "Stop search";
+            this.button_softCancel.Text = "Stop after processing";
             this.button_softCancel.UseVisualStyleBackColor = true;
             this.button_softCancel.Click += new System.EventHandler(this.button_softCancel_Click);
             // 
@@ -389,11 +389,11 @@ namespace GenshinArtifactOCR
             // 
             this.button_hardCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.button_hardCancel.Enabled = false;
-            this.button_hardCancel.Location = new System.Drawing.Point(655, 698);
+            this.button_hardCancel.Location = new System.Drawing.Point(574, 698);
             this.button_hardCancel.Name = "button_hardCancel";
             this.button_hardCancel.Size = new System.Drawing.Size(75, 23);
             this.button_hardCancel.TabIndex = 32;
-            this.button_hardCancel.Text = "Hard stop";
+            this.button_hardCancel.Text = "Stop now";
             this.button_hardCancel.UseVisualStyleBackColor = true;
             this.button_hardCancel.Click += new System.EventHandler(this.button_hardCancel_Click);
             // 
@@ -412,11 +412,11 @@ namespace GenshinArtifactOCR
             // button_export
             // 
             this.button_export.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button_export.Location = new System.Drawing.Point(494, 727);
+            this.button_export.Location = new System.Drawing.Point(655, 698);
             this.button_export.Name = "button_export";
-            this.button_export.Size = new System.Drawing.Size(236, 23);
+            this.button_export.Size = new System.Drawing.Size(75, 51);
             this.button_export.TabIndex = 34;
-            this.button_export.Text = "Export";
+            this.button_export.Text = "Export Results";
             this.button_export.UseVisualStyleBackColor = true;
             this.button_export.Click += new System.EventHandler(this.button_export_Click);
             // 
