@@ -29,7 +29,7 @@ namespace GenshinArtifactOCR
         private bool pauseAuto = true;
         private bool softCancelAuto = true;
         private bool hardCancelAuto = true;
-
+        private KeyHandler ghk;
 
         bool autoRunning = false;
         bool autoCaptureDone = false;
@@ -84,6 +84,12 @@ namespace GenshinArtifactOCR
             }
             img_Filtered = new Bitmap(img_Raw);
             image_preview.Image = new Bitmap(img_Raw);
+            FormClosing += GenshinArtifactOCR_FormClosing;
+        }
+
+        private void GenshinArtifactOCR_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            unregisterKey();
         }
 
         private bool TryPauseAuto()
@@ -103,6 +109,41 @@ namespace GenshinArtifactOCR
         private void eventGotFocus(object sender, EventArgs e)
         {
             TryPauseAuto();
+        }
+
+        public void registerKey()
+        {
+            if (InvokeRequired)
+            {
+                this.Invoke(new Action(registerKey));
+                return;
+            }
+            if (ghk == null)
+            {
+                ghk = new KeyHandler(Keys.Escape, this);
+            }
+            ghk.Register();
+        }
+
+        public void unregisterKey()
+        {
+            if (InvokeRequired)
+            {
+                this.Invoke(new Action(unregisterKey));
+                return;
+            }
+            if (ghk == null)
+            {
+                return;
+            }
+            ghk.Unregister();
+        }
+
+        protected override void WndProc(ref Message m)
+        {
+            if (m.Msg == KeyHandler.WM_HOTKEY_MSG_ID)
+                TryPauseAuto();
+            base.WndProc(ref m);
         }
 
         public void AppendStatusText(string value, bool setButtons)
@@ -245,9 +286,10 @@ namespace GenshinArtifactOCR
 
         private void runAuto(bool saveImages, int clickSleepDuration = 100, int scrollSleepDuration = 1500, int recheckSleepDuration = 300)
         {
-            text_full.Text = "Starting auto-run. ---ALT TAB TO PAUSE/CANCEL---" + Environment.NewLine + "If no artifact switching happens, you forgot to run as admin" + Environment.NewLine;
+            text_full.Text = "Starting auto-run. ---Press ESCAPE to pause---" + Environment.NewLine + "If no artifact switching happens, you forgot to run as admin" + Environment.NewLine;
             autoRunning = true;
             autoCaptureDone = false;
+            registerKey(); //activate pause auto hotkey
             //start worker threads
             for (int i = 0; i < ThreadCount; i++)
             {
@@ -476,8 +518,9 @@ namespace GenshinArtifactOCR
                 }
 
                 AppendStatusText("All bad results displayed" + Environment.NewLine, false);
-            
+
             hard_cancel_pos:
+                unregisterKey();
                 runtime.Stop();
                 AppendStatusText("Time elapsed: " + runtime.ElapsedMilliseconds + "ms" + Environment.NewLine, true);
                 autoRunning = false;
