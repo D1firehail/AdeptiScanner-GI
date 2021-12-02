@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{2C37347B-B97C-4C85-8C32-EDD759A80224}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>GenshinArtifactOCR</RootNamespace>
-    <AssemblyName>GenshinArtifactOCR</AssemblyName>
+    <RootNamespace>AdeptiScanner_GI</RootNamespace>
+    <AssemblyName>AdeptiScanner GI</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -82,6 +82,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="ScannerFiles\ArtifactInfo.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
