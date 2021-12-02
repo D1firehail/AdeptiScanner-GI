@@ -15,10 +15,10 @@ OCR-based inventory scanner for Genshin Impact, with both a manual and automatic
     - It may work for other resolutions, but it's likely to run into issues for lower resolutions or different aspect ratios
 2. Place the game window in a position that covers the middle of your primary display. 
     - **Make sure nothing is covering the game window!**
-    - Example window position for 1080p monitor can be found ---here---. Notice that the preview portion of the window is off-screen while actively using the scanner
+    - [Example window position for 1080p monitor](https://github.com/D1firehail/AdeptiScanner-GI/blob/master/1080p-example.png?raw=true). Notice that the preview portion of the window is off-screen while actively using the scanner
 3. Open the artifact section on your main backpack and select a 5 star artifact with a full length item description
 4. Press "Capture"
-    - The preview should look something like **---this---** afterwards. If it includes stuff too far to the right, try moving the camera in-game a bit and repeat from step 3
+    - The preview should look [something like this](https://github.com/D1firehail/AdeptiScanner-GI/blob/master/Capture-example.png?raw=true) afterwards. If it includes stuff too far to the right, try moving the camera in-game a bit and repeat from step 3
 You're now ready for manual or automatic artifact scanning
 
 ### Manual scanning
@@ -33,7 +33,7 @@ You're now ready for manual or automatic artifact scanning
 - Automated scanning will only work properly if this program is being run as admin
 - Automated scanning is expected to work for 4 and 5 star artifacts, it's not expected to automatically scroll through any lower tier artifacts
 1. Follow the instructions under `How to prepare for scanning`
-2. (Optional) Scroll your artifact list to look something like **---this---** to lower the amount of times it has to scroll. Note how the stars for the top row is visible and the white/Beige label for the bottom row is fully visible
+2. (Optional) Scroll your artifact list to look [something like this](https://github.com/D1firehail/AdeptiScanner-GI/blob/master/scroll-example.png?raw=true) to lower the amount of times it has to scroll. Note how the stars for the top row is visible and the white/Beige label for the bottom row is fully visible
 3. Press the `Start Auto` button
     - During the scan, you can press the escape button on your keyboard to pause it
     - `Resume` will make the scanner resume the scan
