@@ -82,6 +82,7 @@ namespace AdeptiScanner_GI
             this.trackBar_minlevel = new System.Windows.Forms.TrackBar();
             this.label_appversion = new System.Windows.Forms.Label();
             this.label_dataversion = new System.Windows.Forms.Label();
+            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             ((System.ComponentModel.ISupportInitialize)(this.image_preview)).BeginInit();
             this.panel_artifactdetails.SuspendLayout();
             this.panel_filters.SuspendLayout();
@@ -655,12 +656,25 @@ namespace AdeptiScanner_GI
             this.label_dataversion.TabIndex = 42;
             this.label_dataversion.Text = "Data version: XX.XX";
             // 
-            // AdeptiScanner_GI
+            // linkLabel1
+            // 
+            this.linkLabel1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.linkLabel1.AutoSize = true;
+            this.linkLabel1.Location = new System.Drawing.Point(12, 736);
+            this.linkLabel1.Name = "linkLabel1";
+            this.linkLabel1.Size = new System.Drawing.Size(38, 13);
+            this.linkLabel1.TabIndex = 43;
+            this.linkLabel1.TabStop = true;
+            this.linkLabel1.Text = "Github";
+            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
+            // 
+            // ScannerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.LightGray;
             this.ClientSize = new System.Drawing.Size(784, 761);
+            this.Controls.Add(this.linkLabel1);
             this.Controls.Add(this.label_dataversion);
             this.Controls.Add(this.label_appversion);
             this.Controls.Add(this.panel_filters);
@@ -681,7 +695,7 @@ namespace AdeptiScanner_GI
             this.Controls.Add(this.btn_capture);
             this.Controls.Add(this.image_preview);
             this.MinimumSize = new System.Drawing.Size(650, 600);
-            this.Name = "AdeptiScanner_GI";
+            this.Name = "ScannerForm";
             this.Text = "AdeptiScanner_GI";
             ((System.ComponentModel.ISupportInitialize)(this.image_preview)).EndInit();
             this.panel_artifactdetails.ResumeLayout(false);
@@ -752,6 +766,7 @@ namespace AdeptiScanner_GI
         private System.Windows.Forms.Label label_filterheadline;
         private System.Windows.Forms.Label label_appversion;
         private System.Windows.Forms.Label label_dataversion;
+        private System.Windows.Forms.LinkLabel linkLabel1;
     }
 }
 

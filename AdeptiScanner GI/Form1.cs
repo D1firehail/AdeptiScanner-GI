@@ -766,5 +766,10 @@ namespace AdeptiScanner_GI
         {
             label_maxraritynumber.Text = "" + trackBar_maxrarity.Value;
         }
+
+        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://github.com/D1firehail/AdeptiScanner-GI");
+        }
     }
 }
