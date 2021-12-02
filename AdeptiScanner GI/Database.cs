@@ -6,7 +6,7 @@ using System.IO;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
-namespace GenshinArtifactOCR
+namespace AdeptiScanner_GI
 {
     class Database
     {

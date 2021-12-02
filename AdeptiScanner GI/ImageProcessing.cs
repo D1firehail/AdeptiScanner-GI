@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Tesseract;
 
-namespace GenshinArtifactOCR
+namespace AdeptiScanner_GI
 {
     class ImageProcessing
     {

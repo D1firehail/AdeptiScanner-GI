@@ -9,7 +9,7 @@
 //------------------------------------------------------------------------------
 
 
-namespace GenshinArtifactOCR.Properties
+namespace AdeptiScanner_GI.Properties
 {
     /// <summary>
     ///   A strongly-typed resource class, for looking up localized strings, etc.
@@ -43,7 +43,7 @@ namespace GenshinArtifactOCR.Properties
             {
                 if ((resourceMan == null))
                 {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("GenshinArtifactOCR.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("AdeptiScanner_GI.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

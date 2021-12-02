@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace GenshinArtifactOCR
+namespace AdeptiScanner_GI
 {
     class InventoryItem
     {

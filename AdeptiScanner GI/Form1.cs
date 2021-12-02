@@ -16,9 +16,9 @@ using System.Windows.Input;
 using Tesseract;
 using WindowsInput;
 
-namespace GenshinArtifactOCR
+namespace AdeptiScanner_GI
 {
-    public partial class GenshinArtifactOCR : Form
+    public partial class ScannerForm : Form
     {
         private TesseractEngine tessEngine;
         private Bitmap img_Raw;
@@ -55,12 +55,12 @@ namespace GenshinArtifactOCR
 
         private static InputSimulator sim = new InputSimulator();
 
-        public GenshinArtifactOCR()
+        public ScannerForm()
         {
             InitializeComponent();
             label_dataversion.Text = "Data Version: " + Database.dataVersion;
             label_appversion.Text = "Program Version: " + Database.programVersion;
-            this.Text = "GenshinArtifactOCR V" + Database.programVersion;
+            this.Text = "AdeptiScanner_GI V" + Database.programVersion;
             Activated += eventGotFocus;
             try
             {

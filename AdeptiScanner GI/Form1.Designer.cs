@@ -1,7 +1,7 @@
 ﻿
-namespace GenshinArtifactOCR
+namespace AdeptiScanner_GI
 {
-    partial class GenshinArtifactOCR
+    partial class ScannerForm
     {
         /// <summary>
         /// Required designer variable.
@@ -655,7 +655,7 @@ namespace GenshinArtifactOCR
             this.label_dataversion.TabIndex = 42;
             this.label_dataversion.Text = "Data version: XX.XX";
             // 
-            // GenshinArtifactOCR
+            // AdeptiScanner_GI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -681,8 +681,8 @@ namespace GenshinArtifactOCR
             this.Controls.Add(this.btn_capture);
             this.Controls.Add(this.image_preview);
             this.MinimumSize = new System.Drawing.Size(650, 600);
-            this.Name = "GenshinArtifactOCR";
-            this.Text = "GenshinArtifactOCR";
+            this.Name = "AdeptiScanner_GI";
+            this.Text = "AdeptiScanner_GI";
             ((System.ComponentModel.ISupportInitialize)(this.image_preview)).EndInit();
             this.panel_artifactdetails.ResumeLayout(false);
             this.panel_artifactdetails.PerformLayout();

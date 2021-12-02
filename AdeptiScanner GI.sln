@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31605.320
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GenshinArtifactOCR", "GenshinArtifactOCR\GenshinArtifactOCR.csproj", "{2C37347B-B97C-4C85-8C32-EDD759A80224}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdeptiScanner GI", "AdeptiScanner GI\AdeptiScanner GI.csproj", "{2C37347B-B97C-4C85-8C32-EDD759A80224}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
