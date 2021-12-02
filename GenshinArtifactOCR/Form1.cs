@@ -58,6 +58,9 @@ namespace GenshinArtifactOCR
         public GenshinArtifactOCR()
         {
             InitializeComponent();
+            label_dataversion.Text = "Data Version: " + Database.dataVersion;
+            label_appversion.Text = "Program Version: " + Database.programVersion;
+            this.Text = "GenshinArtifactOCR V" + Database.programVersion;
             Activated += eventGotFocus;
             try
             {

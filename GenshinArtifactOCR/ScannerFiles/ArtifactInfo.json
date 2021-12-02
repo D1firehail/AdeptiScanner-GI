@@ -1,4 +1,5 @@
 {
+	"DataVersion" :  "2.3",
 	"Pieces": [
 		{ "name": { "Flower of Life": "flower" } },
 		{ "name": { "Plume of Death": "plume" } },
@@ -139,7 +140,7 @@
 				"MainStats": [
 					{
 						"name": { "HP": "hp" },
-						"value": [ 645, 828, 1011, 1194, 1377, 1559, 1742, 1925, 2108, 2291, 2474, 2657, 2839, 3022, 3205, 3388  ]
+						"value": [ 645, 828, 1011, 1194, 1377, 1559, 1742, 1925, 2108, 2291, 2474, 2657, 2839, 3022, 3205, 3388 ]
 					},
 					{
 						"name": { "ATK": "atk" },
@@ -189,7 +190,7 @@
 				"Substats": [
 					{
 						"name": { "HP": "hp" },
-						"rolls": [ 167.30, 191.20, 215.10, 239,00 ]
+						"rolls": [ 167.30, 191.20, 215.10, 239, 00 ]
 					},
 					{
 						"name": { "ATK": "atk" },
@@ -288,7 +289,7 @@
 							"Anemo DMG Bonus%": "anemo_dmg_",
 							"Geo DMG Bonus%": "geo_dmg_"
 						},
-						"value": [ 5.2, 6.7, 8.2, 9.7, 11.2, 12.7, 14.2, 15.6, 17.1, 18.6, 20.1, 21.6, 23,1 ]
+						"value": [ 5.2, 6.7, 8.2, 9.7, 11.2, 12.7, 14.2, 15.6, 17.1, 18.6, 20.1, 21.6, 23, 1 ]
 					},
 					{
 						"name": {
@@ -487,11 +488,11 @@
 				"MainStats": [
 					{
 						"name": { "HP": "hp" },
-						"value": [ 129, 178, 227, 275, 324]
+						"value": [ 129, 178, 227, 275, 324 ]
 					},
 					{
 						"name": { "ATK": "atk" },
-						"value": [ 8, 12, 15, 18, 21]
+						"value": [ 8, 12, 15, 18, 21 ]
 					},
 					{
 						"name": {
@@ -585,51 +586,50 @@
 
 
 	],
-	"Characters" :
-	[
-		{"name" : {"Albedo" : "Albedo"} },
-		{"name" : {"Aloy" : "Aloy"} },
-		{"name" : {"Amber" : "Amber"} },
-		{"name" : {"Arataki Itto" : "AratakiItto"} },
-		{"name" : {"Barbara" : "Barbara"} },
-		{"name" : {"Beidou" : "Beidou"} },
-		{"name" : {"Bennett" : "Bennett"} },
-		{"name" : {"Chongyun" : "Chongyun"} },
-		{"name" : {"Diluc" : "Diluc"} },
-		{"name" : {"Diona" : "Diona"} },
-		{"name" : {"Eula" : "Eula"} },
-		{"name" : {"Fischl" : "Fischl"} },
-		{"name" : {"Ganyu" : "Ganyu"} },
-		{"name" : {"Gorou" : "Gorou"} },
-		{"name" : {"Hu Tao" : "HuTao"} },
-		{"name" : {"Jean" : "Jean"} },
-		{"name" : {"Kaedehara Kazuha" : "KaedeharaKazuha"} },
-		{"name" : {"Kaeya" : "Kaeya"} },
-		{"name" : {"Kamisato Ayaka" : "KamisatoAyaka"} },
-		{"name" : {"Keqing" : "Keqing"} },
-		{"name" : {"Klee" : "Klee"} },
-		{"name" : {"Kujou Sara" : "KujouSara"} },
-		{"name" : {"Lisa" : "Lisa"} },
-		{"name" : {"Mona" : "Mona"} },
-		{"name" : {"Ningguang" : "Ningguang"} },
-		{"name" : {"Noelle" : "Noelle"} },
-		{"name" : {"Qiqi" : "Qiqi"} },
-		{"name" : {"Raiden Shogun" : "RaidenShogun"} },
-		{"name" : {"Razor" : "Razor"} },
-		{"name" : {"Rosaria" : "Rosaria"} },
-		{"name" : {"Sangonomiya Kokomi" : "SangonomiyaKokomi"} },
-		{"name" : {"Sayu" : "Sayu"} },
-		{"name" : {"Sucrose" : "Sucrose"} },
-		{"name" : {"Tartaglia" : "Tartaglia"} },
-		{"name" : {"Thoma" : "Thoma"} },
-		{"name" : {"YOURNAMEHEREYOURNAMEHEREYOURNAMEHERE" : "Traveler"} },
-		{"name" : {"Venti" : "Venti"} },
-		{"name" : {"Xiangling" : "Xiangling"} },
-		{"name" : {"Xiao" : "Xiao"} },
-		{"name" : {"Xingqiu" : "Xingqiu"} },
-		{"name" : {"Xinyan" : "Xinyan"} },
-		{"name" : {"Yanfei" : "Yanfei"} },
-		{"name" : {"Yoimiya" : "Yoimiya"} },
-		{"name" : {"Zhongli" : "Zhongli"} }
+	"Characters": [
+		{ "name": { "Albedo": "Albedo" } },
+		{ "name": { "Aloy": "Aloy" } },
+		{ "name": { "Amber": "Amber" } },
+		{ "name": { "Arataki Itto": "AratakiItto" } },
+		{ "name": { "Barbara": "Barbara" } },
+		{ "name": { "Beidou": "Beidou" } },
+		{ "name": { "Bennett": "Bennett" } },
+		{ "name": { "Chongyun": "Chongyun" } },
+		{ "name": { "Diluc": "Diluc" } },
+		{ "name": { "Diona": "Diona" } },
+		{ "name": { "Eula": "Eula" } },
+		{ "name": { "Fischl": "Fischl" } },
+		{ "name": { "Ganyu": "Ganyu" } },
+		{ "name": { "Gorou": "Gorou" } },
+		{ "name": { "Hu Tao": "HuTao" } },
+		{ "name": { "Jean": "Jean" } },
+		{ "name": { "Kaedehara Kazuha": "KaedeharaKazuha" } },
+		{ "name": { "Kaeya": "Kaeya" } },
+		{ "name": { "Kamisato Ayaka": "KamisatoAyaka" } },
+		{ "name": { "Keqing": "Keqing" } },
+		{ "name": { "Klee": "Klee" } },
+		{ "name": { "Kujou Sara": "KujouSara" } },
+		{ "name": { "Lisa": "Lisa" } },
+		{ "name": { "Mona": "Mona" } },
+		{ "name": { "Ningguang": "Ningguang" } },
+		{ "name": { "Noelle": "Noelle" } },
+		{ "name": { "Qiqi": "Qiqi" } },
+		{ "name": { "Raiden Shogun": "RaidenShogun" } },
+		{ "name": { "Razor": "Razor" } },
+		{ "name": { "Rosaria": "Rosaria" } },
+		{ "name": { "Sangonomiya Kokomi": "SangonomiyaKokomi" } },
+		{ "name": { "Sayu": "Sayu" } },
+		{ "name": { "Sucrose": "Sucrose" } },
+		{ "name": { "Tartaglia": "Tartaglia" } },
+		{ "name": { "Thoma": "Thoma" } },
+		{ "name": { "YOURNAMEHEREYOURNAMEHEREYOURNAMEHERE": "Traveler" } },
+		{ "name": { "Venti": "Venti" } },
+		{ "name": { "Xiangling": "Xiangling" } },
+		{ "name": { "Xiao": "Xiao" } },
+		{ "name": { "Xingqiu": "Xingqiu" } },
+		{ "name": { "Xinyan": "Xinyan" } },
+		{ "name": { "Yanfei": "Yanfei" } },
+		{ "name": { "Yoimiya": "Yoimiya" } },
+		{ "name": { "Zhongli": "Zhongli" } }
 	]
 }

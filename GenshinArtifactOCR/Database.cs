@@ -12,6 +12,8 @@ namespace GenshinArtifactOCR
     {
         private static System.Globalization.CultureInfo culture = new System.Globalization.CultureInfo("en-GB", false);
         public static string appDir = Application.StartupPath + @"\ScannerFiles";
+        public static string programVersion = "X.X.X";
+        public static string dataVersion = "X.XX";
         //These get filled on startup by other file
         public static List<string> Pieces = new List<string>();
         public static List<Tuple<string, string>> Pieces_trans = new List<Tuple<string, string>>();
@@ -267,6 +269,10 @@ namespace GenshinArtifactOCR
                 MessageBox.Show("Error trying to access ArtifactInfo file" + Environment.NewLine + "Exact error:" + Environment.NewLine + e.Message,
                     "Scanner could not start", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Environment.Exit(-1);
+            }
+            if (allJson.TryGetValue("DataVersion", out JToken ver)) {
+                dataVersion = ver.ToObject<string>();
+                allJson.Remove("DataVersion");
             }
             foreach (KeyValuePair<string, JToken> entry in allJson)
             {

@@ -80,6 +80,8 @@ namespace GenshinArtifactOCR
             this.label_minlevelnumber = new System.Windows.Forms.Label();
             this.label_minleveltext = new System.Windows.Forms.Label();
             this.trackBar_minlevel = new System.Windows.Forms.TrackBar();
+            this.label_appversion = new System.Windows.Forms.Label();
+            this.label_dataversion = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.image_preview)).BeginInit();
             this.panel_artifactdetails.SuspendLayout();
             this.panel_filters.SuspendLayout();
@@ -633,12 +635,34 @@ namespace GenshinArtifactOCR
             this.trackBar_minlevel.TabIndex = 0;
             this.trackBar_minlevel.Scroll += new System.EventHandler(this.trackBar_minlevel_Scroll);
             // 
+            // label_appversion
+            // 
+            this.label_appversion.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.label_appversion.AutoSize = true;
+            this.label_appversion.Location = new System.Drawing.Point(64, 736);
+            this.label_appversion.Name = "label_appversion";
+            this.label_appversion.Size = new System.Drawing.Size(130, 13);
+            this.label_appversion.TabIndex = 41;
+            this.label_appversion.Text = "Program version: X.X.XXX";
+            // 
+            // label_dataversion
+            // 
+            this.label_dataversion.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.label_dataversion.AutoSize = true;
+            this.label_dataversion.Location = new System.Drawing.Point(200, 736);
+            this.label_dataversion.Name = "label_dataversion";
+            this.label_dataversion.Size = new System.Drawing.Size(104, 13);
+            this.label_dataversion.TabIndex = 42;
+            this.label_dataversion.Text = "Data version: XX.XX";
+            // 
             // GenshinArtifactOCR
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.LightGray;
             this.ClientSize = new System.Drawing.Size(784, 761);
+            this.Controls.Add(this.label_dataversion);
+            this.Controls.Add(this.label_appversion);
             this.Controls.Add(this.panel_filters);
             this.Controls.Add(this.button_panelcycle);
             this.Controls.Add(this.panel_artifactdetails);
@@ -656,7 +680,7 @@ namespace GenshinArtifactOCR
             this.Controls.Add(this.btn_OCR);
             this.Controls.Add(this.btn_capture);
             this.Controls.Add(this.image_preview);
-            this.MinimumSize = new System.Drawing.Size(600, 600);
+            this.MinimumSize = new System.Drawing.Size(650, 600);
             this.Name = "GenshinArtifactOCR";
             this.Text = "GenshinArtifactOCR";
             ((System.ComponentModel.ISupportInitialize)(this.image_preview)).EndInit();
@@ -726,6 +750,8 @@ namespace GenshinArtifactOCR
         private System.Windows.Forms.TrackBar trackBar_maxrarity;
         private System.Windows.Forms.TrackBar trackBar_minrarity;
         private System.Windows.Forms.Label label_filterheadline;
+        private System.Windows.Forms.Label label_appversion;
+        private System.Windows.Forms.Label label_dataversion;
     }
 }
 
