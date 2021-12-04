@@ -1,5 +1,7 @@
 # AdeptiScanner-GI
-OCR-based inventory scanner for Genshin Impact, with both a manual and automatic mode
+OCR-based inventory scanner for Genshin Impact, with both a manual and automatic mode.
+
+Please read instructions below before using. Download link for the latest version can be found [here](https://github.com/D1firehail/AdeptiScanner-GI/releases)
 
 ## Warnings
 - While using the auto mode, the program will take control of your mouse. You can press escape during the scan to pause it. Do not move or use your mouse during auto unless paused.
