@@ -15,13 +15,13 @@ Please read instructions below before using. Download link for the latest versio
 ## How to prepare for scanning
 1. Set the game to run in windowed mode at a resolution of 1600x900
     - It may work for other resolutions, but it's likely to run into issues for lower resolutions or different aspect ratios
-2. Place the game window in a position that covers the middle of your primary display. 
+2. Place the game window in a position that covers the middle of your **-primary-** display. 
     - **Make sure nothing is covering the game window!**
     - Example window position for 1080p monitor. Notice that the preview portion of the window is off-screen while doing the initial capture or using auto ![Example window position for 1080p monitor](https://github.com/D1firehail/AdeptiScanner-GI/blob/master/1080p-example.png?raw=true)
 3. Open the artifact section on your main backpack and select a 5 star artifact with a full length item description
         - Example ![Example](https://github.com/D1firehail/AdeptiScanner-GI/blob/master/Capture-length-example.png?raw=true)
 4. Press "Capture"
-    - Make sure the preview matches the good example, if it doesn't, try moving your camera around a bit in-game to change the background and repear again from step 3 ![something like this](https://github.com/D1firehail/AdeptiScanner-GI/blob/master/Capture-example.png?raw=true)
+    - Make sure the preview matches the good example, if it doesn't, try moving your camera around a bit in-game to change the background and repeat again from step 3 ![something like this](https://github.com/D1firehail/AdeptiScanner-GI/blob/master/Capture-example.png?raw=true)
 
 You're now ready for manual or automatic artifact scanning
 
