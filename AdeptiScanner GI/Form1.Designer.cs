@@ -595,9 +595,9 @@ namespace AdeptiScanner_GI
             this.label_maxleveltext.AutoSize = true;
             this.label_maxleveltext.Location = new System.Drawing.Point(3, 101);
             this.label_maxleveltext.Name = "label_maxleveltext";
-            this.label_maxleveltext.Size = new System.Drawing.Size(76, 13);
+            this.label_maxleveltext.Size = new System.Drawing.Size(79, 13);
             this.label_maxleveltext.TabIndex = 4;
-            this.label_maxleveltext.Text = "Minimum level:";
+            this.label_maxleveltext.Text = "Maximum level:";
             // 
             // trackBar_maxlevel
             // 
