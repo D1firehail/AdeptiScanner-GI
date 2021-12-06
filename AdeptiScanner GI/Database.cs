@@ -12,7 +12,7 @@ namespace AdeptiScanner_GI
     {
         private static System.Globalization.CultureInfo culture = new System.Globalization.CultureInfo("en-GB", false);
         public static string appDir = Application.StartupPath + @"\ScannerFiles";
-        public static string programVersion = "1.0";
+        public static string programVersion = "1.0.1";
         public static string dataVersion = "X.XX";
         //These get filled on startup by other file
         public static List<string> Pieces = new List<string>();
@@ -164,7 +164,7 @@ namespace AdeptiScanner_GI
 
                     int start = 0;
                     int stop = rolls.Count;
-                    for (int i = 0; i < 4; i++)
+                    for (int i = 0; i < 5; i++)
                     {
                         for (int j = start; j < stop; j++)
                         {
