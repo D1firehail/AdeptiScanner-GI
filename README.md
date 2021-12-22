@@ -22,6 +22,8 @@ Please read instructions below before using. Download link for the latest versio
         - Example ![Example](https://github.com/D1firehail/AdeptiScanner-GI/blob/master/Capture-length-example.png?raw=true)
 4. Press "Capture"
     - Make sure the preview matches the good example, if it doesn't, try moving your camera around a bit in-game to change the background and repeat again from step 3 ![something like this](https://github.com/D1firehail/AdeptiScanner-GI/blob/master/Capture-example.png?raw=true)
+5. (Optional) Enter your in-game name / traveler name in the `Traveler Name` text box. 
+    - Not entering this will cause any scanned artifacts that are equipped on your Traveler to be incorrectly detected as either equipped on the wrong character or not equipped at all
 
 You're now ready for manual or automatic artifact scanning
 
