@@ -1,5 +1,5 @@
 {
-	"DataVersion" :  "2.3",
+	"DataVersion" :  "2.4",
 	"Pieces": [
 		{ "name": { "Flower of Life": "flower" } },
 		{ "name": { "Plume of Death": "plume" } },
@@ -619,6 +619,7 @@
 		{ "name": { "Rosaria": "Rosaria" } },
 		{ "name": { "Sangonomiya Kokomi": "SangonomiyaKokomi" } },
 		{ "name": { "Sayu": "Sayu" } },
+		{ "name": { "Shenhe": "Shenhe" } },
 		{ "name": { "Sucrose": "Sucrose" } },
 		{ "name": { "Tartaglia": "Tartaglia" } },
 		{ "name": { "Thoma": "Thoma" } },
@@ -630,6 +631,7 @@
 		{ "name": { "Xinyan": "Xinyan" } },
 		{ "name": { "Yanfei": "Yanfei" } },
 		{ "name": { "Yoimiya": "Yoimiya" } },
+		{ "name": { "Yun Jin": "YunJin" } },
 		{ "name": { "Zhongli": "Zhongli" } }
 	]
 }
