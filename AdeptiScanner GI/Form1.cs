@@ -816,5 +816,17 @@ namespace AdeptiScanner_GI
         {
             System.Diagnostics.Process.Start("https://github.com/D1firehail/AdeptiScanner-GI");
         }
+
+        private void btn_Clear_Click(object sender, EventArgs e)
+        {
+            if (autoRunning)
+            {
+                text_full.AppendText("Ignored, auto currently running" + Environment.NewLine);
+                return;
+            }
+
+            text_full.AppendText("Cleared "+ scannedItems.Count + " items from results"  + Environment.NewLine);
+            scannedItems.Clear();
+        }
     }
 }

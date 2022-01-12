@@ -83,6 +83,7 @@ namespace AdeptiScanner_GI
             this.label_appversion = new System.Windows.Forms.Label();
             this.label_dataversion = new System.Windows.Forms.Label();
             this.linkLabel1 = new System.Windows.Forms.LinkLabel();
+            this.btn_Clear = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.image_preview)).BeginInit();
             this.panel_artifactdetails.SuspendLayout();
             this.panel_filters.SuspendLayout();
@@ -495,6 +496,7 @@ namespace AdeptiScanner_GI
             // panel_filters
             // 
             this.panel_filters.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel_filters.Controls.Add(this.btn_Clear);
             this.panel_filters.Controls.Add(this.label_filterheadline);
             this.panel_filters.Controls.Add(this.trackBar_maxrarity);
             this.panel_filters.Controls.Add(this.trackBar_minrarity);
@@ -668,6 +670,17 @@ namespace AdeptiScanner_GI
             this.linkLabel1.Text = "Github";
             this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
             // 
+            // btn_Clear
+            // 
+            this.btn_Clear.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btn_Clear.Location = new System.Drawing.Point(112, 187);
+            this.btn_Clear.Name = "btn_Clear";
+            this.btn_Clear.Size = new System.Drawing.Size(75, 23);
+            this.btn_Clear.TabIndex = 36;
+            this.btn_Clear.Text = "Clear results";
+            this.btn_Clear.UseVisualStyleBackColor = true;
+            this.btn_Clear.Click += new System.EventHandler(this.btn_Clear_Click);
+            // 
             // ScannerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -767,6 +780,7 @@ namespace AdeptiScanner_GI
         private System.Windows.Forms.Label label_appversion;
         private System.Windows.Forms.Label label_dataversion;
         private System.Windows.Forms.LinkLabel linkLabel1;
+        private System.Windows.Forms.Button btn_Clear;
     }
 }
 
