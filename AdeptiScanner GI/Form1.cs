@@ -9,6 +9,7 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Security.Principal;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -252,6 +253,13 @@ namespace AdeptiScanner_GI
             {
                 text_character.Text = item.character.Item1;
             }
+        }
+
+        //https://stackoverflow.com/questions/11660184/c-sharp-check-if-run-as-administrator
+        public static bool IsAdministrator()
+        {
+            return (new WindowsPrincipal(WindowsIdentity.GetCurrent()))
+                      .IsInRole(WindowsBuiltInRole.Administrator);
         }
 
         private void runOCRThread(int threadIndex)
@@ -682,6 +690,14 @@ namespace AdeptiScanner_GI
 
         private void button_auto_Click(object sender, EventArgs e)
         {
+            if (!IsAdministrator() && !Keyboard.IsKeyDown(Key.LeftShift))
+            {
+                MessageBox.Show("Cannot automatically scroll artifacts without admin perms" + Environment.NewLine + Environment.NewLine 
+                + "To use auto mode, restart scanner as admin",
+                "Insufficient permissions", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             bool saveImages = checkbox_saveImages.Checked;
             if (autoRunning)
             {
