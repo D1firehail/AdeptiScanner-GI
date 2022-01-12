@@ -402,7 +402,7 @@ namespace AdeptiScanner_GI
         /// </summary>
         /// <param name="full">Screenshot of main monitor</param>
         /// <returns>Area containing game</returns>
-        public static Rectangle findGameArea(Bitmap full)
+        public static Rectangle? findGameArea(Bitmap full)
         {
             //Prepare bytewise image processing
 
@@ -485,7 +485,7 @@ namespace AdeptiScanner_GI
                 }
                 return new Rectangle(left, top, width, height);
             }
-            return new Rectangle(0, 0, fullWidth, fullHeight);
+            return null;
         }
 
         /// <summary>

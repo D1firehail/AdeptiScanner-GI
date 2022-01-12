@@ -558,9 +558,38 @@ namespace AdeptiScanner_GI
             }
             else
             {
+                Bitmap oldRaw = img_Raw;
                 img_Raw = ImageProcessing.CaptureScreenshot(saveImages, Rectangle.Empty);
-                savedGameArea = ImageProcessing.findGameArea(img_Raw);
-                savedArtifactArea = ImageProcessing.findArtifactArea(img_Raw, savedGameArea);
+                Rectangle? tmpGameArea = ImageProcessing.findGameArea(img_Raw);
+                if (tmpGameArea == null)
+                {
+                    MessageBox.Show("Failed to find Game Area" + Environment.NewLine + 
+                        "Please make sure you're following the instructions properly."
+                        + Environment.NewLine + "If the problem persists, please contact scanner dev", "Failed to find Game Area"
+                        , MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    img_Raw = oldRaw;
+                    return;
+                }
+
+                try
+                {
+                    savedArtifactArea = ImageProcessing.findArtifactArea(img_Raw, tmpGameArea.Value);
+
+                } catch (Exception exc)
+                {
+                    MessageBox.Show("Failed to find Artifact Area" + Environment.NewLine +
+                        "Please make sure you're following the instructions properly."
+                        + Environment.NewLine + "If the problem persists, please contact scanner dev"
+                        + Environment.NewLine + Environment.NewLine + "---" + Environment.NewLine + Environment.NewLine + "Exact error message: " + Environment.NewLine + exc.Message
+                        + Environment.NewLine + Environment.NewLine + "Stack trace: " + Environment.NewLine + exc.StackTrace
+                        , "Failed to find Artifact Area"
+                        , MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    img_Raw = oldRaw;
+                    return;
+                }
+
+                savedGameArea = tmpGameArea.Value;
+
             }
 
 
