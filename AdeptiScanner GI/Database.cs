@@ -266,7 +266,10 @@ namespace AdeptiScanner_GI
             } 
             catch (Exception e)
             {
-                MessageBox.Show("Error trying to access ArtifactInfo file" + Environment.NewLine + "Exact error:" + Environment.NewLine + e.Message,
+                MessageBox.Show("Error trying to access ArtifactInfo file" + Environment.NewLine + Environment.NewLine +
+                    "Exact error:" + Environment.NewLine + e.Message + Environment.NewLine + Environment.NewLine +
+                    "Stack trace: " + Environment.NewLine + e.StackTrace,
+
                     "Scanner could not start", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Environment.Exit(-1);
             }
