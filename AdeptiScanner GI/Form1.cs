@@ -550,7 +550,12 @@ namespace AdeptiScanner_GI
             }));
         }
 
-
+        enum CaptureDebugMode { 
+            Off, 
+            FullScreen,
+            GameWindow,
+            ArtifactArea
+        };
 
         private void btn_capture_Click(object sender, EventArgs e)
         {
@@ -558,34 +563,60 @@ namespace AdeptiScanner_GI
             if (autoRunning)
             {
                 text_full.AppendText("Ignored, auto currently running" + Environment.NewLine);
+                return;
             }
             resetTextBoxes();
+
+            //Nothing = Normal, LShift + LCtrl = Game, LShift = Artifact, LCtrl = FullScreen
+            CaptureDebugMode debugMode = CaptureDebugMode.Off;
             if (Keyboard.IsKeyDown(Key.LeftShift))
             {
-                img_Raw = ImageProcessing.LoadScreenshot();
-                savedGameArea = new Rectangle(0, 0, img_Raw.Width, img_Raw.Height);
-                savedArtifactArea = new Rectangle(0, 0, img_Raw.Width, img_Raw.Height);
-            }
-            else
+                if (Keyboard.IsKeyDown(Key.LeftCtrl))
+                {
+                    debugMode = CaptureDebugMode.GameWindow;
+                } else
+                {
+                    debugMode = CaptureDebugMode.ArtifactArea;
+                }
+            } else if (Keyboard.IsKeyDown(Key.LeftCtrl)) 
             {
-                Bitmap oldRaw = img_Raw;
+                debugMode = CaptureDebugMode.FullScreen;
+            }
+
+            if (debugMode != CaptureDebugMode.Off)
+            {
+                img_Raw = ImageProcessing.LoadScreenshot();
+            } else
+            {
                 img_Raw = ImageProcessing.CaptureScreenshot(saveImages, Rectangle.Empty);
-                Rectangle? tmpGameArea = ImageProcessing.findGameArea(img_Raw);
+            }
+
+            Rectangle? tmpGameArea = new Rectangle(0, 0, img_Raw.Width, img_Raw.Height);
+            if (debugMode == CaptureDebugMode.Off || debugMode == CaptureDebugMode.FullScreen)
+            {
+                tmpGameArea = ImageProcessing.findGameArea(img_Raw);
                 if (tmpGameArea == null)
                 {
-                    MessageBox.Show("Failed to find Game Area" + Environment.NewLine + 
+                    MessageBox.Show("Failed to find Game Area" + Environment.NewLine +
                         "Please make sure you're following the instructions properly."
                         + Environment.NewLine + "If the problem persists, please contact scanner dev", "Failed to find Game Area"
                         , MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    img_Raw = oldRaw;
-                    return;
                 }
+            }
 
+            bool ArtifactAreaCaptured = tmpGameArea != null;
+            if (debugMode == CaptureDebugMode.ArtifactArea)
+            {
+                savedArtifactArea = new Rectangle(0, 0, img_Raw.Width, img_Raw.Height);
+            } else if (tmpGameArea != null)
+            {
                 try
                 {
                     savedArtifactArea = ImageProcessing.findArtifactArea(img_Raw, tmpGameArea.Value);
-
-                } catch (Exception exc)
+                    if (savedArtifactArea.Width == 0 || savedArtifactArea.Height == 0)
+                        throw new Exception("Detected artifact are has width or height 0");
+                }
+                catch (Exception exc)
                 {
                     MessageBox.Show("Failed to find Artifact Area" + Environment.NewLine +
                         "Please make sure you're following the instructions properly."
@@ -594,24 +625,13 @@ namespace AdeptiScanner_GI
                         + Environment.NewLine + Environment.NewLine + "Stack trace: " + Environment.NewLine + exc.StackTrace
                         , "Failed to find Artifact Area"
                         , MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    img_Raw = oldRaw;
-                    return;
+                    ArtifactAreaCaptured = false;
                 }
+            }
 
+            if (ArtifactAreaCaptured)
+            {
                 savedGameArea = tmpGameArea.Value;
-
-            }
-
-
-
-
-            if (savedArtifactArea.Width == 0 || savedArtifactArea.Height == 0)
-            {
-                savedArtifactArea = savedGameArea;
-                image_preview.Image = new Bitmap(img_Raw);
-            }
-            else
-            {
                 btn_OCR.Enabled = true;
                 button_auto.Enabled = true;
             }
@@ -619,28 +639,34 @@ namespace AdeptiScanner_GI
             string timestamp = DateTime.UtcNow.ToString("yyyy-MM-dd HH-mm-ssff");
             if (saveImages)
             {
-                Bitmap gameImg = new Bitmap(savedGameArea.Width, savedGameArea.Height);
-                using (Graphics g = Graphics.FromImage(gameImg))
+                if (tmpGameArea != null)
                 {
-                    g.DrawImage(img_Raw, 0, 0, savedGameArea, GraphicsUnit.Pixel);
+                    Bitmap gameImg = new Bitmap(savedGameArea.Width, savedGameArea.Height);
+                    using (Graphics g = Graphics.FromImage(gameImg))
+                    {
+                        g.DrawImage(img_Raw, 0, 0, savedGameArea, GraphicsUnit.Pixel);
+                    }
+                    gameImg.Save(Database.appDir + @"\images\GenshinGameArea " + timestamp + ".png");
                 }
-                gameImg.Save(Database.appDir + @"\images\GenshinGameArea " + timestamp + ".png");
-                Bitmap artifactImg = new Bitmap(savedArtifactArea.Width, savedArtifactArea.Height);
-                using (Graphics g = Graphics.FromImage(artifactImg))
+
+                if (ArtifactAreaCaptured)
+                {
+                    Bitmap artifactImg = new Bitmap(savedArtifactArea.Width, savedArtifactArea.Height);
+                    using (Graphics g = Graphics.FromImage(artifactImg))
+                    {
+                        g.DrawImage(img_Raw, 0, 0, savedArtifactArea, GraphicsUnit.Pixel);
+                    }
+                    artifactImg.Save(Database.appDir + @"\images\GenshinArtifactArea " + timestamp + ".png");
+                }
+            }
+
+            if (ArtifactAreaCaptured)
+            {
+                image_preview.Image = new Bitmap(savedArtifactArea.Width, savedArtifactArea.Height);
+                using (Graphics g = Graphics.FromImage(image_preview.Image))
                 {
                     g.DrawImage(img_Raw, 0, 0, savedArtifactArea, GraphicsUnit.Pixel);
                 }
-                artifactImg.Save(Database.appDir + @"\images\GenshinArtifactArea " + timestamp + ".png");
-            }
-
-            if (savedArtifactArea.Width == 0 || savedArtifactArea.Height == 0)
-            {
-                image_preview.Image = new Bitmap(img_Raw);
-            }
-            image_preview.Image = new Bitmap(savedArtifactArea.Width, savedArtifactArea.Height);
-            using (Graphics g = Graphics.FromImage(image_preview.Image))
-            {
-                g.DrawImage(img_Raw, 0, 0, savedArtifactArea, GraphicsUnit.Pixel);
             }
         }
 
