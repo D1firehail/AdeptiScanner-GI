@@ -3,10 +3,13 @@ OCR-based inventory scanner for Genshin Impact, with both a manual and automatic
 
 Please read instructions below before using. Download link for the latest version can be found [here](https://github.com/D1firehail/AdeptiScanner-GI/releases)
 
-## Warnings
+## Warnings and important notes
+- ***For the automated scanning mode of this program to work, it needs to run as admin.***
 - While using the auto mode, the program will take control of your mouse. You can press escape during the scan to pause it. Do not move or use your mouse during auto unless paused.
-- For the automated scanning mode of this program to work, it needs to run as admin. 
 - According to my interpretation of the [Genshin TOS](https://genshin.mihoyo.com/en/company/terms), use of this scanner should be allowed as I do not believe it causes an unfair competitive advantage. To my knowledge, nobody has gotten in trouble for the use of this or similar programs so far, but if you're worried about it I suggest avoiding the auto mode.
+- AdeptiScanner relies on specific colour values and a white window header to identify the contents of the image
+    - Anything that changes in-game colours can mess up the results. Examples of programs/features that can interfere is Reshade, Windows Night Light, F.lux, Nvidia Filters and Colourblind compensation tools.
+    -   If your window header for the game is not white, try changing it in Windows settings (Themes -> Colours). If that isn't an option, you can try tricking it by covering the window header with a mostly white window like notepad.
 
 ## Updating for a new version
 - For the vast majority of game updates, all you should need is to replace the `ArtifactInfo.json` file inside `ScannerFiles` with an updated one. You can find the latest version [here](https://raw.githubusercontent.com/D1firehail/AdeptiScanner-GI/master/AdeptiScanner%20GI/ScannerFiles/ArtifactInfo.json)
@@ -15,8 +18,8 @@ Please read instructions below before using. Download link for the latest versio
 ## How to prepare for scanning
 1. Set the game to run in windowed mode at a resolution of 1600x900
     - It may work for other resolutions, but it's likely to run into issues for lower resolutions or different aspect ratios
-2. Place the game window in a position that covers the middle of your **-primary-** display. 
-    - **Make sure nothing is covering the game window!**
+2. Place the game window in a position that covers the middle of your ***-primary-*** display. 
+    - ***Make sure nothing is covering the game window!***
     - Example window position for 1080p monitor. Notice that the preview portion of the window is off-screen while doing the initial capture or using auto ![Example window position for 1080p monitor](https://github.com/D1firehail/AdeptiScanner-GI/blob/master/1080p-example.png?raw=true)
 3. Open the artifact section on your main backpack and select a 5 star artifact with a full length item description
         - Example ![Example](https://github.com/D1firehail/AdeptiScanner-GI/blob/master/Capture-length-example.png?raw=true)
