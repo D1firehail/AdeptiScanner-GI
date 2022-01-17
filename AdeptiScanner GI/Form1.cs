@@ -791,7 +791,7 @@ namespace AdeptiScanner_GI
             {
                 currData.Add("format", "GOOD");
                 currData.Add("version", 1);
-                currData.Add("source", "");
+                currData.Add("source", "AdeptiScanner");
                 //currData.Add("characters", new JArray());
                 //currData.Add("weapons", new JArray());
             }
@@ -853,8 +853,13 @@ namespace AdeptiScanner_GI
                 return;
             }
 
-            text_full.AppendText("Cleared "+ scannedItems.Count + " items from results"  + Environment.NewLine);
-            scannedItems.Clear();
+            DialogResult dialogResult = MessageBox.Show("This will clear " + scannedItems.Count + " artifacts from the results." + Environment.NewLine + "Are you sure?", "Clear Results", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+            if (dialogResult == DialogResult.Yes)
+            {
+                text_full.AppendText("Cleared " + scannedItems.Count + " items from results" + Environment.NewLine);
+                scannedItems.Clear();
+            }
         }
     }
 }
