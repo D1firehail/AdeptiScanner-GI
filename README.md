@@ -3,6 +3,9 @@ OCR-based inventory scanner for Genshin Impact, with both a manual and automatic
 
 Please read instructions below before using. Download link for the latest version can be found [here](https://github.com/D1firehail/AdeptiScanner-GI/releases)
 
+AdeptiScanner requires some tools produced by Microsoft to work, they're commonly used in games so you're likely to already have them. 
+ - If the scanner throws an error on startup, you may be missing them. [Download links for their installers can be found here](https://docs.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170#visual-studio-2015-2017-2019-and-2022). ***You need both x86 and x64***
+
 ## Warnings and important notes
 - ***For the automated scanning mode of this program to work, it needs to run as admin.***
 - While using the auto mode, the program will take control of your mouse. You can press escape during the scan to pause it. Do not move or use your mouse during auto unless paused.
