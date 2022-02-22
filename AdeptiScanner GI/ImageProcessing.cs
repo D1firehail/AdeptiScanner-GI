@@ -315,11 +315,14 @@ namespace AdeptiScanner_GI
                     {
                         //set rarity on two consecutive identical results
                         if (rarity == line_rarity)
-                            rarity = line_rarity;
-                        else 
                         {
                             rarity = line_rarity;
                             line_rarity = -1;
+                        }
+                        else
+                        {
+                            rarity = line_rarity;
+                            line_rarity = 0;
                         }
                     }
                     if (section == 0)

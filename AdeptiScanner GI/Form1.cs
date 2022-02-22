@@ -73,8 +73,7 @@ namespace AdeptiScanner_GI
             catch (Exception e)
             {
                 MessageBox.Show("Error trying to access Tessdata file" + Environment.NewLine + Environment.NewLine + 
-                    "Exact error:" + Environment.NewLine + e.Message + Environment.NewLine + Environment.NewLine +
-                    "Stack trace: " + Environment.NewLine + e.StackTrace,
+                    "Exact error:" + Environment.NewLine + e.ToString(),
                     "Scanner could not start", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Environment.Exit(-1);
             }
@@ -621,9 +620,7 @@ namespace AdeptiScanner_GI
                     MessageBox.Show("Failed to find Artifact Area" + Environment.NewLine +
                         "Please make sure you're following the instructions properly."
                         + Environment.NewLine + "If the problem persists, please contact scanner dev"
-                        + Environment.NewLine + Environment.NewLine + "---" + Environment.NewLine + Environment.NewLine + "Exact error message: " + Environment.NewLine + exc.Message
-                        + Environment.NewLine + Environment.NewLine + "Stack trace: " + Environment.NewLine + exc.StackTrace
-                        , "Failed to find Artifact Area"
+                        + Environment.NewLine + Environment.NewLine + "---" + Environment.NewLine + Environment.NewLine + "Exact error message: " + Environment.NewLine + exc.ToString(), "Failed to find Artifact Area"
                         , MessageBoxButtons.OK, MessageBoxIcon.Error);
                     ArtifactAreaCaptured = false;
                 }
