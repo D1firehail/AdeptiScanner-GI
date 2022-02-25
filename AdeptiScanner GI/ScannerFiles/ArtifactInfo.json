@@ -1,5 +1,5 @@
 {
-	"DataVersion" :  "2.4",
+	"DataVersion" :  "2.5",
 	"Pieces": [
 		{ "name": { "Flower of Life": "flower" } },
 		{ "name": { "Plume of Death": "plume" } },
