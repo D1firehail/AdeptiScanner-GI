@@ -550,6 +550,7 @@ namespace AdeptiScanner_GI
                 Rectangle sourceRect = new Rectangle(0, start, img.Width, height);
                 g.DrawImage(img, 0, 0, sourceRect, GraphicsUnit.Pixel);
             }
+            scanArea.SetResolution(96, 96); //make sure DPI doesn't affect OCR results
 
 
             string timestamp = DateTime.UtcNow.ToString("yyyy-MM-dd HH-mm-ssff");
