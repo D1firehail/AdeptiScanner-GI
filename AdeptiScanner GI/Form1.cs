@@ -769,7 +769,8 @@ namespace AdeptiScanner_GI
             int maxLevel = trackBar_maxlevel.Value;
             int minRarity = trackBar_minrarity.Value;
             int maxRarity = trackBar_maxrarity.Value;
-            JObject currData = InventoryItem.listToGOODArtifacts(scannedItems, minLevel, maxLevel, minRarity, maxRarity);
+            bool exportAllEquipped = checkBox_exportEquipped.Checked;
+            JObject currData = InventoryItem.listToGOODArtifacts(scannedItems, minLevel, maxLevel, minRarity, maxRarity, exportAllEquipped);
             bool useTemplate = checkbox_exportTemplate.Checked;
             if (useTemplate && !File.Exists(Database.appDir + @"\ExportTemplate.json"))
             {

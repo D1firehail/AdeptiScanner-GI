@@ -111,13 +111,13 @@ namespace AdeptiScanner_GI
             return result;
         }
 
-        public static JObject listToGOODArtifacts(List<InventoryItem> items, int minLevel, int maxLevel, int minRarity, int maxRarity)
+        public static JObject listToGOODArtifacts(List<InventoryItem> items, int minLevel, int maxLevel, int minRarity, int maxRarity, bool exportAllEquipped)
         {
             JObject result = new JObject();
             JArray artifactJArr = new JArray();
             foreach (InventoryItem item in items)
             {
-                if (item.level.Item2 >= minLevel && item.level.Item2 <= maxLevel && item.rarity >= minRarity && item.rarity <= maxRarity)
+                if ( (exportAllEquipped && item.character != null) || (item.level.Item2 >= minLevel && item.level.Item2 <= maxLevel && item.rarity >= minRarity && item.rarity <= maxRarity) )
                     artifactJArr.Add(item.toGOODArtifact());
             }
             result.Add("artifacts", artifactJArr);
