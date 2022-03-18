@@ -185,7 +185,11 @@ namespace AdeptiScanner_GI
                         if (statName.Contains("%"))
                         {
                             text = statName + value.ToString("N1", culture);
+                            value = Math.Round(value, 1);
                             text = text.Replace("%", "") + "%";
+                        } else
+                        {
+                            value = Math.Round(value, 0);
                         }
                         Substats.Add(text);
                         Substats_trans.Add(Tuple.Create(text, statKey, value));
