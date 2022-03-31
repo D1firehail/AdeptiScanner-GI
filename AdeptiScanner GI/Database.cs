@@ -12,7 +12,7 @@ namespace AdeptiScanner_GI
     {
         private static System.Globalization.CultureInfo culture = new System.Globalization.CultureInfo("en-GB", false);
         public static string appDir = Application.StartupPath + @"\ScannerFiles";
-        public static string programVersion = "1.1.1";
+        public static string programVersion = "1.1.2";
         public static string dataVersion = "X.XX";
         //These get filled on startup by other file
         public static List<string> Pieces = new List<string>();
@@ -180,7 +180,7 @@ namespace AdeptiScanner_GI
                     }
                     foreach (int value_int in rolls)
                     {
-                        double value = value_int / 100.0;
+                        double value = value_int / 100.0 + 0.001;
                         string text = statName + value.ToString("N0", culture);
                         if (statName.Contains("%"))
                         {
@@ -193,7 +193,8 @@ namespace AdeptiScanner_GI
                         }
                         Substats.Add(text);
                         Substats_trans.Add(Tuple.Create(text, statKey, value));
-                        //Console.WriteLine(text);
+                        //if (!text.Contains(value.ToString(culture)))
+                        //    Console.WriteLine(Substats_trans[Substats_trans.Count-1]);
                     }
                 }
             }

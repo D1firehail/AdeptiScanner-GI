@@ -1,5 +1,5 @@
 {
-	"DataVersion" :  "2.5",
+	"DataVersion" :  "2.6",
 	"Pieces": [
 		{ "name": { "Flower of Life": "flower" } },
 		{ "name": { "Plume of Death": "plume" } },
@@ -130,7 +130,9 @@
 					{ "name": { "Emblem of Severed Fate": "EmblemOfSeveredFate" } },
 					{ "name": { "Shimenawa's Reminiscence": "ShimenawasReminiscence" } },
 					{ "name": { "Husk of Opulent Dreams": "HuskOfOpulentDreams" } },
-					{ "name": { "Ocean-Hued Clam": "OceanHuedClam" } }
+					{ "name": { "Ocean-Hued Clam": "OceanHuedClam" } },
+					{ "name": { "Echoes of an Offering": "EchoesOfAnOffering" } },
+					{ "name": { "Vermillion Hereafter": "VermillionHereafter" } }
 				]
 			}
 		},
@@ -262,7 +264,9 @@
 					{ "name": { "Emblem of Severed Fate": "EmblemOfSeveredFate" } },
 					{ "name": { "Shimenawa's Reminiscence": "ShimenawasReminiscence" } },
 					{ "name": { "Husk of Opulent Dreams": "HuskOfOpulentDreams" } },
-					{ "name": { "Ocean-Hued Clam": "OceanHuedClam" } }
+					{ "name": { "Ocean-Hued Clam": "OceanHuedClam" } },
+					{ "name": { "Echoes of an Offering": "EchoesOfAnOffering" } },
+					{ "name": { "Vermillion Hereafter": "VermillionHereafter" } }
 				]
 			}
 		},
@@ -606,6 +610,7 @@
 		{ "name": { "Kaedehara Kazuha": "KaedeharaKazuha" } },
 		{ "name": { "Kaeya": "Kaeya" } },
 		{ "name": { "Kamisato Ayaka": "KamisatoAyaka" } },
+		{ "name": { "Kamisato Ayato": "KamisatoAyato" } },
 		{ "name": { "Keqing": "Keqing" } },
 		{ "name": { "Klee": "Klee" } },
 		{ "name": { "Kujou Sara": "KujouSara" } },
