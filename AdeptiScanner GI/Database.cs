@@ -155,10 +155,14 @@ namespace AdeptiScanner_GI
                     string statKey = statNameTup.Value.ToObject<string>();
                     List<int> baserolls = new List<int>();
                     List<int> rolls = new List<int>();
+                    Dictionary<int, List<int>> source = new Dictionary<int, List<int>>();
                     foreach (double statValue in substat["rolls"].ToObject<List<double>>())
                     {
                         baserolls.Add((int)(statValue * 100));
                         rolls.Add((int)(statValue * 100));
+                        List<int> tmpList = new List<int>();
+                        tmpList.Add((int)(statValue * 100));
+                        source.Add((int)(statValue * 100), tmpList);
 
                     }
 
@@ -172,7 +176,14 @@ namespace AdeptiScanner_GI
                             {
                                 int tmp = rolls[j] + value;
                                 if (!rolls.Contains(tmp))
+                                {
+                                    List<int> sourceRolls = new List<int>();
+                                    if (source.ContainsKey(rolls[j]))
+                                        sourceRolls.AddRange(source[rolls[j]]);
+                                    sourceRolls.Add(value);
+                                    source.Add(tmp, sourceRolls);
                                     rolls.Add(tmp);
+                                }
                             }
                         }
                         start = stop;
@@ -193,8 +204,14 @@ namespace AdeptiScanner_GI
                         }
                         Substats.Add(text);
                         Substats_trans.Add(Tuple.Create(text, statKey, value));
-                        //if (!text.Contains(value.ToString(culture)))
-                        //    Console.WriteLine(Substats_trans[Substats_trans.Count-1]);
+                        if (!text.Replace(",","").Contains(value.ToString(culture)))
+                        {
+                            Console.WriteLine(Substats_trans[Substats_trans.Count - 1]);
+                            List<int> sourceRolls = source[value_int];
+                            foreach (int roll in sourceRolls)
+                                Console.Write(roll + ", ");
+                            Console.WriteLine("end");
+                        }
                     }
                 }
             }
