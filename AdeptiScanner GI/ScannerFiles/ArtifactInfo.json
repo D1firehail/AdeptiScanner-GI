@@ -1,5 +1,5 @@
 {
-	"DataVersion" :  "2.6",
+	"DataVersion" :  "2.7",
 	"Pieces": [
 		{ "name": { "Flower of Life": "flower" } },
 		{ "name": { "Plume of Death": "plume" } },
@@ -614,6 +614,7 @@
 		{ "name": { "Keqing": "Keqing" } },
 		{ "name": { "Klee": "Klee" } },
 		{ "name": { "Kujou Sara": "KujouSara" } },
+		{ "name": { "Kuki Shinobu": "KukiShinobu" } },
 		{ "name": { "Lisa": "Lisa" } },
 		{ "name": { "Mona": "Mona" } },
 		{ "name": { "Ningguang": "Ningguang" } },
@@ -635,6 +636,7 @@
 		{ "name": { "Xingqiu": "Xingqiu" } },
 		{ "name": { "Xinyan": "Xinyan" } },
 		{ "name": { "Yanfei": "Yanfei" } },
+		{ "name": { "Yelan": "Yelan" } },
 		{ "name": { "Yae Miko": "YaeMiko" } },
 		{ "name": { "Yoimiya": "Yoimiya" } },
 		{ "name": { "Yun Jin": "YunJin" } },

@@ -40,7 +40,7 @@ namespace AdeptiScanner_GI
 
             List<Tuple<int, int, int>> artifactListTuple = new List<Tuple<int, int, int>>(); //start and end x, y for found artifacts in grid
             int currStreak = 0;
-            int margin = 3;
+            int margin = 4;
             for (int i = 0; i < numBytes; i += PixelSize)
             {
                 int x = (i / PixelSize) % width;

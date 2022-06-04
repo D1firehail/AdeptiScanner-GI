@@ -3,7 +3,7 @@ OCR-based inventory scanner for Genshin Impact, with both a manual and automatic
 
 ### _Please read instructions below before using. Download link for the latest version can be found [here](https://github.com/D1firehail/AdeptiScanner-GI/releases)_
 
-AdeptiScanner requires some tools produced by Microsoft to work, they're commonly used in games so you're likely to already have them. 
+AdeptiScanner requires some tools produced by Microsoft to work, they're commonly used in games so you're likely to already have them.
  - If the scanner throws an error on startup, you may be missing them. [Download links for their installers can be found here](https://docs.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170#visual-studio-2015-2017-2019-and-2022). ***You need both x86 and x64***
 
 ## Warnings and important notes
@@ -21,14 +21,14 @@ AdeptiScanner requires some tools produced by Microsoft to work, they're commonl
 ## How to prepare for scanning
 1. Set the game to run in windowed mode at a resolution of 1600x900
     - It may work for other resolutions, but it's likely to run into issues for lower resolutions or different aspect ratios
-2. Place the game window in a position that covers the middle of your ***-primary-*** display. 
+2. Place the game window in a position that covers the middle of your ***-primary-*** display.
     - ***Make sure nothing is covering the game window!***
     - Example window position for 1080p monitor. Notice that the preview portion of the window is off-screen while doing the initial capture or using auto ![Example window position for 1080p monitor](https://github.com/D1firehail/AdeptiScanner-GI/blob/master/1080p-example.png?raw=true)
 3. Open the artifact section on your main backpack and select a 5 star artifact with a full length item description
         - Example ![Example](https://github.com/D1firehail/AdeptiScanner-GI/blob/master/Capture-length-example.png?raw=true)
 4. Press "Capture"
     - Make sure the preview matches the good example, if it doesn't, try moving your camera around a bit in-game to change the background and repeat again from step 3 ![something like this](https://github.com/D1firehail/AdeptiScanner-GI/blob/master/Capture-example.png?raw=true)
-5. (Optional) Enter your in-game name / traveler name in the `Traveler Name` text box. 
+5. (Optional) Enter your in-game name / traveler name in the `Traveler Name` text box.
     - Not entering this will cause any scanned artifacts that are equipped on your Traveler to be incorrectly detected as either equipped on the wrong character or not equipped at all
 
 You're now ready for manual or automatic artifact scanning
@@ -40,12 +40,12 @@ You're now ready for manual or automatic artifact scanning
 3. Repeat step 2 for every artifact you wish to manually scan
 
 ### Automated scanning
-- While using the auto mode, the program will take control of your mouse. You can press escape during the scan to pause it. 
+- While using the auto mode, the program will take control of your mouse. You can press escape during the scan to pause it.
 - Do not move or use your mouse during auto unless paused.
 - Automated scanning will only work properly if this program is being run as admin
 - Automated scanning is expected to work for 4 and 5 star artifacts, it's not expected to automatically scroll through any lower tier artifacts
 1. Follow the instructions under `How to prepare for scanning`. Do not move the game window and do not cover ***ANY*** part of the game while using auto
-2. (Optional) Scroll your artifact list a bit to lower the amount of times it has to scroll. Note how the stars for the top row is visible and the white/Beige label for the bottom row is fully visible. ![something like this](https://github.com/D1firehail/AdeptiScanner-GI/blob/master/scroll-example.png?raw=true)
+2. Scroll your artifact list so the **stars** for the **top row** and the **white/beige label** for the **bottom row** are **both fully visible** with some margin. ![something like this](https://github.com/D1firehail/AdeptiScanner-GI/blob/master/scroll-example.png?raw=true)
 3. Press the `Start Auto` button
     - During the scan, you can press the escape button on your keyboard to pause it
     - `Resume` will make the scanner resume the scan

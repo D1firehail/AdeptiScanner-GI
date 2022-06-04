@@ -393,6 +393,8 @@ namespace AdeptiScanner_GI
                         //test scroll distance
                         sim.Mouse.VerticalScroll(-1);
                         System.Threading.Thread.Sleep(100);
+                        sim.Mouse.VerticalScroll(-1);
+                        System.Threading.Thread.Sleep(100);
                         img = ImageProcessing.CaptureScreenshot(saveImages, gridArea, true);
                         artifactLocations = ImageProcessing.getArtifactGrid(img, saveImages, gridOffset);
 
@@ -400,17 +402,23 @@ namespace AdeptiScanner_GI
                         {
                             break;
                         }
-                        int distPerScroll = startTop - artifactLocations[0].Y;
+                        int distPerScroll = (startTop - artifactLocations[0].Y ) / 2;
                         int scrollsNeeded = 0;
                         if (distPerScroll > 0)
                         {
                             scrollsNeeded = distToScroll / distPerScroll;
                         }
 
-                        if (scrollsNeeded <= 0 || distPerScroll == 0 || rows < firstRows)
+                        if (scrollsNeeded <= 0 || distPerScroll == 0 || rows < Math.Max(firstRows - 1, 0))
                         {
                             running = false;
                         }
+                        /*Console.WriteLine("firstY " + firstY + Environment.NewLine
+                            + "startTop " + startTop + Environment.NewLine
+                            + "currTop " + artifactLocations[0].Y + Environment.NewLine
+                            + "distPerScroll " + distPerScroll + Environment.NewLine
+                            + "distToScroll " + distToScroll + Environment.NewLine
+                            + "scrollsNeeded " + scrollsNeeded + Environment.NewLine + Environment.NewLine); */
 
                         while (scrollsNeeded > 0)
                         {
