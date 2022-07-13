@@ -1,5 +1,5 @@
 {
-	"DataVersion" :  "2.7",
+	"DataVersion" :  "2.8",
 	"Pieces": [
 		{ "name": { "Flower of Life": "flower" } },
 		{ "name": { "Plume of Death": "plume" } },
@@ -625,6 +625,7 @@
 		{ "name": { "Rosaria": "Rosaria" } },
 		{ "name": { "Sangonomiya Kokomi": "SangonomiyaKokomi" } },
 		{ "name": { "Sayu": "Sayu" } },
+		{ "name": { "Shikanoin Heizou": "ShikanoinHeizou" } },
 		{ "name": { "Shenhe": "Shenhe" } },
 		{ "name": { "Sucrose": "Sucrose" } },
 		{ "name": { "Tartaglia": "Tartaglia" } },
