@@ -71,30 +71,85 @@ namespace AdeptiScanner_GI
                         continue;
                     }
 
-                    if (currStreak > width * 0.05)
+                    //investigate label if label+star streak long enough for a single star
+                    if (currStreak > 5)
                     {
-                        bool alreadyFound = false;
-                        for (int j = 0; j < artifactListTuple.Count; j++)
+                        //find left edge
+                        int left = Math.Max(x - currStreak - 3, 1);
+                        margin = 3;
+                        for (int left_i = (y_low * width + left) * PixelSize; left_i > y_low * width * PixelSize; left_i-= PixelSize)
                         {
-                            //skip if start or end x, and y is close to an existing found artifactList
-                            if ((artifactListTuple[j].Item1 <= x - currStreak && artifactListTuple[j].Item2 >= x - currStreak)
-                                || (artifactListTuple[j].Item1 <= x && artifactListTuple[j].Item2 >= x)
-                                || (x - currStreak <= artifactListTuple[j].Item1 && x >= artifactListTuple[j].Item1)
-                                || (x - currStreak <= artifactListTuple[j].Item2 && x >= artifactListTuple[j].Item2)
-                                && true)
+                            if ((imgBytes[left_i] > 200 && imgBytes[left_i + 1] > 200 && imgBytes[left_i + 2] > 200 && imgBytes[left_i + 3] > 200) //white-ish or black-ish line underneath
+                                || (imgBytes[left_i] > 65 && imgBytes[left_i] < 110 && imgBytes[left_i + 1] > 65 && imgBytes[left_i + 1] < 110 && imgBytes[left_i + 2] > 65 && imgBytes[left_i + 2] < 110 && imgBytes[left_i + 3] > 65 && imgBytes[left_i + 3] < 100))
                             {
-                                if (Math.Abs(artifactListTuple[j].Item3 - y) < width * 0.07)
-                                {
-                                    artifactListTuple[j] = Tuple.Create(Math.Min(artifactListTuple[j].Item1, x - currStreak),
-                                        Math.Max(artifactListTuple[j].Item2, x), y);
-                                    alreadyFound = true;
-                                    break;
-                                }
+                                margin = 3;
+                            } else
+                            {
+                                margin--;
+                            }
+
+                            if( margin > 0)
+                            {
+                                left--;
+                            } else
+                            {
+                                break;
                             }
                         }
-                        if (!alreadyFound)
-                            artifactListTuple.Add(Tuple.Create(x - currStreak, x, y));
+
+                        //find right edge
+                        int right = x;
+                        margin = 3;
+                        for (int right_i = (y_low * width + right) * PixelSize; right_i < (y_low + 1) * width * PixelSize; right_i += PixelSize)
+                        {
+                            if ((imgBytes[right_i] > 200 && imgBytes[right_i + 1] > 200 && imgBytes[right_i + 2] > 200 && imgBytes[right_i + 3] > 200) //white-ish or black-ish line underneath
+                                || (imgBytes[right_i] > 65 && imgBytes[right_i] < 110 && imgBytes[right_i + 1] > 65 && imgBytes[right_i + 1] < 110 && imgBytes[right_i + 2] > 65 && imgBytes[right_i + 2] < 110 && imgBytes[right_i + 3] > 65 && imgBytes[right_i + 3] < 100))
+                            {
+                                margin = 3;
+                            }
+                            else
+                            {
+                                margin--;
+                            }
+
+                            if (margin > 0)
+                            {
+                                right++;
+                            } else
+                            {
+                                break;
+                            }
+                        }
+
+                        //if wide enough, add to grid results
+                        if (right - left > width / 16)
+                        {
+                            bool alreadyFound = false;
+                            for (int j = 0; j < artifactListTuple.Count; j++)
+                            {
+                                //skip if start or end x, and y is close to an existing found artifactList
+                                if ((artifactListTuple[j].Item1 <= left && artifactListTuple[j].Item2 >= left)
+                                    || (artifactListTuple[j].Item1 <= right && artifactListTuple[j].Item2 >= right)
+                                    || (left <= artifactListTuple[j].Item1 && right >= artifactListTuple[j].Item1)
+                                    || (left <= artifactListTuple[j].Item2 && right >= artifactListTuple[j].Item2))
+                                {
+                                    if (Math.Abs(artifactListTuple[j].Item3 - y) < width * 0.07)
+                                    {
+                                        artifactListTuple[j] = Tuple.Create(Math.Min(artifactListTuple[j].Item1, left),
+                                            Math.Max(artifactListTuple[j].Item2, right), y);
+                                        alreadyFound = true;
+                                        break;
+                                    }
+                                }
+                            }
+                            if (!alreadyFound)
+                            {
+                                artifactListTuple.Add(Tuple.Create(left, right, y));
+                            }
+                        }
                     }
+
+                    
                     currStreak = 0;
                 }
 

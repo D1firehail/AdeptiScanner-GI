@@ -43,7 +43,7 @@ You're now ready for manual or automatic artifact scanning
 - While using the auto mode, the program will take control of your mouse. You can press escape during the scan to pause it.
 - Do not move or use your mouse during auto unless paused.
 - Automated scanning will only work properly if this program is being run as admin
-- Automated scanning is expected to work for 4 and 5 star artifacts, it's not expected to automatically scroll through any lower tier artifacts
+- Automated scanning will scroll through your entire artifact inventory, filtering is applied on export
 1. Follow the instructions under `How to prepare for scanning`. Do not move the game window and do not cover ***ANY*** part of the game while using auto
 2. Scroll your artifact list so the **stars** for the **top row** and the **white/beige label** for the **bottom row** are **both fully visible** with some margin. ![something like this](https://github.com/D1firehail/AdeptiScanner-GI/blob/master/scroll-example.png?raw=true)
 3. Press the `Start Auto` button
