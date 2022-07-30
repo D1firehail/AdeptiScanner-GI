@@ -7,7 +7,7 @@ namespace AdeptiScanner_GI
     class InventoryItem
     {
         public Tuple<string, string> piece;
-        public Tuple<string, string, double> main;
+        public Tuple<string, string, double, int> main;
         public Tuple<string, int> level;
         public List<Tuple<string, string, double>> subs;
         public Tuple<string, string> set;
@@ -38,7 +38,7 @@ namespace AdeptiScanner_GI
 
             text += "Rarity: " + rarity + Environment.NewLine;
 
-            text += "Level: ";
+            text += "Level (deprecated): ";
             if (level != null)
                 text += level + Environment.NewLine;
             else
@@ -84,8 +84,8 @@ namespace AdeptiScanner_GI
             if (set != null)
                 result.Add("setKey", JToken.FromObject(set.Item2));
             result.Add("rarity", JToken.FromObject(rarity));
-            if (level != null)
-                result.Add("level", JToken.FromObject(level.Item2));
+            if (main != null)
+                result.Add("level", JToken.FromObject(main.Item4));
             if (piece != null)
                 result.Add("slotKey", JToken.FromObject(piece.Item2));
             if (main != null)
@@ -108,6 +108,13 @@ namespace AdeptiScanner_GI
                 result.Add("location", JToken.FromObject(""));
 
             result.Add("lock", JToken.FromObject(locked));
+
+            /*if (level != null && main != null && level.Item2 != main.Item4)
+            {
+                Console.WriteLine("Read level: " + level.Item2 + ", mainstat level: " + main.Item4);
+                Console.WriteLine(this.ToString());
+                
+            }*/
             return result;
         }
 

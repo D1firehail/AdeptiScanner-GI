@@ -67,6 +67,7 @@ namespace AdeptiScanner_GI
             this.panel_artifactdetails = new System.Windows.Forms.Panel();
             this.button_panelcycle = new System.Windows.Forms.Button();
             this.panel_filters = new System.Windows.Forms.Panel();
+            this.checkBox_exportEquipped = new System.Windows.Forms.CheckBox();
             this.btn_Clear = new System.Windows.Forms.Button();
             this.label_filterheadline = new System.Windows.Forms.Label();
             this.trackBar_maxrarity = new System.Windows.Forms.TrackBar();
@@ -84,7 +85,6 @@ namespace AdeptiScanner_GI
             this.label_appversion = new System.Windows.Forms.Label();
             this.label_dataversion = new System.Windows.Forms.Label();
             this.linkLabel1 = new System.Windows.Forms.LinkLabel();
-            this.checkBox_exportEquipped = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.image_preview)).BeginInit();
             this.panel_artifactdetails.SuspendLayout();
             this.panel_filters.SuspendLayout();
@@ -289,11 +289,11 @@ namespace AdeptiScanner_GI
             // 
             this.label_level.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label_level.AutoSize = true;
-            this.label_level.Location = new System.Drawing.Point(28, 55);
+            this.label_level.Location = new System.Drawing.Point(9, 55);
             this.label_level.Name = "label_level";
-            this.label_level.Size = new System.Drawing.Size(33, 13);
+            this.label_level.Size = new System.Drawing.Size(56, 13);
             this.label_level.TabIndex = 22;
-            this.label_level.Text = "Level";
+            this.label_level.Text = "Level (old)";
             // 
             // text_Level
             // 
@@ -518,6 +518,19 @@ namespace AdeptiScanner_GI
             this.panel_filters.Size = new System.Drawing.Size(349, 228);
             this.panel_filters.TabIndex = 40;
             // 
+            // checkBox_exportEquipped
+            // 
+            this.checkBox_exportEquipped.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.checkBox_exportEquipped.AutoSize = true;
+            this.checkBox_exportEquipped.Checked = true;
+            this.checkBox_exportEquipped.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBox_exportEquipped.Location = new System.Drawing.Point(93, 191);
+            this.checkBox_exportEquipped.Name = "checkBox_exportEquipped";
+            this.checkBox_exportEquipped.Size = new System.Drawing.Size(143, 17);
+            this.checkBox_exportEquipped.TabIndex = 37;
+            this.checkBox_exportEquipped.Text = "Always include equipped";
+            this.checkBox_exportEquipped.UseVisualStyleBackColor = true;
+            // 
             // btn_Clear
             // 
             this.btn_Clear.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
@@ -682,19 +695,6 @@ namespace AdeptiScanner_GI
             this.linkLabel1.TabStop = true;
             this.linkLabel1.Text = "Github";
             this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
-            // 
-            // checkBox_exportEquipped
-            // 
-            this.checkBox_exportEquipped.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.checkBox_exportEquipped.AutoSize = true;
-            this.checkBox_exportEquipped.Checked = true;
-            this.checkBox_exportEquipped.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBox_exportEquipped.Location = new System.Drawing.Point(93, 191);
-            this.checkBox_exportEquipped.Name = "checkBox_exportEquipped";
-            this.checkBox_exportEquipped.Size = new System.Drawing.Size(143, 17);
-            this.checkBox_exportEquipped.TabIndex = 37;
-            this.checkBox_exportEquipped.Text = "Always include equipped";
-            this.checkBox_exportEquipped.UseVisualStyleBackColor = true;
             // 
             // ScannerForm
             // 

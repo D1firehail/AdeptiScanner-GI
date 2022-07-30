@@ -24,7 +24,7 @@ namespace AdeptiScanner_GI
         public static Database[] rarityData = new Database[5];
 
         public List<string> MainStats = new List<string>();
-        public List<Tuple<string, string, double>> MainStats_trans = new List<Tuple<string, string, double>>();
+        public List<Tuple<string, string, double, int>> MainStats_trans = new List<Tuple<string, string, double, int>>();
         public List<string> Substats = new List<string>();
         public List<Tuple<string, string, double>> Substats_trans = new List<Tuple<string, string, double>>();
         public List<string> Sets = new List<string>();
@@ -129,8 +129,10 @@ namespace AdeptiScanner_GI
                     string statName = statNameTup.Key;
                     string statKey = statNameTup.Value.ToObject<string>();
 
-                    foreach (double statValue in mainStat["value"].ToObject<List<double>>())
-                    {
+                    List<double> statValues = mainStat["value"].ToObject<List<double>>();
+                    for (int i = 0; i < statValues.Count; i++) 
+                    { 
+                        double statValue = statValues[i];
                         string text = statName + statValue.ToString("N0", culture);
                         if (statName.Contains("%"))
                         {
@@ -138,8 +140,8 @@ namespace AdeptiScanner_GI
                             text = text.Replace("%", "") + "%";
                         }
                         MainStats.Add(text);
-                        MainStats_trans.Add(Tuple.Create(text, statKey, statValue));
-                        //Console.WriteLine(text);
+                        MainStats_trans.Add(Tuple.Create(text, statKey, statValue, i));
+                        //Console.WriteLine(text + " ---- " + statValue);
                     }
                 }
             }
