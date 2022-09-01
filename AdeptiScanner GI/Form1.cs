@@ -21,6 +21,7 @@ namespace AdeptiScanner_GI
 {
     public partial class ScannerForm : Form
     {
+        public static ScannerForm INSTANCE;
         private TesseractEngine tessEngine;
         private Bitmap img_Raw;
         private Bitmap img_Filtered;
@@ -32,16 +33,23 @@ namespace AdeptiScanner_GI
         private bool hardCancelAuto = true;
         private KeyHandler ghk;
 
-        bool autoRunning = false;
-        bool autoCaptureDone = false;
-        List<InventoryItem> scannedItems = new List<InventoryItem>();
-        bool cancelOCRThreads = false;
-        const int ThreadCount = 6; //--------------------------------------------------------
+        internal bool autoRunning = false;
+        private bool autoCaptureDone = false;
+        internal List<InventoryItem> scannedItems = new List<InventoryItem>();
+        private bool cancelOCRThreads = false;
+        private const int ThreadCount = 6; //--------------------------------------------------------
         private bool[] threadRunning = new bool[ThreadCount];
         private ConcurrentQueue<Bitmap>[] threadQueues = new ConcurrentQueue<Bitmap>[ThreadCount];
         private ConcurrentQueue<Bitmap> badResults = new ConcurrentQueue<Bitmap>();
         private TesseractEngine[] threadEngines = new TesseractEngine[ThreadCount];
         private List<InventoryItem>[] threadResults = new List<InventoryItem>[ThreadCount];
+
+        internal int minLevel = 0;
+        internal int maxLevel = 20;
+        internal int minRarity = 5;
+        internal int maxRarity = 5;
+        internal bool exportAllEquipped = true;
+        internal bool useTemplate = false;
 
         enum panelChoices
         {
@@ -58,6 +66,7 @@ namespace AdeptiScanner_GI
 
         public ScannerForm()
         {
+            ScannerForm.INSTANCE = this;
             InitializeComponent();
             label_dataversion.Text = "Data Version: " + Database.dataVersion;
             label_appversion.Text = "Program Version: " + Database.programVersion;
@@ -773,13 +782,7 @@ namespace AdeptiScanner_GI
                 return;
             }
             string timestamp = DateTime.UtcNow.ToString("yyyy-MM-dd HH-mm-ssff");
-            int minLevel = trackBar_minlevel.Value;
-            int maxLevel = trackBar_maxlevel.Value;
-            int minRarity = trackBar_minrarity.Value;
-            int maxRarity = trackBar_maxrarity.Value;
-            bool exportAllEquipped = checkBox_exportEquipped.Checked;
             JObject currData = InventoryItem.listToGOODArtifacts(scannedItems, minLevel, maxLevel, minRarity, maxRarity, exportAllEquipped);
-            bool useTemplate = checkbox_exportTemplate.Checked;
             if (useTemplate && !File.Exists(Database.appDir + @"\ExportTemplate.json"))
             {
                 MessageBox.Show("No export template found, exporting without one" + Environment.NewLine + "To use an export template, place valid GOOD-format json in ScannerFiles and rename to \"ExportTemplate.json\"", 
@@ -814,58 +817,23 @@ namespace AdeptiScanner_GI
             {
                 button_panelcycle.Text = panelChoiceText[(int)panelChoices.ArtifactDetails];
                 panel_artifactdetails.Visible = false;
-                panel_filters.Visible = true;
+                exportSettings1.Visible = true;
             }
             else
             {
                 //default switch to ExportFilters
                 button_panelcycle.Text = panelChoiceText[(int)panelChoices.ExportFilters];
                 panel_artifactdetails.Visible = true;
-                panel_filters.Visible = false;
+                exportSettings1.Visible = false;
             } 
 
         }
 
-        private void trackBar_minlevel_Scroll(object sender, EventArgs e)
-        {
-            label_minlevelnumber.Text = "" + trackBar_minlevel.Value;
-        }
-
-        private void trackBar_maxlevel_Scroll(object sender, EventArgs e)
-        {
-            label_maxlevelnumber.Text = "" + trackBar_maxlevel.Value;
-        }
-
-        private void trackBar_minrarity_Scroll(object sender, EventArgs e)
-        {
-            label_minraritynumber.Text = "" + trackBar_minrarity.Value;
-        }
-
-        private void trackBar_maxrarity_Scroll(object sender, EventArgs e)
-        {
-            label_maxraritynumber.Text = "" + trackBar_maxrarity.Value;
-        }
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             System.Diagnostics.Process.Start("https://github.com/D1firehail/AdeptiScanner-GI");
         }
 
-        private void btn_Clear_Click(object sender, EventArgs e)
-        {
-            if (autoRunning)
-            {
-                text_full.AppendText("Ignored, auto currently running" + Environment.NewLine);
-                return;
-            }
-
-            DialogResult dialogResult = MessageBox.Show("This will clear " + scannedItems.Count + " artifacts from the results." + Environment.NewLine + "Are you sure?", "Clear Results", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-
-            if (dialogResult == DialogResult.Yes)
-            {
-                text_full.AppendText("Cleared " + scannedItems.Count + " items from results" + Environment.NewLine);
-                scannedItems.Clear();
-            }
-        }
     }
 }

@@ -62,6 +62,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ExportSettings.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ExportSettings.Designer.cs">
+      <DependentUpon>ExportSettings.cs</DependentUpon>
+    </Compile>
     <Compile Include="ImageProcessing.cs" />
     <Compile Include="Database.cs" />
     <Compile Include="InventoryItem.cs" />
@@ -74,6 +80,9 @@
     <Compile Include="KeyHandler.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="ExportSettings.resx">
+      <DependentUpon>ExportSettings.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
