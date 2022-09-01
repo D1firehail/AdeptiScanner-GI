@@ -295,6 +295,7 @@ namespace AdeptiScanner_GI
             this.checkbox_OCRcapture.TabIndex = 23;
             this.checkbox_OCRcapture.Text = "Capture on read";
             this.checkbox_OCRcapture.UseVisualStyleBackColor = true;
+            this.checkbox_OCRcapture.CheckedChanged += new System.EventHandler(this.checkbox_OCRcapture_CheckedChanged);
             // 
             // checkbox_saveImages
             // 
@@ -306,6 +307,7 @@ namespace AdeptiScanner_GI
             this.checkbox_saveImages.TabIndex = 25;
             this.checkbox_saveImages.Text = "Save images";
             this.checkbox_saveImages.UseVisualStyleBackColor = true;
+            this.checkbox_saveImages.CheckedChanged += new System.EventHandler(this.checkbox_saveImages_CheckedChanged);
             // 
             // label_character
             // 
@@ -421,6 +423,7 @@ namespace AdeptiScanner_GI
             this.text_traveler.Name = "text_traveler";
             this.text_traveler.Size = new System.Drawing.Size(200, 20);
             this.text_traveler.TabIndex = 37;
+            this.text_traveler.TextChanged += new System.EventHandler(this.text_traveler_TextChanged);
             // 
             // panel_artifactdetails
             // 

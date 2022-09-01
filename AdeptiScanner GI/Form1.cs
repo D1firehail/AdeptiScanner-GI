@@ -50,6 +50,9 @@ namespace AdeptiScanner_GI
         internal int maxRarity = 5;
         internal bool exportAllEquipped = true;
         internal bool useTemplate = false;
+        internal string travelerName = "";
+        internal bool captureOnread = true;
+        internal bool saveImagesGlobal = false;
 
         enum panelChoices
         {
@@ -67,10 +70,13 @@ namespace AdeptiScanner_GI
         public ScannerForm()
         {
             ScannerForm.INSTANCE = this;
+            loadSettings();
             InitializeComponent();
+            finalizeLoadSettings();
             label_dataversion.Text = "Data Version: " + Database.dataVersion;
             label_appversion.Text = "Program Version: " + Database.programVersion;
             this.Text = "AdeptiScanner_GI V" + Database.programVersion;
+            FormClosing += eventFormClosing;
             Activated += eventGotFocus;
             try
             {
@@ -109,6 +115,11 @@ namespace AdeptiScanner_GI
             img_Filtered = new Bitmap(img_Raw);
             image_preview.Image = new Bitmap(img_Raw);
             FormClosing += GenshinArtifactOCR_FormClosing;
+        }
+
+        private void eventFormClosing(object sender, FormClosingEventArgs e)
+        {
+            saveSettings();
         }
 
         private void GenshinArtifactOCR_FormClosing(object sender, FormClosingEventArgs e)
@@ -694,7 +705,6 @@ namespace AdeptiScanner_GI
             }
 
             resetTextBoxes();
-            Database.SetTravelerName(text_traveler.Text);
 
             if (checkbox_OCRcapture.Checked)
             {
@@ -746,7 +756,6 @@ namespace AdeptiScanner_GI
                 text_full.AppendText("Ignored, auto currently running" + Environment.NewLine);
                 return;
             }
-            Database.SetTravelerName(text_traveler.Text);
             btn_OCR.Enabled = false;
             btn_capture.Enabled = false;
             button_auto.Enabled = false;
@@ -835,5 +844,96 @@ namespace AdeptiScanner_GI
             System.Diagnostics.Process.Start("https://github.com/D1firehail/AdeptiScanner-GI");
         }
 
+        private void loadSettings()
+        {
+            string fileName = Database.appDir + @"\settings.json";
+            JObject settings = null;
+            try
+            {
+                settings = JsonConvert.DeserializeObject<JObject>(File.ReadAllText(fileName));
+            } catch (Exception e)
+            {
+                return;
+            }
+
+            if (settings.ContainsKey("TravelerName"))
+            {
+                string readTravelerName = settings["TravelerName"].ToObject<string>();
+                Database.SetTravelerName(readTravelerName);
+                travelerName = readTravelerName;
+            }
+            if (settings.ContainsKey("FilterMinLevel"))
+            {
+                minLevel = settings["FilterMinLevel"].ToObject<int>();
+            }
+            if (settings.ContainsKey("FilterMaxLevel"))
+            {
+                maxLevel = settings["FilterMaxLevel"].ToObject<int>();
+            }
+            if (settings.ContainsKey("FilterMinRarity"))
+            {
+                minRarity = settings["FilterMinRarity"].ToObject<int>();
+            }
+            if (settings.ContainsKey("FilterMaxRarity"))
+            {
+                maxRarity = settings["FilterMaxRarity"].ToObject<int>();
+            }
+            if (settings.ContainsKey("ExportUseTemplate"))
+            {
+                useTemplate = settings["ExportUseTemplate"].ToObject<bool>();
+            }
+            if (settings.ContainsKey("ExportAllEquipped"))
+            {
+                exportAllEquipped = settings["ExportAllEquipped"].ToObject<bool>();
+            }
+            if (settings.ContainsKey("CaptureOnRead"))
+            {
+                captureOnread = settings["CaptureOnRead"].ToObject<bool>();
+            }
+            if (settings.ContainsKey("saveImagesGlobal"))
+            {
+                saveImagesGlobal = settings["saveImagesGlobal"].ToObject<bool>();
+            }
+        }
+
+        private void finalizeLoadSettings()
+        {
+            text_traveler.Text = travelerName;
+            checkbox_OCRcapture.Checked = captureOnread;
+            checkbox_saveImages.Checked = saveImagesGlobal;
+
+        }
+
+        private void saveSettings()
+        {
+            JObject settings = new JObject();
+            settings["TravelerName"] = text_traveler.Text;
+            settings["FilterMinLevel"] = minLevel;
+            settings["FilterMaxLevel"] = maxLevel;
+            settings["FilterMinRarity"] = minRarity;
+            settings["FilterMaxRarity"] = maxRarity;
+            settings["ExportUseTemplate"] = useTemplate;
+            settings["ExportAllEquipped"] = exportAllEquipped;
+            settings["CaptureOnRead"] = captureOnread;
+            settings["saveImagesGlobal"] = saveImagesGlobal;
+            string fileName = Database.appDir + @"\settings.json";
+            File.WriteAllText(fileName, settings.ToString());
+        }
+
+        private void text_traveler_TextChanged(object sender, EventArgs e)
+        {
+            travelerName = text_traveler.Text;
+            Database.SetTravelerName(travelerName);
+        }
+
+        private void checkbox_OCRcapture_CheckedChanged(object sender, EventArgs e)
+        {
+            captureOnread = checkbox_OCRcapture.Checked;
+        }
+
+        private void checkbox_saveImages_CheckedChanged(object sender, EventArgs e)
+        {
+            saveImagesGlobal = checkbox_saveImages.Checked;
+        }
     }
 }
