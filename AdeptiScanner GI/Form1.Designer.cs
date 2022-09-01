@@ -64,13 +64,21 @@ namespace AdeptiScanner_GI
             this.label_traveler = new System.Windows.Forms.Label();
             this.text_traveler = new System.Windows.Forms.TextBox();
             this.panel_artifactdetails = new System.Windows.Forms.Panel();
-            this.button_panelcycle = new System.Windows.Forms.Button();
             this.label_appversion = new System.Windows.Forms.Label();
             this.label_dataversion = new System.Windows.Forms.Label();
             this.linkLabel1 = new System.Windows.Forms.LinkLabel();
+            this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
             this.exportSettings1 = new AdeptiScanner_GI.ExportSettings();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.button_loadArtifacts = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.image_preview)).BeginInit();
             this.panel_artifactdetails.SuspendLayout();
+            this.tabControl1.SuspendLayout();
+            this.tabPage1.SuspendLayout();
+            this.tabPage2.SuspendLayout();
+            this.tabPage3.SuspendLayout();
             this.SuspendLayout();
             // 
             // image_preview
@@ -81,7 +89,7 @@ namespace AdeptiScanner_GI
             this.image_preview.Location = new System.Drawing.Point(12, 12);
             this.image_preview.MinimumSize = new System.Drawing.Size(100, 100);
             this.image_preview.Name = "image_preview";
-            this.image_preview.Size = new System.Drawing.Size(407, 709);
+            this.image_preview.Size = new System.Drawing.Size(407, 729);
             this.image_preview.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.image_preview.TabIndex = 1;
             this.image_preview.TabStop = false;
@@ -222,7 +230,7 @@ namespace AdeptiScanner_GI
             // btn_capture
             // 
             this.btn_capture.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btn_capture.Location = new System.Drawing.Point(493, 669);
+            this.btn_capture.Location = new System.Drawing.Point(493, 689);
             this.btn_capture.Name = "btn_capture";
             this.btn_capture.Size = new System.Drawing.Size(75, 23);
             this.btn_capture.TabIndex = 16;
@@ -234,7 +242,7 @@ namespace AdeptiScanner_GI
             // 
             this.btn_OCR.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btn_OCR.Enabled = false;
-            this.btn_OCR.Location = new System.Drawing.Point(574, 669);
+            this.btn_OCR.Location = new System.Drawing.Point(574, 689);
             this.btn_OCR.Name = "btn_OCR";
             this.btn_OCR.Size = new System.Drawing.Size(75, 23);
             this.btn_OCR.TabIndex = 18;
@@ -246,7 +254,7 @@ namespace AdeptiScanner_GI
             // 
             this.text_full.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.text_full.Location = new System.Drawing.Point(493, 275);
+            this.text_full.Location = new System.Drawing.Point(493, 295);
             this.text_full.Multiline = true;
             this.text_full.Name = "text_full";
             this.text_full.ReadOnly = true;
@@ -258,7 +266,7 @@ namespace AdeptiScanner_GI
             // 
             this.label_full.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label_full.AutoSize = true;
-            this.label_full.Location = new System.Drawing.Point(465, 278);
+            this.label_full.Location = new System.Drawing.Point(465, 298);
             this.label_full.Name = "label_full";
             this.label_full.Size = new System.Drawing.Size(23, 13);
             this.label_full.TabIndex = 20;
@@ -289,7 +297,7 @@ namespace AdeptiScanner_GI
             this.checkbox_OCRcapture.AutoSize = true;
             this.checkbox_OCRcapture.Checked = true;
             this.checkbox_OCRcapture.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkbox_OCRcapture.Location = new System.Drawing.Point(494, 620);
+            this.checkbox_OCRcapture.Location = new System.Drawing.Point(494, 640);
             this.checkbox_OCRcapture.Name = "checkbox_OCRcapture";
             this.checkbox_OCRcapture.Size = new System.Drawing.Size(102, 17);
             this.checkbox_OCRcapture.TabIndex = 23;
@@ -301,7 +309,7 @@ namespace AdeptiScanner_GI
             // 
             this.checkbox_saveImages.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.checkbox_saveImages.AutoSize = true;
-            this.checkbox_saveImages.Location = new System.Drawing.Point(622, 620);
+            this.checkbox_saveImages.Location = new System.Drawing.Point(622, 640);
             this.checkbox_saveImages.Name = "checkbox_saveImages";
             this.checkbox_saveImages.Size = new System.Drawing.Size(87, 17);
             this.checkbox_saveImages.TabIndex = 25;
@@ -332,7 +340,7 @@ namespace AdeptiScanner_GI
             // 
             this.button_auto.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.button_auto.Enabled = false;
-            this.button_auto.Location = new System.Drawing.Point(655, 669);
+            this.button_auto.Location = new System.Drawing.Point(655, 689);
             this.button_auto.Name = "button_auto";
             this.button_auto.Size = new System.Drawing.Size(75, 23);
             this.button_auto.TabIndex = 28;
@@ -363,7 +371,7 @@ namespace AdeptiScanner_GI
             // 
             this.button_softCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.button_softCancel.Enabled = false;
-            this.button_softCancel.Location = new System.Drawing.Point(493, 726);
+            this.button_softCancel.Location = new System.Drawing.Point(493, 746);
             this.button_softCancel.Name = "button_softCancel";
             this.button_softCancel.Size = new System.Drawing.Size(153, 23);
             this.button_softCancel.TabIndex = 31;
@@ -375,7 +383,7 @@ namespace AdeptiScanner_GI
             // 
             this.button_hardCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.button_hardCancel.Enabled = false;
-            this.button_hardCancel.Location = new System.Drawing.Point(574, 698);
+            this.button_hardCancel.Location = new System.Drawing.Point(574, 718);
             this.button_hardCancel.Name = "button_hardCancel";
             this.button_hardCancel.Size = new System.Drawing.Size(75, 23);
             this.button_hardCancel.TabIndex = 32;
@@ -387,7 +395,7 @@ namespace AdeptiScanner_GI
             // 
             this.button_resume.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.button_resume.Enabled = false;
-            this.button_resume.Location = new System.Drawing.Point(493, 698);
+            this.button_resume.Location = new System.Drawing.Point(493, 718);
             this.button_resume.Name = "button_resume";
             this.button_resume.Size = new System.Drawing.Size(75, 23);
             this.button_resume.TabIndex = 33;
@@ -398,7 +406,7 @@ namespace AdeptiScanner_GI
             // button_export
             // 
             this.button_export.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button_export.Location = new System.Drawing.Point(655, 698);
+            this.button_export.Location = new System.Drawing.Point(655, 718);
             this.button_export.Name = "button_export";
             this.button_export.Size = new System.Drawing.Size(75, 51);
             this.button_export.TabIndex = 34;
@@ -410,7 +418,7 @@ namespace AdeptiScanner_GI
             // 
             this.label_traveler.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.label_traveler.AutoSize = true;
-            this.label_traveler.Location = new System.Drawing.Point(490, 646);
+            this.label_traveler.Location = new System.Drawing.Point(490, 666);
             this.label_traveler.Name = "label_traveler";
             this.label_traveler.Size = new System.Drawing.Size(80, 13);
             this.label_traveler.TabIndex = 38;
@@ -419,7 +427,7 @@ namespace AdeptiScanner_GI
             // text_traveler
             // 
             this.text_traveler.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.text_traveler.Location = new System.Drawing.Point(574, 643);
+            this.text_traveler.Location = new System.Drawing.Point(574, 663);
             this.text_traveler.Name = "text_traveler";
             this.text_traveler.Size = new System.Drawing.Size(200, 20);
             this.text_traveler.TabIndex = 37;
@@ -448,28 +456,16 @@ namespace AdeptiScanner_GI
             this.panel_artifactdetails.Controls.Add(this.label_statSub4);
             this.panel_artifactdetails.Controls.Add(this.text_Level);
             this.panel_artifactdetails.Controls.Add(this.label_level);
-            this.panel_artifactdetails.Location = new System.Drawing.Point(427, 12);
+            this.panel_artifactdetails.Location = new System.Drawing.Point(3, 7);
             this.panel_artifactdetails.Name = "panel_artifactdetails";
             this.panel_artifactdetails.Size = new System.Drawing.Size(349, 228);
             this.panel_artifactdetails.TabIndex = 39;
-            this.panel_artifactdetails.Visible = false;
-            // 
-            // button_panelcycle
-            // 
-            this.button_panelcycle.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button_panelcycle.Location = new System.Drawing.Point(636, 246);
-            this.button_panelcycle.Name = "button_panelcycle";
-            this.button_panelcycle.Size = new System.Drawing.Size(140, 23);
-            this.button_panelcycle.TabIndex = 40;
-            this.button_panelcycle.Text = "Artifact details";
-            this.button_panelcycle.UseVisualStyleBackColor = true;
-            this.button_panelcycle.Click += new System.EventHandler(this.button_panelcycle_Click);
             // 
             // label_appversion
             // 
             this.label_appversion.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label_appversion.AutoSize = true;
-            this.label_appversion.Location = new System.Drawing.Point(64, 736);
+            this.label_appversion.Location = new System.Drawing.Point(64, 756);
             this.label_appversion.Name = "label_appversion";
             this.label_appversion.Size = new System.Drawing.Size(130, 13);
             this.label_appversion.TabIndex = 41;
@@ -479,7 +475,7 @@ namespace AdeptiScanner_GI
             // 
             this.label_dataversion.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label_dataversion.AutoSize = true;
-            this.label_dataversion.Location = new System.Drawing.Point(200, 736);
+            this.label_dataversion.Location = new System.Drawing.Point(200, 756);
             this.label_dataversion.Name = "label_dataversion";
             this.label_dataversion.Size = new System.Drawing.Size(104, 13);
             this.label_dataversion.TabIndex = 42;
@@ -489,7 +485,7 @@ namespace AdeptiScanner_GI
             // 
             this.linkLabel1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.linkLabel1.AutoSize = true;
-            this.linkLabel1.Location = new System.Drawing.Point(12, 736);
+            this.linkLabel1.Location = new System.Drawing.Point(12, 756);
             this.linkLabel1.Name = "linkLabel1";
             this.linkLabel1.Size = new System.Drawing.Size(38, 13);
             this.linkLabel1.TabIndex = 43;
@@ -497,26 +493,78 @@ namespace AdeptiScanner_GI
             this.linkLabel1.Text = "Github";
             this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
             // 
+            // tabControl1
+            // 
+            this.tabControl1.Controls.Add(this.tabPage1);
+            this.tabControl1.Controls.Add(this.tabPage2);
+            this.tabControl1.Controls.Add(this.tabPage3);
+            this.tabControl1.Location = new System.Drawing.Point(425, 12);
+            this.tabControl1.Name = "tabControl1";
+            this.tabControl1.SelectedIndex = 0;
+            this.tabControl1.Size = new System.Drawing.Size(360, 270);
+            this.tabControl1.TabIndex = 45;
+            // 
+            // tabPage1
+            // 
+            this.tabPage1.Controls.Add(this.exportSettings1);
+            this.tabPage1.Location = new System.Drawing.Point(4, 22);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage1.Size = new System.Drawing.Size(352, 244);
+            this.tabPage1.TabIndex = 0;
+            this.tabPage1.Text = "Export Filters";
+            this.tabPage1.UseVisualStyleBackColor = true;
+            // 
             // exportSettings1
             // 
             this.exportSettings1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.exportSettings1.Location = new System.Drawing.Point(427, 12);
+            this.exportSettings1.Location = new System.Drawing.Point(0, 0);
             this.exportSettings1.Name = "exportSettings1";
             this.exportSettings1.Size = new System.Drawing.Size(349, 228);
             this.exportSettings1.TabIndex = 44;
+            // 
+            // tabPage2
+            // 
+            this.tabPage2.Controls.Add(this.panel_artifactdetails);
+            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(352, 244);
+            this.tabPage2.TabIndex = 1;
+            this.tabPage2.Text = "Artifact Details";
+            this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // tabPage3
+            // 
+            this.tabPage3.Controls.Add(this.button_loadArtifacts);
+            this.tabPage3.Location = new System.Drawing.Point(4, 22);
+            this.tabPage3.Name = "tabPage3";
+            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage3.Size = new System.Drawing.Size(352, 244);
+            this.tabPage3.TabIndex = 2;
+            this.tabPage3.Text = "Advanced";
+            this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // button_loadArtifacts
+            // 
+            this.button_loadArtifacts.Location = new System.Drawing.Point(6, 6);
+            this.button_loadArtifacts.Name = "button_loadArtifacts";
+            this.button_loadArtifacts.Size = new System.Drawing.Size(118, 23);
+            this.button_loadArtifacts.TabIndex = 0;
+            this.button_loadArtifacts.Text = "Load Artifact File";
+            this.button_loadArtifacts.UseVisualStyleBackColor = true;
+            this.button_loadArtifacts.Click += new System.EventHandler(this.button_loadArtifacts_Click);
             // 
             // ScannerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.LightGray;
-            this.ClientSize = new System.Drawing.Size(784, 761);
-            this.Controls.Add(this.exportSettings1);
+            this.ClientSize = new System.Drawing.Size(784, 781);
+            this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.linkLabel1);
             this.Controls.Add(this.label_dataversion);
             this.Controls.Add(this.label_appversion);
-            this.Controls.Add(this.button_panelcycle);
-            this.Controls.Add(this.panel_artifactdetails);
             this.Controls.Add(this.label_traveler);
             this.Controls.Add(this.text_traveler);
             this.Controls.Add(this.button_export);
@@ -537,6 +585,10 @@ namespace AdeptiScanner_GI
             ((System.ComponentModel.ISupportInitialize)(this.image_preview)).EndInit();
             this.panel_artifactdetails.ResumeLayout(false);
             this.panel_artifactdetails.PerformLayout();
+            this.tabControl1.ResumeLayout(false);
+            this.tabPage1.ResumeLayout(false);
+            this.tabPage2.ResumeLayout(false);
+            this.tabPage3.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -579,11 +631,15 @@ namespace AdeptiScanner_GI
         private System.Windows.Forms.Label label_traveler;
         private System.Windows.Forms.TextBox text_traveler;
         private System.Windows.Forms.Panel panel_artifactdetails;
-        private System.Windows.Forms.Button button_panelcycle;
         private System.Windows.Forms.Label label_appversion;
         private System.Windows.Forms.Label label_dataversion;
         private System.Windows.Forms.LinkLabel linkLabel1;
         private ExportSettings exportSettings1;
+        private System.Windows.Forms.TabControl tabControl1;
+        private System.Windows.Forms.TabPage tabPage1;
+        private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.TabPage tabPage3;
+        private System.Windows.Forms.Button button_loadArtifacts;
     }
 }
 

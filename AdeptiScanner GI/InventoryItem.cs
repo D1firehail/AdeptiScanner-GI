@@ -118,6 +118,106 @@ namespace AdeptiScanner_GI
             return result;
         }
 
+        public static InventoryItem fromGOODArtifact(JObject GOODArtifact)
+        {
+            InventoryItem res = new InventoryItem();
+            if (GOODArtifact.ContainsKey("rarity"))
+            {
+                res.rarity = GOODArtifact["rarity"].ToObject<int>();
+            } else
+            {
+                return null;
+            }
+            Database rarityDb = Database.rarityData[res.rarity - 1];
+            if (GOODArtifact.ContainsKey("setKey"))
+            {
+                string setKey = GOODArtifact["setKey"].ToObject<string>();
+                for (int i = 0; i < rarityDb.Sets_trans.Count; i++)
+                {
+                    if (rarityDb.Sets_trans[i].Item2 == setKey)
+                    {
+                        res.set = rarityDb.Sets_trans[i];
+                        break;
+                    }
+                }
+            }
+            if (GOODArtifact.ContainsKey("slotKey"))
+            {
+                string slotKey = GOODArtifact["slotKey"].ToObject<string>();
+                for (int i = 0; i < Database.Pieces_trans.Count; i++)
+                {
+                    if (Database.Pieces_trans[i].Item2 == slotKey)
+                    {
+                        res.piece = Database.Pieces_trans[i];
+                        break;
+                    }
+                }
+            }
+            if (GOODArtifact.ContainsKey("mainStatKey") && GOODArtifact.ContainsKey("level"))
+            {
+                string mainStatKey = GOODArtifact["mainStatKey"].ToObject<string>();
+                int levelKey = GOODArtifact["level"].ToObject<int>();
+
+                for (int i = 0; i < rarityDb.MainStats_trans.Count; i++)
+                {
+                    if (rarityDb.MainStats_trans[i].Item2 == mainStatKey && rarityDb.MainStats_trans[i].Item4 == levelKey)
+                    {
+                        res.main = rarityDb.MainStats_trans[i];
+                        break;
+                    }
+                }
+                for (int i = 0; i < Database.Levels_trans.Count; i++)
+                {
+                    if (Database.Levels_trans[i].Item2 == levelKey)
+                    {
+                        res.level = Database.Levels_trans[i];
+                        break;
+                    }
+                }
+            }
+            if (GOODArtifact.ContainsKey("location"))
+            {
+                string locationKey = GOODArtifact["location"].ToObject<string>();
+
+                for (int i = 0; i < Database.Characters_trans.Count; i++)
+                {
+                    if (Database.Characters_trans[i].Item2 == locationKey)
+                    {
+                        res.character = Database.Characters_trans[i];
+                        break;
+                    }
+                }
+            }
+            if (GOODArtifact.ContainsKey("lock"))
+            {
+                res.locked = GOODArtifact["lock"].ToObject<bool>();
+            }
+            if (GOODArtifact.ContainsKey("substats"))
+            {
+                JArray substats = GOODArtifact["substats"].ToObject<JArray>();
+                res.subs = new List<Tuple<string, string, double>>();
+                foreach (JObject sub in substats)
+                {
+                    if (sub.ContainsKey("key") && sub.ContainsKey("value") )
+                    {
+                        string statKey = sub["key"].ToObject<string>();
+                        double statVal = sub["value"].ToObject<double>();
+                        for (int i = 0; i < rarityDb.Substats_trans.Count; i++)
+                        {
+                            if (rarityDb.Substats_trans[i].Item2 == statKey && rarityDb.Substats_trans[i].Item3 - statVal < 0.099)
+                            {
+                                res.subs.Add(rarityDb.Substats_trans[i]);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+
+
+            return res;
+        }
+
         public static JObject listToGOODArtifacts(List<InventoryItem> items, int minLevel, int maxLevel, int minRarity, int maxRarity, bool exportAllEquipped)
         {
             JObject result = new JObject();

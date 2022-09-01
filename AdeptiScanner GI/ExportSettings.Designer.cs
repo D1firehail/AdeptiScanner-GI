@@ -87,7 +87,7 @@ namespace AdeptiScanner_GI
             // 
             // trackBar_maxrarity
             // 
-            this.trackBar_maxrarity.Location = new System.Drawing.Point(250, 139);
+            this.trackBar_maxrarity.Location = new System.Drawing.Point(262, 139);
             this.trackBar_maxrarity.Maximum = 5;
             this.trackBar_maxrarity.Name = "trackBar_maxrarity";
             this.trackBar_maxrarity.Size = new System.Drawing.Size(77, 45);
@@ -97,7 +97,7 @@ namespace AdeptiScanner_GI
             // 
             // trackBar_minrarity
             // 
-            this.trackBar_minrarity.Location = new System.Drawing.Point(85, 139);
+            this.trackBar_minrarity.Location = new System.Drawing.Point(82, 140);
             this.trackBar_minrarity.Maximum = 5;
             this.trackBar_minrarity.Name = "trackBar_minrarity";
             this.trackBar_minrarity.Size = new System.Drawing.Size(77, 45);

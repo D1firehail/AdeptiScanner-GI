@@ -820,25 +820,6 @@ namespace AdeptiScanner_GI
 
         }
 
-        private void button_panelcycle_Click(object sender, EventArgs e)
-        {
-            if (button_panelcycle.Text == panelChoiceText[(int)panelChoices.ExportFilters])
-            {
-                button_panelcycle.Text = panelChoiceText[(int)panelChoices.ArtifactDetails];
-                panel_artifactdetails.Visible = false;
-                exportSettings1.Visible = true;
-            }
-            else
-            {
-                //default switch to ExportFilters
-                button_panelcycle.Text = panelChoiceText[(int)panelChoices.ExportFilters];
-                panel_artifactdetails.Visible = true;
-                exportSettings1.Visible = false;
-            } 
-
-        }
-
-
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             System.Diagnostics.Process.Start("https://github.com/D1firehail/AdeptiScanner-GI");
@@ -934,6 +915,55 @@ namespace AdeptiScanner_GI
         private void checkbox_saveImages_CheckedChanged(object sender, EventArgs e)
         {
             saveImagesGlobal = checkbox_saveImages.Checked;
+        }
+
+        private void button_loadArtifacts_Click(object sender, EventArgs e)
+        {
+            if (autoRunning)
+            {
+                text_full.AppendText("Ignored, auto currently running" + Environment.NewLine);
+                return;
+            }
+            using (OpenFileDialog openFileDialog = new OpenFileDialog())
+            {
+                openFileDialog.InitialDirectory = Database.appDir;
+                openFileDialog.Filter = "All files (*.*)|*.*";
+                openFileDialog.FilterIndex = 1;
+                openFileDialog.RestoreDirectory = true;
+                openFileDialog.Multiselect = false;
+
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    foreach (string file in openFileDialog.FileNames)
+                    {
+                        try
+                        {
+                            int startArtiAmount = scannedItems.Count();
+                            JObject GOODjson = JsonConvert.DeserializeObject<JObject>(File.ReadAllText(file));
+                            if (GOODjson.ContainsKey("artifacts"))
+                            {
+                                JArray artifacts = GOODjson["artifacts"].ToObject<JArray>();
+                                foreach (JObject artifact in artifacts)
+                                {
+                                    InventoryItem importedArtifact = InventoryItem.fromGOODArtifact(artifact);
+                                    if (importedArtifact != null)
+                                    {
+                                        scannedItems.Add(importedArtifact);
+                                    }
+                                }
+                            }
+                            int endArtiAmount = scannedItems.Count();
+                            text_full.AppendText("Imported " + (endArtiAmount - startArtiAmount) + " aritfacts (new total " + endArtiAmount + ") from file: " + file + Environment.NewLine);
+                            break;
+                        }
+                        catch (Exception exc)
+                        {
+                            text_full.AppendText("Error importing from file: " + file + Environment.NewLine);
+                            Debug.WriteLine(exc);
+                        }
+                    }
+                }
+            }
         }
     }
 }
