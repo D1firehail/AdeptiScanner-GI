@@ -4,7 +4,7 @@
 		{ "name": { "Flower of Life": "flower" } },
 		{ "name": { "Plume of Death": "plume" } },
 		{ "name": { "Sands of Eon": "sands" } },
-		{ "name": { "Goblet on Eonothem": "goblet" } },
+		{ "name": { "Goblet of Eonothem": "goblet" } },
 		{ "name": { "Circlet of Logos": "circlet" } }
 	],
 	"ArtifactTiers": [
@@ -133,6 +133,7 @@
 					{ "name": { "Husk of Opulent Dreams": "HuskOfOpulentDreams" } },
 					{ "name": { "Ocean-Hued Clam": "OceanHuedClam" } },
 					{ "name": { "Echoes of an Offering": "EchoesOfAnOffering" } },
+					{ "name": { "Vermillion Hereafter": "VermillionHereafter" } },
 					{ "name": { "Deepwood Memories": "DeepwoodMemories" } },
 					{ "name": { "Gilded Dreams": "GildedDreams" } }
 				]
