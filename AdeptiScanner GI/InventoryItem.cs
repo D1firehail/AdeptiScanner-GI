@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace AdeptiScanner_GI
 {
-    class InventoryItem
+    public class InventoryItem
     {
         public Tuple<string, string> piece;
         public Tuple<string, string, double, int> main;

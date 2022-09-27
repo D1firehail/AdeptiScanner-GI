@@ -30,40 +30,19 @@ namespace AdeptiScanner_GI
         private void InitializeComponent()
         {
             this.image_preview = new System.Windows.Forms.PictureBox();
-            this.text_Set = new System.Windows.Forms.TextBox();
-            this.text_Type = new System.Windows.Forms.TextBox();
-            this.text_statMain = new System.Windows.Forms.TextBox();
-            this.text_statSub1 = new System.Windows.Forms.TextBox();
-            this.text_statSub2 = new System.Windows.Forms.TextBox();
-            this.text_statSub3 = new System.Windows.Forms.TextBox();
-            this.text_statSub4 = new System.Windows.Forms.TextBox();
-            this.label_Set = new System.Windows.Forms.Label();
-            this.label_Type = new System.Windows.Forms.Label();
-            this.label_statMain = new System.Windows.Forms.Label();
-            this.label_statSub1 = new System.Windows.Forms.Label();
-            this.label_statSub2 = new System.Windows.Forms.Label();
-            this.label_statSub3 = new System.Windows.Forms.Label();
-            this.label_statSub4 = new System.Windows.Forms.Label();
             this.btn_capture = new System.Windows.Forms.Button();
             this.btn_OCR = new System.Windows.Forms.Button();
             this.text_full = new System.Windows.Forms.TextBox();
             this.label_full = new System.Windows.Forms.Label();
-            this.label_level = new System.Windows.Forms.Label();
-            this.text_Level = new System.Windows.Forms.TextBox();
             this.checkbox_OCRcapture = new System.Windows.Forms.CheckBox();
             this.checkbox_saveImages = new System.Windows.Forms.CheckBox();
-            this.label_character = new System.Windows.Forms.Label();
-            this.text_character = new System.Windows.Forms.TextBox();
             this.button_auto = new System.Windows.Forms.Button();
-            this.label_locked = new System.Windows.Forms.Label();
-            this.text_locked = new System.Windows.Forms.TextBox();
             this.button_softCancel = new System.Windows.Forms.Button();
             this.button_hardCancel = new System.Windows.Forms.Button();
             this.button_resume = new System.Windows.Forms.Button();
             this.button_export = new System.Windows.Forms.Button();
             this.label_traveler = new System.Windows.Forms.Label();
             this.text_traveler = new System.Windows.Forms.TextBox();
-            this.panel_artifactdetails = new System.Windows.Forms.Panel();
             this.label_appversion = new System.Windows.Forms.Label();
             this.label_dataversion = new System.Windows.Forms.Label();
             this.linkLabel1 = new System.Windows.Forms.LinkLabel();
@@ -71,10 +50,10 @@ namespace AdeptiScanner_GI
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.exportSettings1 = new AdeptiScanner_GI.ExportSettings();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.artifactDetails1 = new AdeptiScanner_GI.ArtifactDetails();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.button_loadArtifacts = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.image_preview)).BeginInit();
-            this.panel_artifactdetails.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -93,139 +72,6 @@ namespace AdeptiScanner_GI
             this.image_preview.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.image_preview.TabIndex = 1;
             this.image_preview.TabStop = false;
-            // 
-            // text_Set
-            // 
-            this.text_Set.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.text_Set.Location = new System.Drawing.Point(67, 182);
-            this.text_Set.Name = "text_Set";
-            this.text_Set.ReadOnly = true;
-            this.text_Set.Size = new System.Drawing.Size(279, 20);
-            this.text_Set.TabIndex = 2;
-            // 
-            // text_Type
-            // 
-            this.text_Type.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.text_Type.Location = new System.Drawing.Point(67, 3);
-            this.text_Type.Name = "text_Type";
-            this.text_Type.ReadOnly = true;
-            this.text_Type.Size = new System.Drawing.Size(279, 20);
-            this.text_Type.TabIndex = 3;
-            // 
-            // text_statMain
-            // 
-            this.text_statMain.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.text_statMain.Location = new System.Drawing.Point(67, 26);
-            this.text_statMain.Name = "text_statMain";
-            this.text_statMain.ReadOnly = true;
-            this.text_statMain.Size = new System.Drawing.Size(279, 20);
-            this.text_statMain.TabIndex = 4;
-            // 
-            // text_statSub1
-            // 
-            this.text_statSub1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.text_statSub1.Location = new System.Drawing.Point(67, 78);
-            this.text_statSub1.Name = "text_statSub1";
-            this.text_statSub1.ReadOnly = true;
-            this.text_statSub1.Size = new System.Drawing.Size(279, 20);
-            this.text_statSub1.TabIndex = 5;
-            // 
-            // text_statSub2
-            // 
-            this.text_statSub2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.text_statSub2.Location = new System.Drawing.Point(67, 104);
-            this.text_statSub2.Name = "text_statSub2";
-            this.text_statSub2.ReadOnly = true;
-            this.text_statSub2.Size = new System.Drawing.Size(279, 20);
-            this.text_statSub2.TabIndex = 6;
-            // 
-            // text_statSub3
-            // 
-            this.text_statSub3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.text_statSub3.Location = new System.Drawing.Point(67, 130);
-            this.text_statSub3.Name = "text_statSub3";
-            this.text_statSub3.ReadOnly = true;
-            this.text_statSub3.Size = new System.Drawing.Size(279, 20);
-            this.text_statSub3.TabIndex = 7;
-            // 
-            // text_statSub4
-            // 
-            this.text_statSub4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.text_statSub4.Location = new System.Drawing.Point(67, 156);
-            this.text_statSub4.Name = "text_statSub4";
-            this.text_statSub4.ReadOnly = true;
-            this.text_statSub4.Size = new System.Drawing.Size(279, 20);
-            this.text_statSub4.TabIndex = 14;
-            // 
-            // label_Set
-            // 
-            this.label_Set.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.label_Set.AutoSize = true;
-            this.label_Set.Location = new System.Drawing.Point(38, 185);
-            this.label_Set.Name = "label_Set";
-            this.label_Set.Size = new System.Drawing.Size(23, 13);
-            this.label_Set.TabIndex = 8;
-            this.label_Set.Text = "Set";
-            // 
-            // label_Type
-            // 
-            this.label_Type.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.label_Type.AutoSize = true;
-            this.label_Type.Location = new System.Drawing.Point(30, 3);
-            this.label_Type.Name = "label_Type";
-            this.label_Type.Size = new System.Drawing.Size(31, 13);
-            this.label_Type.TabIndex = 9;
-            this.label_Type.Text = "Type";
-            // 
-            // label_statMain
-            // 
-            this.label_statMain.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.label_statMain.AutoSize = true;
-            this.label_statMain.Location = new System.Drawing.Point(9, 29);
-            this.label_statMain.Name = "label_statMain";
-            this.label_statMain.Size = new System.Drawing.Size(52, 13);
-            this.label_statMain.TabIndex = 10;
-            this.label_statMain.Text = "Main Stat";
-            // 
-            // label_statSub1
-            // 
-            this.label_statSub1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.label_statSub1.AutoSize = true;
-            this.label_statSub1.Location = new System.Drawing.Point(9, 81);
-            this.label_statSub1.Name = "label_statSub1";
-            this.label_statSub1.Size = new System.Drawing.Size(52, 13);
-            this.label_statSub1.TabIndex = 11;
-            this.label_statSub1.Text = "Substat 1";
-            // 
-            // label_statSub2
-            // 
-            this.label_statSub2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.label_statSub2.AutoSize = true;
-            this.label_statSub2.Location = new System.Drawing.Point(9, 107);
-            this.label_statSub2.Name = "label_statSub2";
-            this.label_statSub2.Size = new System.Drawing.Size(52, 13);
-            this.label_statSub2.TabIndex = 12;
-            this.label_statSub2.Text = "Substat 2";
-            // 
-            // label_statSub3
-            // 
-            this.label_statSub3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.label_statSub3.AutoSize = true;
-            this.label_statSub3.Location = new System.Drawing.Point(9, 133);
-            this.label_statSub3.Name = "label_statSub3";
-            this.label_statSub3.Size = new System.Drawing.Size(52, 13);
-            this.label_statSub3.TabIndex = 13;
-            this.label_statSub3.Text = "Substat 3";
-            // 
-            // label_statSub4
-            // 
-            this.label_statSub4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.label_statSub4.AutoSize = true;
-            this.label_statSub4.Location = new System.Drawing.Point(9, 159);
-            this.label_statSub4.Name = "label_statSub4";
-            this.label_statSub4.Size = new System.Drawing.Size(52, 13);
-            this.label_statSub4.TabIndex = 15;
-            this.label_statSub4.Text = "Substat 4";
             // 
             // btn_capture
             // 
@@ -272,25 +118,6 @@ namespace AdeptiScanner_GI
             this.label_full.TabIndex = 20;
             this.label_full.Text = "Full";
             // 
-            // label_level
-            // 
-            this.label_level.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.label_level.AutoSize = true;
-            this.label_level.Location = new System.Drawing.Point(9, 55);
-            this.label_level.Name = "label_level";
-            this.label_level.Size = new System.Drawing.Size(56, 13);
-            this.label_level.TabIndex = 22;
-            this.label_level.Text = "Level (old)";
-            // 
-            // text_Level
-            // 
-            this.text_Level.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.text_Level.Location = new System.Drawing.Point(67, 52);
-            this.text_Level.Name = "text_Level";
-            this.text_Level.ReadOnly = true;
-            this.text_Level.Size = new System.Drawing.Size(120, 20);
-            this.text_Level.TabIndex = 21;
-            // 
             // checkbox_OCRcapture
             // 
             this.checkbox_OCRcapture.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
@@ -317,25 +144,6 @@ namespace AdeptiScanner_GI
             this.checkbox_saveImages.UseVisualStyleBackColor = true;
             this.checkbox_saveImages.CheckedChanged += new System.EventHandler(this.checkbox_saveImages_CheckedChanged);
             // 
-            // label_character
-            // 
-            this.label_character.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.label_character.AutoSize = true;
-            this.label_character.Location = new System.Drawing.Point(8, 211);
-            this.label_character.Name = "label_character";
-            this.label_character.Size = new System.Drawing.Size(53, 13);
-            this.label_character.TabIndex = 27;
-            this.label_character.Text = "Character";
-            // 
-            // text_character
-            // 
-            this.text_character.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.text_character.Location = new System.Drawing.Point(67, 208);
-            this.text_character.Name = "text_character";
-            this.text_character.ReadOnly = true;
-            this.text_character.Size = new System.Drawing.Size(279, 20);
-            this.text_character.TabIndex = 26;
-            // 
             // button_auto
             // 
             this.button_auto.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
@@ -347,25 +155,6 @@ namespace AdeptiScanner_GI
             this.button_auto.Text = "Start Auto";
             this.button_auto.UseVisualStyleBackColor = true;
             this.button_auto.Click += new System.EventHandler(this.button_auto_Click);
-            // 
-            // label_locked
-            // 
-            this.label_locked.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.label_locked.AutoSize = true;
-            this.label_locked.Location = new System.Drawing.Point(193, 55);
-            this.label_locked.Name = "label_locked";
-            this.label_locked.Size = new System.Drawing.Size(43, 13);
-            this.label_locked.TabIndex = 29;
-            this.label_locked.Text = "Locked";
-            // 
-            // text_locked
-            // 
-            this.text_locked.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.text_locked.Location = new System.Drawing.Point(240, 52);
-            this.text_locked.Name = "text_locked";
-            this.text_locked.ReadOnly = true;
-            this.text_locked.Size = new System.Drawing.Size(106, 20);
-            this.text_locked.TabIndex = 30;
             // 
             // button_softCancel
             // 
@@ -433,34 +222,6 @@ namespace AdeptiScanner_GI
             this.text_traveler.TabIndex = 37;
             this.text_traveler.TextChanged += new System.EventHandler(this.text_traveler_TextChanged);
             // 
-            // panel_artifactdetails
-            // 
-            this.panel_artifactdetails.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.panel_artifactdetails.Controls.Add(this.text_Type);
-            this.panel_artifactdetails.Controls.Add(this.text_Set);
-            this.panel_artifactdetails.Controls.Add(this.text_statMain);
-            this.panel_artifactdetails.Controls.Add(this.text_statSub1);
-            this.panel_artifactdetails.Controls.Add(this.text_statSub2);
-            this.panel_artifactdetails.Controls.Add(this.text_statSub3);
-            this.panel_artifactdetails.Controls.Add(this.label_Set);
-            this.panel_artifactdetails.Controls.Add(this.label_Type);
-            this.panel_artifactdetails.Controls.Add(this.label_statMain);
-            this.panel_artifactdetails.Controls.Add(this.text_locked);
-            this.panel_artifactdetails.Controls.Add(this.label_statSub1);
-            this.panel_artifactdetails.Controls.Add(this.label_locked);
-            this.panel_artifactdetails.Controls.Add(this.label_statSub2);
-            this.panel_artifactdetails.Controls.Add(this.label_statSub3);
-            this.panel_artifactdetails.Controls.Add(this.label_character);
-            this.panel_artifactdetails.Controls.Add(this.text_statSub4);
-            this.panel_artifactdetails.Controls.Add(this.text_character);
-            this.panel_artifactdetails.Controls.Add(this.label_statSub4);
-            this.panel_artifactdetails.Controls.Add(this.text_Level);
-            this.panel_artifactdetails.Controls.Add(this.label_level);
-            this.panel_artifactdetails.Location = new System.Drawing.Point(3, 7);
-            this.panel_artifactdetails.Name = "panel_artifactdetails";
-            this.panel_artifactdetails.Size = new System.Drawing.Size(349, 228);
-            this.panel_artifactdetails.TabIndex = 39;
-            // 
             // label_appversion
             // 
             this.label_appversion.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
@@ -525,7 +286,7 @@ namespace AdeptiScanner_GI
             // 
             // tabPage2
             // 
-            this.tabPage2.Controls.Add(this.panel_artifactdetails);
+            this.tabPage2.Controls.Add(this.artifactDetails1);
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
@@ -533,6 +294,13 @@ namespace AdeptiScanner_GI
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Artifact Details";
             this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // artifactDetails1
+            // 
+            this.artifactDetails1.Location = new System.Drawing.Point(0, 3);
+            this.artifactDetails1.Name = "artifactDetails1";
+            this.artifactDetails1.Size = new System.Drawing.Size(349, 228);
+            this.artifactDetails1.TabIndex = 0;
             // 
             // tabPage3
             // 
@@ -547,7 +315,7 @@ namespace AdeptiScanner_GI
             // 
             // button_loadArtifacts
             // 
-            this.button_loadArtifacts.Location = new System.Drawing.Point(6, 6);
+            this.button_loadArtifacts.Location = new System.Drawing.Point(225, 215);
             this.button_loadArtifacts.Name = "button_loadArtifacts";
             this.button_loadArtifacts.Size = new System.Drawing.Size(118, 23);
             this.button_loadArtifacts.TabIndex = 0;
@@ -583,8 +351,6 @@ namespace AdeptiScanner_GI
             this.Name = "ScannerForm";
             this.Text = "AdeptiScanner_GI";
             ((System.ComponentModel.ISupportInitialize)(this.image_preview)).EndInit();
-            this.panel_artifactdetails.ResumeLayout(false);
-            this.panel_artifactdetails.PerformLayout();
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage2.ResumeLayout(false);
@@ -597,40 +363,19 @@ namespace AdeptiScanner_GI
         #endregion
 
         private System.Windows.Forms.PictureBox image_preview;
-        private System.Windows.Forms.TextBox text_Set;
-        private System.Windows.Forms.TextBox text_Type;
-        private System.Windows.Forms.TextBox text_statMain;
-        private System.Windows.Forms.TextBox text_statSub1;
-        private System.Windows.Forms.TextBox text_statSub2;
-        private System.Windows.Forms.TextBox text_statSub3;
-        private System.Windows.Forms.Label label_Set;
-        private System.Windows.Forms.Label label_Type;
-        private System.Windows.Forms.Label label_statMain;
-        private System.Windows.Forms.Label label_statSub1;
-        private System.Windows.Forms.Label label_statSub2;
-        private System.Windows.Forms.Label label_statSub3;
-        private System.Windows.Forms.Label label_statSub4;
-        private System.Windows.Forms.TextBox text_statSub4;
         private System.Windows.Forms.Button btn_capture;
         private System.Windows.Forms.Button btn_OCR;
         private System.Windows.Forms.TextBox text_full;
         private System.Windows.Forms.Label label_full;
-        private System.Windows.Forms.Label label_level;
-        private System.Windows.Forms.TextBox text_Level;
         private System.Windows.Forms.CheckBox checkbox_OCRcapture;
         private System.Windows.Forms.CheckBox checkbox_saveImages;
-        private System.Windows.Forms.Label label_character;
-        private System.Windows.Forms.TextBox text_character;
         private System.Windows.Forms.Button button_auto;
-        private System.Windows.Forms.Label label_locked;
-        private System.Windows.Forms.TextBox text_locked;
         private System.Windows.Forms.Button button_softCancel;
         private System.Windows.Forms.Button button_hardCancel;
         private System.Windows.Forms.Button button_resume;
         private System.Windows.Forms.Button button_export;
         private System.Windows.Forms.Label label_traveler;
         private System.Windows.Forms.TextBox text_traveler;
-        private System.Windows.Forms.Panel panel_artifactdetails;
         private System.Windows.Forms.Label label_appversion;
         private System.Windows.Forms.Label label_dataversion;
         private System.Windows.Forms.LinkLabel linkLabel1;
@@ -640,6 +385,7 @@ namespace AdeptiScanner_GI
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.TabPage tabPage3;
         private System.Windows.Forms.Button button_loadArtifacts;
+        private ArtifactDetails artifactDetails1;
     }
 }
 

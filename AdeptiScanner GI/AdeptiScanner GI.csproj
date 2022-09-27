@@ -62,6 +62,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ArtifactDetails.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ArtifactDetails.Designer.cs">
+      <DependentUpon>ArtifactDetails.cs</DependentUpon>
+    </Compile>
     <Compile Include="ExportSettings.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -80,6 +86,9 @@
     <Compile Include="KeyHandler.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="ArtifactDetails.resx">
+      <DependentUpon>ArtifactDetails.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="ExportSettings.resx">
       <DependentUpon>ExportSettings.cs</DependentUpon>
     </EmbeddedResource>
