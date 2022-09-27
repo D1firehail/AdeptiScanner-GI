@@ -52,6 +52,7 @@ namespace AdeptiScanner_GI
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.artifactDetails1 = new AdeptiScanner_GI.ArtifactDetails();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.button_resetSettings = new System.Windows.Forms.Button();
             this.label_recheckwait = new System.Windows.Forms.Label();
             this.text_RecheckWait = new System.Windows.Forms.TextBox();
             this.label_scrolltestwait = new System.Windows.Forms.Label();
@@ -312,6 +313,7 @@ namespace AdeptiScanner_GI
             // 
             // tabPage3
             // 
+            this.tabPage3.Controls.Add(this.button_resetSettings);
             this.tabPage3.Controls.Add(this.label_recheckwait);
             this.tabPage3.Controls.Add(this.text_RecheckWait);
             this.tabPage3.Controls.Add(this.label_scrolltestwait);
@@ -329,12 +331,22 @@ namespace AdeptiScanner_GI
             this.tabPage3.Text = "Advanced";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
+            // button_resetSettings
+            // 
+            this.button_resetSettings.Location = new System.Drawing.Point(99, 189);
+            this.button_resetSettings.Name = "button_resetSettings";
+            this.button_resetSettings.Size = new System.Drawing.Size(118, 49);
+            this.button_resetSettings.TabIndex = 9;
+            this.button_resetSettings.Text = "Remove Saved Settings";
+            this.button_resetSettings.UseVisualStyleBackColor = true;
+            this.button_resetSettings.Click += new System.EventHandler(this.button_resetSettings_Click);
+            // 
             // label_recheckwait
             // 
             this.label_recheckwait.AutoSize = true;
             this.label_recheckwait.Location = new System.Drawing.Point(6, 87);
             this.label_recheckwait.Name = "label_recheckwait";
-            this.label_recheckwait.Size = new System.Drawing.Size(78, 13);
+            this.label_recheckwait.Size = new System.Drawing.Size(73, 13);
             this.label_recheckwait.TabIndex = 8;
             this.label_recheckwait.Text = "RecheckWait";
             // 
@@ -350,7 +362,7 @@ namespace AdeptiScanner_GI
             this.label_scrolltestwait.AutoSize = true;
             this.label_scrolltestwait.Location = new System.Drawing.Point(6, 61);
             this.label_scrolltestwait.Name = "label_scrolltestwait";
-            this.label_scrolltestwait.Size = new System.Drawing.Size(81, 13);
+            this.label_scrolltestwait.Size = new System.Drawing.Size(76, 13);
             this.label_scrolltestwait.TabIndex = 6;
             this.label_scrolltestwait.Text = "ScrollTestWait";
             // 
@@ -366,7 +378,7 @@ namespace AdeptiScanner_GI
             this.label_scrollsleepwait.AutoSize = true;
             this.label_scrollsleepwait.Location = new System.Drawing.Point(6, 35);
             this.label_scrollsleepwait.Name = "label_scrollsleepwait";
-            this.label_scrollsleepwait.Size = new System.Drawing.Size(87, 13);
+            this.label_scrollsleepwait.Size = new System.Drawing.Size(82, 13);
             this.label_scrollsleepwait.TabIndex = 4;
             this.label_scrollsleepwait.Text = "ScrollSleepWait";
             // 
@@ -375,7 +387,7 @@ namespace AdeptiScanner_GI
             this.label_clicksleepwait.AutoSize = true;
             this.label_clicksleepwait.Location = new System.Drawing.Point(6, 9);
             this.label_clicksleepwait.Name = "label_clicksleepwait";
-            this.label_clicksleepwait.Size = new System.Drawing.Size(84, 13);
+            this.label_clicksleepwait.Size = new System.Drawing.Size(79, 13);
             this.label_clicksleepwait.TabIndex = 3;
             this.label_clicksleepwait.Text = "ClickSleepWait";
             // 
@@ -475,6 +487,7 @@ namespace AdeptiScanner_GI
         private System.Windows.Forms.TextBox text_RecheckWait;
         private System.Windows.Forms.Label label_scrolltestwait;
         private System.Windows.Forms.TextBox text_ScrollTestWait;
+        private System.Windows.Forms.Button button_resetSettings;
     }
 }
 

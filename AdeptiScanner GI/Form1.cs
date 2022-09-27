@@ -43,6 +43,7 @@ namespace AdeptiScanner_GI
         private ConcurrentQueue<Bitmap> badResults = new ConcurrentQueue<Bitmap>();
         private TesseractEngine[] threadEngines = new TesseractEngine[ThreadCount];
         private List<InventoryItem>[] threadResults = new List<InventoryItem>[ThreadCount];
+        private bool rememberSettings = true;
 
         internal int minLevel = 0;
         internal int maxLevel = 20;
@@ -123,7 +124,8 @@ namespace AdeptiScanner_GI
 
         private void eventFormClosing(object sender, FormClosingEventArgs e)
         {
-            saveSettings();
+            if (rememberSettings)
+                saveSettings();
         }
 
         private void GenshinArtifactOCR_FormClosing(object sender, FormClosingEventArgs e)
@@ -955,6 +957,17 @@ namespace AdeptiScanner_GI
                         }
                     }
                 }
+            }
+        }
+
+        private void button_resetSettings_Click(object sender, EventArgs e)
+        {
+            DialogResult dialogResult = MessageBox.Show("This will make all settings return to default the next time the scanner is started" + Environment.NewLine + "Are you sure?", "Remove saved Settings", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+            if (dialogResult == DialogResult.Yes)
+            {
+                File.Delete(Database.appDir + @"\settings.json");
+                rememberSettings = false;
             }
         }
     }
