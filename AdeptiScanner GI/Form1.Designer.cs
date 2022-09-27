@@ -52,6 +52,14 @@ namespace AdeptiScanner_GI
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.artifactDetails1 = new AdeptiScanner_GI.ArtifactDetails();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.label_recheckwait = new System.Windows.Forms.Label();
+            this.text_RecheckWait = new System.Windows.Forms.TextBox();
+            this.label_scrolltestwait = new System.Windows.Forms.Label();
+            this.text_ScrollTestWait = new System.Windows.Forms.TextBox();
+            this.label_scrollsleepwait = new System.Windows.Forms.Label();
+            this.label_clicksleepwait = new System.Windows.Forms.Label();
+            this.text_ScrollSleepWait = new System.Windows.Forms.TextBox();
+            this.text_clickSleepWait = new System.Windows.Forms.TextBox();
             this.button_loadArtifacts = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.image_preview)).BeginInit();
             this.tabControl1.SuspendLayout();
@@ -304,6 +312,14 @@ namespace AdeptiScanner_GI
             // 
             // tabPage3
             // 
+            this.tabPage3.Controls.Add(this.label_recheckwait);
+            this.tabPage3.Controls.Add(this.text_RecheckWait);
+            this.tabPage3.Controls.Add(this.label_scrolltestwait);
+            this.tabPage3.Controls.Add(this.text_ScrollTestWait);
+            this.tabPage3.Controls.Add(this.label_scrollsleepwait);
+            this.tabPage3.Controls.Add(this.label_clicksleepwait);
+            this.tabPage3.Controls.Add(this.text_ScrollSleepWait);
+            this.tabPage3.Controls.Add(this.text_clickSleepWait);
             this.tabPage3.Controls.Add(this.button_loadArtifacts);
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
@@ -312,6 +328,70 @@ namespace AdeptiScanner_GI
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Advanced";
             this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // label_recheckwait
+            // 
+            this.label_recheckwait.AutoSize = true;
+            this.label_recheckwait.Location = new System.Drawing.Point(6, 87);
+            this.label_recheckwait.Name = "label_recheckwait";
+            this.label_recheckwait.Size = new System.Drawing.Size(78, 13);
+            this.label_recheckwait.TabIndex = 8;
+            this.label_recheckwait.Text = "RecheckWait";
+            // 
+            // text_RecheckWait
+            // 
+            this.text_RecheckWait.Location = new System.Drawing.Point(109, 84);
+            this.text_RecheckWait.Name = "text_RecheckWait";
+            this.text_RecheckWait.Size = new System.Drawing.Size(100, 20);
+            this.text_RecheckWait.TabIndex = 7;
+            // 
+            // label_scrolltestwait
+            // 
+            this.label_scrolltestwait.AutoSize = true;
+            this.label_scrolltestwait.Location = new System.Drawing.Point(6, 61);
+            this.label_scrolltestwait.Name = "label_scrolltestwait";
+            this.label_scrolltestwait.Size = new System.Drawing.Size(81, 13);
+            this.label_scrolltestwait.TabIndex = 6;
+            this.label_scrolltestwait.Text = "ScrollTestWait";
+            // 
+            // text_ScrollTestWait
+            // 
+            this.text_ScrollTestWait.Location = new System.Drawing.Point(109, 58);
+            this.text_ScrollTestWait.Name = "text_ScrollTestWait";
+            this.text_ScrollTestWait.Size = new System.Drawing.Size(100, 20);
+            this.text_ScrollTestWait.TabIndex = 5;
+            // 
+            // label_scrollsleepwait
+            // 
+            this.label_scrollsleepwait.AutoSize = true;
+            this.label_scrollsleepwait.Location = new System.Drawing.Point(6, 35);
+            this.label_scrollsleepwait.Name = "label_scrollsleepwait";
+            this.label_scrollsleepwait.Size = new System.Drawing.Size(87, 13);
+            this.label_scrollsleepwait.TabIndex = 4;
+            this.label_scrollsleepwait.Text = "ScrollSleepWait";
+            // 
+            // label_clicksleepwait
+            // 
+            this.label_clicksleepwait.AutoSize = true;
+            this.label_clicksleepwait.Location = new System.Drawing.Point(6, 9);
+            this.label_clicksleepwait.Name = "label_clicksleepwait";
+            this.label_clicksleepwait.Size = new System.Drawing.Size(84, 13);
+            this.label_clicksleepwait.TabIndex = 3;
+            this.label_clicksleepwait.Text = "ClickSleepWait";
+            // 
+            // text_ScrollSleepWait
+            // 
+            this.text_ScrollSleepWait.Location = new System.Drawing.Point(109, 32);
+            this.text_ScrollSleepWait.Name = "text_ScrollSleepWait";
+            this.text_ScrollSleepWait.Size = new System.Drawing.Size(100, 20);
+            this.text_ScrollSleepWait.TabIndex = 2;
+            // 
+            // text_clickSleepWait
+            // 
+            this.text_clickSleepWait.Location = new System.Drawing.Point(109, 6);
+            this.text_clickSleepWait.Name = "text_clickSleepWait";
+            this.text_clickSleepWait.Size = new System.Drawing.Size(100, 20);
+            this.text_clickSleepWait.TabIndex = 1;
             // 
             // button_loadArtifacts
             // 
@@ -355,6 +435,7 @@ namespace AdeptiScanner_GI
             this.tabPage1.ResumeLayout(false);
             this.tabPage2.ResumeLayout(false);
             this.tabPage3.ResumeLayout(false);
+            this.tabPage3.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -386,6 +467,14 @@ namespace AdeptiScanner_GI
         private System.Windows.Forms.TabPage tabPage3;
         private System.Windows.Forms.Button button_loadArtifacts;
         private ArtifactDetails artifactDetails1;
+        private System.Windows.Forms.Label label_scrollsleepwait;
+        private System.Windows.Forms.Label label_clicksleepwait;
+        private System.Windows.Forms.TextBox text_ScrollSleepWait;
+        private System.Windows.Forms.TextBox text_clickSleepWait;
+        private System.Windows.Forms.Label label_recheckwait;
+        private System.Windows.Forms.TextBox text_RecheckWait;
+        private System.Windows.Forms.Label label_scrolltestwait;
+        private System.Windows.Forms.TextBox text_ScrollTestWait;
     }
 }
 

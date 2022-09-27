@@ -53,6 +53,10 @@ namespace AdeptiScanner_GI
         internal string travelerName = "";
         internal bool captureOnread = true;
         internal bool saveImagesGlobal = false;
+        internal string clickSleepWait_load = "100";
+        internal string scrollSleepWait_load = "1500";
+        internal string scrollTestWait_load = "100";
+        internal string recheckWait_load = "300";
 
         enum panelChoices
         {
@@ -277,7 +281,7 @@ namespace AdeptiScanner_GI
             }));
         }
 
-        private void runAuto(bool saveImages, int clickSleepDuration = 100, int scrollSleepDuration = 1500, int recheckSleepDuration = 300)
+        private void runAuto(bool saveImages, int clickSleepWait = 100, int scrollSleepWait = 1500, int scrollTestWait = 100, int recheckSleepWait = 300)
         {
             text_full.Text = "Starting auto-run. ---Press ESCAPE to pause---" + Environment.NewLine + "If no artifact switching happens, you forgot to run as admin" + Environment.NewLine;
             autoRunning = true;
@@ -363,9 +367,9 @@ namespace AdeptiScanner_GI
                         }
                         //test scroll distance
                         sim.Mouse.VerticalScroll(-1);
-                        System.Threading.Thread.Sleep(100);
+                        System.Threading.Thread.Sleep(scrollTestWait);
                         sim.Mouse.VerticalScroll(-1);
-                        System.Threading.Thread.Sleep(100);
+                        System.Threading.Thread.Sleep(scrollTestWait);
                         img = ImageProcessing.CaptureScreenshot(saveImages, gridArea, true);
                         artifactLocations = ImageProcessing.getArtifactGrid(img, saveImages, gridOffset);
 
@@ -396,7 +400,7 @@ namespace AdeptiScanner_GI
                             sim.Mouse.VerticalScroll(-1);
                             scrollsNeeded--;
                         }
-                        System.Threading.Thread.Sleep(scrollSleepDuration);
+                        System.Threading.Thread.Sleep(scrollSleepWait);
                         img = ImageProcessing.CaptureScreenshot(saveImages, gridArea, true);
                         artifactLocations = ImageProcessing.getArtifactGrid(img, saveImages, gridOffset);
                     }
@@ -425,7 +429,7 @@ namespace AdeptiScanner_GI
                             System.Threading.Thread.Sleep(1000);
                         }
                         clickPos(p.X, p.Y);
-                        System.Threading.Thread.Sleep(clickSleepDuration);
+                        System.Threading.Thread.Sleep(clickSleepWait);
 
                         Bitmap artifactSC = ImageProcessing.CaptureScreenshot(saveImages, savedArtifactArea, true);
 
@@ -462,7 +466,7 @@ namespace AdeptiScanner_GI
                             {
                                 repeat = true;
                                 Console.WriteLine("Rechecking at " + p.ToString());
-                                System.Threading.Thread.Sleep(recheckSleepDuration);
+                                System.Threading.Thread.Sleep(recheckSleepWait);
                                 continue;
                             }
 
@@ -713,7 +717,20 @@ namespace AdeptiScanner_GI
             pauseAuto = false;
             softCancelAuto = false;
             hardCancelAuto = false;
-            runAuto(false, 100, 1500);
+
+            int.TryParse(text_clickSleepWait.Text, out int clickSleepWait);
+            if (clickSleepWait == 0)
+                clickSleepWait = 100;
+            int.TryParse(text_ScrollSleepWait.Text, out int scrollSleepWait);
+            if (scrollSleepWait == 0)
+                scrollSleepWait = 1500;
+            int.TryParse(text_ScrollTestWait.Text, out int scrollTestWait);
+            if (scrollTestWait == 0)
+                scrollTestWait = 100;
+            int.TryParse(text_RecheckWait.Text, out int recheckWait);
+            if (recheckWait == 0)
+                recheckWait = 300;
+            runAuto(false, clickSleepWait, scrollSleepWait, scrollTestWait, recheckWait);
         }
 
         private void button_resume_Click(object sender, EventArgs e)
@@ -826,6 +843,22 @@ namespace AdeptiScanner_GI
             {
                 saveImagesGlobal = settings["saveImagesGlobal"].ToObject<bool>();
             }
+            if (settings.ContainsKey("clickSleepWait"))
+            {
+                clickSleepWait_load = settings["clickSleepWait"].ToObject<string>();
+            }
+            if (settings.ContainsKey("scrollSleepWait"))
+            {
+                scrollSleepWait_load = settings["scrollSleepWait"].ToObject<string>();
+            }
+            if (settings.ContainsKey("scrollTestWait"))
+            {
+                scrollTestWait_load = settings["scrollTestWait"].ToObject<string>();
+            }
+            if (settings.ContainsKey("recheckWait"))
+            {
+                recheckWait_load = settings["recheckWait"].ToObject<string>();
+            }
         }
 
         private void finalizeLoadSettings()
@@ -833,6 +866,10 @@ namespace AdeptiScanner_GI
             text_traveler.Text = travelerName;
             checkbox_OCRcapture.Checked = captureOnread;
             checkbox_saveImages.Checked = saveImagesGlobal;
+            text_clickSleepWait.Text = clickSleepWait_load;
+            text_ScrollSleepWait.Text = scrollSleepWait_load;
+            text_ScrollTestWait.Text = scrollTestWait_load;
+            text_RecheckWait.Text = recheckWait_load;
 
         }
 
@@ -848,6 +885,10 @@ namespace AdeptiScanner_GI
             settings["ExportAllEquipped"] = exportAllEquipped;
             settings["CaptureOnRead"] = captureOnread;
             settings["saveImagesGlobal"] = saveImagesGlobal;
+            settings["clickSleepWait"] = text_clickSleepWait.Text;
+            settings["scrollSleepWait"] = text_ScrollSleepWait.Text;
+            settings["scrollTestWait"] = text_ScrollTestWait.Text;
+            settings["recheckWait"] = text_RecheckWait.Text;
             string fileName = Database.appDir + @"\settings.json";
             File.WriteAllText(fileName, settings.ToString());
         }
