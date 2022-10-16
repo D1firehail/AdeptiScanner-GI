@@ -19,9 +19,13 @@ namespace AdeptiScanner_GI
             if (ScannerForm.INSTANCE != null)
             {
                 trackBar_minlevel.Value = ScannerForm.INSTANCE.minLevel;
+                label_minlevelnumber.Text = "" + trackBar_minlevel.Value;
                 trackBar_maxlevel.Value = ScannerForm.INSTANCE.maxLevel;
+                label_maxlevelnumber.Text = "" + trackBar_maxlevel.Value;
                 trackBar_minrarity.Value = ScannerForm.INSTANCE.minRarity;
+                label_minraritynumber.Text = "" + trackBar_minrarity.Value;
                 trackBar_maxrarity.Value = ScannerForm.INSTANCE.maxRarity;
+                label_maxraritynumber.Text = "" + trackBar_maxrarity.Value;
                 checkBox_exportEquipped.Checked = ScannerForm.INSTANCE.exportAllEquipped;
                 checkbox_exportTemplate.Checked = ScannerForm.INSTANCE.useTemplate;
             }
@@ -47,7 +51,8 @@ namespace AdeptiScanner_GI
 
         private void trackBar_minrarity_Scroll(object sender, EventArgs e)
         {
-            label_minraritynumber.Text = "" + trackBar_minrarity.Value; if (ScannerForm.INSTANCE != null)
+            label_minraritynumber.Text = "" + trackBar_minrarity.Value; 
+            if (ScannerForm.INSTANCE != null)
             {
                 ScannerForm.INSTANCE.minRarity = trackBar_minrarity.Value;
             }
@@ -55,7 +60,8 @@ namespace AdeptiScanner_GI
 
         private void trackBar_maxrarity_Scroll(object sender, EventArgs e)
         {
-            label_maxraritynumber.Text = "" + trackBar_maxrarity.Value; if (ScannerForm.INSTANCE != null)
+            label_maxraritynumber.Text = "" + trackBar_maxrarity.Value; 
+            if (ScannerForm.INSTANCE != null)
             {
                 ScannerForm.INSTANCE.maxRarity = trackBar_maxrarity.Value;
             }
