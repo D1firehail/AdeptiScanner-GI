@@ -1,5 +1,5 @@
 {
-	"DataVersion" :  "3.1",
+	"DataVersion" :  "3.2",
 	"Pieces": [
 		{ "name": { "Flower of Life": "flower" } },
 		{ "name": { "Plume of Death": "plume" } },
@@ -630,6 +630,7 @@
 		{ "name": { "Kuki Shinobu": "KukiShinobu" } },
 		{ "name": { "Lisa": "Lisa" } },
 		{ "name": { "Mona": "Mona" } },
+		{ "name": { "Nahida": "Nahida" } },
 		{ "name": { "Nilou": "Nilou" } },
 		{ "name": { "Ningguang": "Ningguang" } },
 		{ "name": { "Noelle": "Noelle" } },
