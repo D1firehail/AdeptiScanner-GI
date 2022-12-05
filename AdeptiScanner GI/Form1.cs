@@ -784,7 +784,7 @@ namespace AdeptiScanner_GI
                 //currData.Add("weapons", new JArray());
             }
 
-            string fileName = Database.appDir + @"\export" + timestamp + ".json";
+            string fileName = Database.appDir + @"\export" + timestamp + ".GOOD.json";
             File.WriteAllText(fileName, currData.ToString());
             text_full.AppendText("Exported to \"" + fileName + "\"" + Environment.NewLine);
 
