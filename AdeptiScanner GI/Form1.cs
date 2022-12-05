@@ -26,8 +26,8 @@ namespace AdeptiScanner_GI
         private Bitmap img_Raw;
         private Bitmap img_Filtered;
         private int[] filtered_rows;
-        private Rectangle savedArtifactArea;
-        private Rectangle savedGameArea;
+        private Rectangle savedArtifactArea = new Rectangle(0, 0, 1, 1);
+        private Rectangle savedGameArea = new Rectangle(0,0,1,1);
         private bool pauseAuto = true;
         private bool softCancelAuto = true;
         private bool hardCancelAuto = true;
@@ -623,10 +623,10 @@ namespace AdeptiScanner_GI
             {
                 if (tmpGameArea != null)
                 {
-                    Bitmap gameImg = new Bitmap(savedGameArea.Width, savedGameArea.Height);
+                    Bitmap gameImg = new Bitmap(tmpGameArea.Value.Width, tmpGameArea.Value.Height);
                     using (Graphics g = Graphics.FromImage(gameImg))
                     {
-                        g.DrawImage(img_Raw, 0, 0, savedGameArea, GraphicsUnit.Pixel);
+                        g.DrawImage(img_Raw, 0, 0, tmpGameArea.Value, GraphicsUnit.Pixel);
                     }
                     gameImg.Save(Database.appDir + @"\images\GenshinGameArea " + timestamp + ".png");
                 }

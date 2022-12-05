@@ -211,21 +211,18 @@ namespace AdeptiScanner_GI
             {
                 int x = (i / PixelSize) % gameArea.Width;
                 if ((imgBytes[i] > 40 && imgBytes[i] < 60 && imgBytes[i + 1] > 90 && imgBytes[i + 1] < 110 && imgBytes[i + 2] > 180 && imgBytes[i + 2] < 200) 
-                    || (imgBytes[i] > 220 && imgBytes[i] < 230 && imgBytes[i + 1] > 80 && imgBytes[i + 1] < 90 && imgBytes[i + 2] > 155 && imgBytes[i + 2] < 165)
-                    || (imgBytes[i] > 200 && imgBytes[i] < 210 && imgBytes[i + 1] > 120 && imgBytes[i + 1] < 130 && imgBytes[i + 2] > 75 && imgBytes[i + 2] < 85)
-                    || (imgBytes[i] > 110 && imgBytes[i] < 120 && imgBytes[i + 1] > 140 && imgBytes[i + 1] < 150 && imgBytes[i + 2] > 35 && imgBytes[i + 2] < 45)
-                    || (imgBytes[i] > 135 && imgBytes[i] < 145 && imgBytes[i + 1] > 115 && imgBytes[i + 1] < 125 && imgBytes[i + 2] > 110 && imgBytes[i + 2] < 120)) //look for artifact name background colour
+                    || (imgBytes[i] > 220 && imgBytes[i] < 230 && imgBytes[i + 1] > 80 && imgBytes[i + 1] < 90 && imgBytes[i + 2] > 155 && imgBytes[i + 2] < 165)) //look for artifact name background colour
                 {
                     cols[x]++;
+                    }
                 }
-            }
 
             //Find artifact text columns
             int edgewidth = 0;
             //find right edge
             while (cols[cols.Length - 1 - edgewidth] / (double)gameArea.Height < 0.02)
                 edgewidth++;
-            int rightmost = cols.Length - edgewidth;
+            int rightmost = cols.Length - edgewidth - 1;
             //find left edge
             int leftmost = rightmost - edgewidth;
             int misses = 0;
@@ -241,14 +238,15 @@ namespace AdeptiScanner_GI
                     misses++;
                 }
             }
-            leftmost += 3;
+            leftmost = Math.Min(leftmost+3, gameArea.Width - 1);
 
 
             int top = 0;
-            for (int y = top; y < gameArea.Height; y++)
+            for (int y = top; y < gameArea.Height - 1; y++)
             {
                 int i = (y * gameArea.Width + (leftmost * 3 + rightmost) / 4) * PixelSize;
-                if ((imgBytes[i] > 40 && imgBytes[i] < 60 && imgBytes[i + 1] > 90 && imgBytes[i + 1] < 110 && imgBytes[i + 2] > 180 && imgBytes[i + 2] < 200)) //look for artifact name background colour
+                if ((imgBytes[i] > 40 && imgBytes[i] < 60 && imgBytes[i + 1] > 90 && imgBytes[i + 1] < 110 && imgBytes[i + 2] > 180 && imgBytes[i + 2] < 200)
+                    || (imgBytes[i] > 220 && imgBytes[i] < 230 && imgBytes[i + 1] > 80 && imgBytes[i + 1] < 90 && imgBytes[i + 2] > 155 && imgBytes[i + 2] < 165)) //look for artifact name background colour
                 {
                     top = y;
                     break;
