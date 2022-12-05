@@ -48,10 +48,10 @@ namespace AdeptiScanner_GI
             this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.exportSettings1 = new AdeptiScanner_GI.ExportSettings();
             this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.artifactDetails1 = new AdeptiScanner_GI.ArtifactDetails();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.checkBox_updateVersion = new System.Windows.Forms.CheckBox();
+            this.checkBox_updateData = new System.Windows.Forms.CheckBox();
             this.button_resetSettings = new System.Windows.Forms.Button();
             this.label_recheckwait = new System.Windows.Forms.Label();
             this.text_RecheckWait = new System.Windows.Forms.TextBox();
@@ -62,6 +62,9 @@ namespace AdeptiScanner_GI
             this.text_ScrollSleepWait = new System.Windows.Forms.TextBox();
             this.text_clickSleepWait = new System.Windows.Forms.TextBox();
             this.button_loadArtifacts = new System.Windows.Forms.Button();
+            this.button_checkUpdateManual = new System.Windows.Forms.Button();
+            this.exportSettings1 = new AdeptiScanner_GI.ExportSettings();
+            this.artifactDetails1 = new AdeptiScanner_GI.ArtifactDetails();
             ((System.ComponentModel.ISupportInitialize)(this.image_preview)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -286,14 +289,6 @@ namespace AdeptiScanner_GI
             this.tabPage1.Text = "Export Filters";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
-            // exportSettings1
-            // 
-            this.exportSettings1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.exportSettings1.Location = new System.Drawing.Point(0, 0);
-            this.exportSettings1.Name = "exportSettings1";
-            this.exportSettings1.Size = new System.Drawing.Size(349, 228);
-            this.exportSettings1.TabIndex = 44;
-            // 
             // tabPage2
             // 
             this.tabPage2.Controls.Add(this.artifactDetails1);
@@ -305,15 +300,11 @@ namespace AdeptiScanner_GI
             this.tabPage2.Text = "Artifact Details";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
-            // artifactDetails1
-            // 
-            this.artifactDetails1.Location = new System.Drawing.Point(0, 3);
-            this.artifactDetails1.Name = "artifactDetails1";
-            this.artifactDetails1.Size = new System.Drawing.Size(349, 228);
-            this.artifactDetails1.TabIndex = 0;
-            // 
             // tabPage3
             // 
+            this.tabPage3.Controls.Add(this.button_checkUpdateManual);
+            this.tabPage3.Controls.Add(this.checkBox_updateVersion);
+            this.tabPage3.Controls.Add(this.checkBox_updateData);
             this.tabPage3.Controls.Add(this.button_resetSettings);
             this.tabPage3.Controls.Add(this.label_recheckwait);
             this.tabPage3.Controls.Add(this.text_RecheckWait);
@@ -332,11 +323,33 @@ namespace AdeptiScanner_GI
             this.tabPage3.Text = "Advanced";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
+            // checkBox_updateVersion
+            // 
+            this.checkBox_updateVersion.AutoSize = true;
+            this.checkBox_updateVersion.Location = new System.Drawing.Point(9, 133);
+            this.checkBox_updateVersion.Name = "checkBox_updateVersion";
+            this.checkBox_updateVersion.Size = new System.Drawing.Size(133, 17);
+            this.checkBox_updateVersion.TabIndex = 13;
+            this.checkBox_updateVersion.Text = "Version Update Check";
+            this.checkBox_updateVersion.UseVisualStyleBackColor = true;
+            this.checkBox_updateVersion.CheckedChanged += new System.EventHandler(this.checkBox_updateVersion_CheckedChanged);
+            // 
+            // checkBox_updateData
+            // 
+            this.checkBox_updateData.AutoSize = true;
+            this.checkBox_updateData.Location = new System.Drawing.Point(9, 110);
+            this.checkBox_updateData.Name = "checkBox_updateData";
+            this.checkBox_updateData.Size = new System.Drawing.Size(121, 17);
+            this.checkBox_updateData.TabIndex = 12;
+            this.checkBox_updateData.Text = "Data Update Check";
+            this.checkBox_updateData.UseVisualStyleBackColor = true;
+            this.checkBox_updateData.CheckedChanged += new System.EventHandler(this.checkBox_updateData_CheckedChanged);
+            // 
             // button_resetSettings
             // 
-            this.button_resetSettings.Location = new System.Drawing.Point(99, 189);
+            this.button_resetSettings.Location = new System.Drawing.Point(99, 186);
             this.button_resetSettings.Name = "button_resetSettings";
-            this.button_resetSettings.Size = new System.Drawing.Size(118, 49);
+            this.button_resetSettings.Size = new System.Drawing.Size(118, 52);
             this.button_resetSettings.TabIndex = 9;
             this.button_resetSettings.Text = "Remove Saved Settings";
             this.button_resetSettings.UseVisualStyleBackColor = true;
@@ -416,6 +429,31 @@ namespace AdeptiScanner_GI
             this.button_loadArtifacts.UseVisualStyleBackColor = true;
             this.button_loadArtifacts.Click += new System.EventHandler(this.button_loadArtifacts_Click);
             // 
+            // button_checkUpdateManual
+            // 
+            this.button_checkUpdateManual.Location = new System.Drawing.Point(226, 186);
+            this.button_checkUpdateManual.Name = "button_checkUpdateManual";
+            this.button_checkUpdateManual.Size = new System.Drawing.Size(117, 23);
+            this.button_checkUpdateManual.TabIndex = 14;
+            this.button_checkUpdateManual.Text = "Check for updates";
+            this.button_checkUpdateManual.UseVisualStyleBackColor = true;
+            this.button_checkUpdateManual.Click += new System.EventHandler(this.button_checkUpdateManual_Click);
+            // 
+            // exportSettings1
+            // 
+            this.exportSettings1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.exportSettings1.Location = new System.Drawing.Point(0, 0);
+            this.exportSettings1.Name = "exportSettings1";
+            this.exportSettings1.Size = new System.Drawing.Size(349, 228);
+            this.exportSettings1.TabIndex = 44;
+            // 
+            // artifactDetails1
+            // 
+            this.artifactDetails1.Location = new System.Drawing.Point(0, 3);
+            this.artifactDetails1.Name = "artifactDetails1";
+            this.artifactDetails1.Size = new System.Drawing.Size(349, 228);
+            this.artifactDetails1.TabIndex = 0;
+            // 
             // ScannerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -489,6 +527,9 @@ namespace AdeptiScanner_GI
         private System.Windows.Forms.Label label_scrolltestwait;
         private System.Windows.Forms.TextBox text_ScrollTestWait;
         private System.Windows.Forms.Button button_resetSettings;
+        private System.Windows.Forms.CheckBox checkBox_updateData;
+        private System.Windows.Forms.CheckBox checkBox_updateVersion;
+        private System.Windows.Forms.Button button_checkUpdateManual;
     }
 }
 

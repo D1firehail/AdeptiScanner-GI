@@ -8,6 +8,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
 using System.Text.RegularExpressions;
@@ -58,16 +59,16 @@ namespace AdeptiScanner_GI
         internal string scrollSleepWait_load = "1500";
         internal string scrollTestWait_load = "100";
         internal string recheckWait_load = "300";
+        internal bool? updateData = null;
+        internal bool? updateVersion = null;
+        internal string ignoredDataVersion = "";
+        internal string ignoredProgramVersion = "";
+        internal string lastUpdateCheck = "";
 
         enum panelChoices
         {
             ExportFilters,
             ArtifactDetails
-        };
-        readonly string[] panelChoiceText = new string[]
-        {
-            "Export filters",
-            "Artifact details"
         };
 
         private static InputSimulator sim = new InputSimulator();
@@ -75,6 +76,19 @@ namespace AdeptiScanner_GI
         public ScannerForm()
         {
             ScannerForm.INSTANCE = this;
+            if (Directory.Exists(Database.appdataPath) && Database.appDir != Database.appdataPath)
+            {
+                foreach( string filePath in Directory.EnumerateFiles(Database.appdataPath))
+                {
+                    string fileName = filePath.Replace(Database.appdataPath, "");
+                    string localFilePath = Database.appDir + fileName;
+                    if (File.Exists(localFilePath))
+                        File.Delete(localFilePath);
+                    File.Copy(filePath, localFilePath);
+                    File.Delete(filePath);
+                }
+                Directory.Delete(Database.appdataPath);
+            }
             loadSettings();
             InitializeComponent();
             finalizeLoadSettings();
@@ -120,6 +134,13 @@ namespace AdeptiScanner_GI
             img_Filtered = new Bitmap(img_Raw);
             image_preview.Image = new Bitmap(img_Raw);
             FormClosing += GenshinArtifactOCR_FormClosing;
+            if (!updateData.HasValue || !updateVersion.HasValue)
+            {
+                Application.Run(new FirstStart());
+            } else
+            {
+                searchForUpdates(false);
+            }
         }
 
         private void eventFormClosing(object sender, FormClosingEventArgs e)
@@ -861,6 +882,26 @@ namespace AdeptiScanner_GI
             {
                 recheckWait_load = settings["recheckWait"].ToObject<string>();
             }
+            if (settings.ContainsKey("updateData"))
+            {
+                updateData = settings["updateData"].ToObject<bool>();
+            }
+            if (settings.ContainsKey("updateVersion"))
+            {
+                updateVersion = settings["updateVersion"].ToObject<bool>();
+            }
+            if (settings.ContainsKey("ignoredDataVersion"))
+            {
+                ignoredDataVersion = settings["ignoredDataVersion"].ToObject<string>();
+            }
+            if (settings.ContainsKey("ignoredProgramVersion"))
+            {
+                ignoredProgramVersion = settings["ignoredProgramVersion"].ToObject<string>();
+            }
+            if (settings.ContainsKey("lastUpdateCheck"))
+            {
+                lastUpdateCheck = settings["lastUpdateCheck"].ToObject<string>();
+            }
         }
 
         private void finalizeLoadSettings()
@@ -873,6 +914,156 @@ namespace AdeptiScanner_GI
             text_ScrollTestWait.Text = scrollTestWait_load;
             text_RecheckWait.Text = recheckWait_load;
 
+            if (updateData.HasValue)
+                checkBox_updateData.Checked = updateData.Value;
+            if (updateVersion.HasValue)
+                checkBox_updateVersion.Checked = updateVersion.Value;
+
+        }
+
+        public void SetUpdatePreferences(bool updateData, bool updateVersion)
+        {
+            if (InvokeRequired)
+            {
+                this.Invoke(new Action<bool, bool>(SetUpdatePreferences), new object[] { updateData, updateVersion });
+                return;
+            }
+            this.updateData = updateData;
+            this.updateVersion = updateVersion;
+            checkBox_updateData.Checked = updateData;
+            checkBox_updateVersion.Checked = updateVersion;
+        }
+
+        private void searchForUpdates(bool isManual)
+        {
+            string timestamp = DateTime.UtcNow.ToString("yyyy-MM-dd");
+            if (timestamp == lastUpdateCheck && !isManual)
+                return;
+            lastUpdateCheck = timestamp;
+            WebClient webclient = new WebClient();
+            webclient.Headers.Add("user-agent", "AdeptiScanner");
+
+            string programVersionTitle = "";
+            string programVersionBody = "";
+
+            if (isManual || (this.updateVersion.HasValue && this.updateVersion.Value))
+            {
+                try
+                {
+                    string response = webclient.DownloadString("https://api.github.com/repos/D1firehail/AdeptiScanner-GI/releases");
+                    JArray releases = JsonConvert.DeserializeObject<JArray>(response);
+                    if (releases.First.HasValues)
+                    {
+                        JObject latest = releases.First.Value<JObject>();
+                        programVersionTitle = latest["tag_name"].ToObject<string>();
+
+                        programVersionBody = latest["body"].ToObject<string>();
+
+                    }
+                } catch(Exception exc)
+                {
+                    Debug.WriteLine(exc.ToString());
+                }
+                if (programVersionTitle.ToLower().Equals("v"+Database.programVersion))
+                {
+                    programVersionTitle = "";
+                }
+            }
+
+            string dataVersionString = "";
+            string dataVersionJson = "";
+
+            if (isManual || (this.updateData.HasValue && this.updateData.Value))
+            {
+                try
+                {
+                    string response = webclient.DownloadString("https://raw.githubusercontent.com/D1firehail/AdeptiScanner-GI/master/AdeptiScanner%20GI/ScannerFiles/ArtifactInfo.json");
+                    JObject artifactInfo = JsonConvert.DeserializeObject<JObject>(response);
+                    dataVersionString = artifactInfo["DataVersion"].ToObject<string>();
+                    dataVersionJson = response;
+                }
+                catch (Exception exc)
+                {
+                    Debug.WriteLine(exc.ToString());
+                }
+                if (dataVersionString.Equals(Database.dataVersion))
+                {
+                    dataVersionString = "";
+                }
+            }
+            if ( (programVersionTitle.Length > 0 && (isManual || programVersionTitle != ignoredProgramVersion)) 
+                || (dataVersionString.Length > 0 && (isManual || dataVersionString != ignoredDataVersion)))
+            {
+                UpdatePrompt tmp = new UpdatePrompt(programVersionTitle, programVersionBody, dataVersionString, dataVersionJson);
+                tmp.Show();
+            } else if (isManual)
+            {
+                MessageBox.Show("No updates found",
+                "Update checker", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+
+        }
+
+        internal void executeDataUpdate(string newData)
+        {
+            if (InvokeRequired)
+            {
+                this.Invoke(new Action<string>(executeDataUpdate), new object[] { newData });
+                return;
+            }
+
+
+            try
+            {
+                File.WriteAllText(Database.appDir + @"\ArtifactInfo.json", newData);
+            } catch (Exception exc)
+            {
+                MessageBox.Show("Update failed, error: " + Environment.NewLine + Environment.NewLine + exc.ToString(), "Update failed",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            Application.Restart();
+        }
+
+        internal void readyVersionUpdate()
+        {
+            if (InvokeRequired)
+            {
+                this.Invoke(new Action(readyVersionUpdate));
+                return;
+            }
+
+            //TODO export settings and template to %appdata% for retrieval in new version
+
+            saveSettings();
+
+            if (!Directory.Exists(Database.appdataPath))
+                Directory.CreateDirectory(Database.appdataPath);
+
+            string[] filesToCopy = { @"\settings.json", @"\ExportTemplate.json"};
+
+            foreach (string file in filesToCopy)
+            {
+                if (!File.Exists(Database.appDir + file))
+                    continue;
+                if (File.Exists(Database.appdataPath + file))
+                    File.Delete(Database.appdataPath + file);
+                File.Copy(Database.appDir + file, Database.appdataPath + file);
+            }
+            System.Diagnostics.Process.Start("https://github.com/D1firehail/AdeptiScanner-GI/releases/latest");
+            Application.Exit();
+        }
+
+        internal void setIgnoredVersions(string dataVersion, string programVersion)
+        {
+            if (InvokeRequired)
+            {
+                this.Invoke(new Action<string, string>(setIgnoredVersions), new object[] { dataVersion, programVersion });
+                return;
+            }
+            if (dataVersion.Length > 0)
+                ignoredDataVersion = dataVersion;
+            if (programVersion.Length > 0)
+                ignoredProgramVersion = programVersion;
         }
 
         private void saveSettings()
@@ -891,9 +1082,19 @@ namespace AdeptiScanner_GI
             settings["scrollSleepWait"] = text_ScrollSleepWait.Text;
             settings["scrollTestWait"] = text_ScrollTestWait.Text;
             settings["recheckWait"] = text_RecheckWait.Text;
+            if (updateData.HasValue)
+                settings["updateData"] = updateData.Value;
+            if (updateVersion.HasValue)
+                settings["updateVersion"] = updateVersion.Value;
+            settings["ignoredDataVersion"] = ignoredDataVersion;
+            settings["ignoredProgramVersion"] = ignoredProgramVersion;
+            settings["lastUpdateCheck"] = lastUpdateCheck;
+            
+
             string fileName = Database.appDir + @"\settings.json";
             File.WriteAllText(fileName, settings.ToString());
         }
+
 
         private void text_traveler_TextChanged(object sender, EventArgs e)
         {
@@ -969,6 +1170,21 @@ namespace AdeptiScanner_GI
                 File.Delete(Database.appDir + @"\settings.json");
                 rememberSettings = false;
             }
+        }
+
+        private void checkBox_updateData_CheckedChanged(object sender, EventArgs e)
+        {
+            updateData = checkBox_updateData.Checked;
+        }
+
+        private void checkBox_updateVersion_CheckedChanged(object sender, EventArgs e)
+        {
+            updateVersion = checkBox_updateVersion.Checked;
+        }
+
+        private void button_checkUpdateManual_Click(object sender, EventArgs e)
+        {
+            searchForUpdates(true);
         }
     }
 }
