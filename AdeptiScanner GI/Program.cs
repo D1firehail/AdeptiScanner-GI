@@ -15,6 +15,7 @@ namespace AdeptiScanner_GI
             Directory.CreateDirectory(Database.appDir);
             Directory.CreateDirectory(Database.appDir + @"\tessdata");
             Directory.CreateDirectory(Database.appDir + @"\images");
+            Directory.CreateDirectory(Database.appDir + @"\Scan_Results");
             Database.GenerateFilters();
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);

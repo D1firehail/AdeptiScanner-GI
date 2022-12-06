@@ -804,11 +804,10 @@ namespace AdeptiScanner_GI
                 //currData.Add("characters", new JArray());
                 //currData.Add("weapons", new JArray());
             }
-
-            string fileName = Database.appDir + @"\export" + timestamp + ".GOOD.json";
+            string fileName = Database.appDir + @"\Scan_Results" + @"\export" + timestamp + ".GOOD.json";
             File.WriteAllText(fileName, currData.ToString());
             text_full.AppendText("Exported to \"" + fileName + "\"" + Environment.NewLine);
-
+            Process.Start("explorer.exe", Database.appDir + @"\Scan_Results");
         }
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -1032,7 +1031,6 @@ namespace AdeptiScanner_GI
                 return;
             }
 
-            //TODO export settings and template to %appdata% for retrieval in new version
 
             saveSettings();
 
