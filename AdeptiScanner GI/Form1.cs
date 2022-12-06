@@ -944,6 +944,8 @@ namespace AdeptiScanner_GI
 
             string programVersionTitle = "";
             string programVersionBody = "";
+            bool programVersionPrerelease = false;
+            bool programVersionDraft = false;
 
             if (isManual || (this.updateVersion.HasValue && this.updateVersion.Value))
             {
@@ -956,6 +958,10 @@ namespace AdeptiScanner_GI
                         JObject latest = releases.First.Value<JObject>();
                         programVersionTitle = latest["tag_name"].ToObject<string>();
 
+                        programVersionPrerelease = latest["prerelease"].ToObject<bool>();
+
+                        programVersionDraft = latest["draft"].ToObject<bool>();
+
                         programVersionBody = latest["body"].ToObject<string>();
 
                     }
@@ -963,7 +969,7 @@ namespace AdeptiScanner_GI
                 {
                     Debug.WriteLine(exc.ToString());
                 }
-                if (programVersionTitle.ToLower().Equals("v"+Database.programVersion))
+                if (programVersionPrerelease || programVersionDraft || programVersionTitle.ToLower().Equals("v"+Database.programVersion))
                 {
                     programVersionTitle = "";
                 }
