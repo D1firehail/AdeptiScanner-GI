@@ -48,8 +48,11 @@ namespace AdeptiScanner_GI
             this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.exportSettings1 = new AdeptiScanner_GI.ExportSettings();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.artifactDetails1 = new AdeptiScanner_GI.ArtifactDetails();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.button_checkUpdateManual = new System.Windows.Forms.Button();
             this.checkBox_updateVersion = new System.Windows.Forms.CheckBox();
             this.checkBox_updateData = new System.Windows.Forms.CheckBox();
             this.button_resetSettings = new System.Windows.Forms.Button();
@@ -62,9 +65,8 @@ namespace AdeptiScanner_GI
             this.text_ScrollSleepWait = new System.Windows.Forms.TextBox();
             this.text_clickSleepWait = new System.Windows.Forms.TextBox();
             this.button_loadArtifacts = new System.Windows.Forms.Button();
-            this.button_checkUpdateManual = new System.Windows.Forms.Button();
-            this.exportSettings1 = new AdeptiScanner_GI.ExportSettings();
-            this.artifactDetails1 = new AdeptiScanner_GI.ArtifactDetails();
+            this.label_wanderer = new System.Windows.Forms.Label();
+            this.text_wanderer = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.image_preview)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -117,7 +119,7 @@ namespace AdeptiScanner_GI
             this.text_full.Name = "text_full";
             this.text_full.ReadOnly = true;
             this.text_full.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.text_full.Size = new System.Drawing.Size(279, 339);
+            this.text_full.Size = new System.Drawing.Size(279, 313);
             this.text_full.TabIndex = 19;
             // 
             // label_full
@@ -136,7 +138,7 @@ namespace AdeptiScanner_GI
             this.checkbox_OCRcapture.AutoSize = true;
             this.checkbox_OCRcapture.Checked = true;
             this.checkbox_OCRcapture.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkbox_OCRcapture.Location = new System.Drawing.Point(494, 640);
+            this.checkbox_OCRcapture.Location = new System.Drawing.Point(492, 614);
             this.checkbox_OCRcapture.Name = "checkbox_OCRcapture";
             this.checkbox_OCRcapture.Size = new System.Drawing.Size(102, 17);
             this.checkbox_OCRcapture.TabIndex = 23;
@@ -148,7 +150,7 @@ namespace AdeptiScanner_GI
             // 
             this.checkbox_saveImages.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.checkbox_saveImages.AutoSize = true;
-            this.checkbox_saveImages.Location = new System.Drawing.Point(622, 640);
+            this.checkbox_saveImages.Location = new System.Drawing.Point(620, 614);
             this.checkbox_saveImages.Name = "checkbox_saveImages";
             this.checkbox_saveImages.Size = new System.Drawing.Size(87, 17);
             this.checkbox_saveImages.TabIndex = 25;
@@ -228,9 +230,9 @@ namespace AdeptiScanner_GI
             // text_traveler
             // 
             this.text_traveler.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.text_traveler.Location = new System.Drawing.Point(574, 663);
+            this.text_traveler.Location = new System.Drawing.Point(584, 663);
             this.text_traveler.Name = "text_traveler";
-            this.text_traveler.Size = new System.Drawing.Size(200, 20);
+            this.text_traveler.Size = new System.Drawing.Size(190, 20);
             this.text_traveler.TabIndex = 37;
             this.text_traveler.TextChanged += new System.EventHandler(this.text_traveler_TextChanged);
             // 
@@ -289,6 +291,14 @@ namespace AdeptiScanner_GI
             this.tabPage1.Text = "Export Filters";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
+            // exportSettings1
+            // 
+            this.exportSettings1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.exportSettings1.Location = new System.Drawing.Point(0, 0);
+            this.exportSettings1.Name = "exportSettings1";
+            this.exportSettings1.Size = new System.Drawing.Size(349, 228);
+            this.exportSettings1.TabIndex = 44;
+            // 
             // tabPage2
             // 
             this.tabPage2.Controls.Add(this.artifactDetails1);
@@ -299,6 +309,13 @@ namespace AdeptiScanner_GI
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Artifact Details";
             this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // artifactDetails1
+            // 
+            this.artifactDetails1.Location = new System.Drawing.Point(0, 3);
+            this.artifactDetails1.Name = "artifactDetails1";
+            this.artifactDetails1.Size = new System.Drawing.Size(349, 228);
+            this.artifactDetails1.TabIndex = 0;
             // 
             // tabPage3
             // 
@@ -322,6 +339,16 @@ namespace AdeptiScanner_GI
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Advanced";
             this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // button_checkUpdateManual
+            // 
+            this.button_checkUpdateManual.Location = new System.Drawing.Point(226, 186);
+            this.button_checkUpdateManual.Name = "button_checkUpdateManual";
+            this.button_checkUpdateManual.Size = new System.Drawing.Size(117, 23);
+            this.button_checkUpdateManual.TabIndex = 14;
+            this.button_checkUpdateManual.Text = "Check for updates";
+            this.button_checkUpdateManual.UseVisualStyleBackColor = true;
+            this.button_checkUpdateManual.Click += new System.EventHandler(this.button_checkUpdateManual_Click);
             // 
             // checkBox_updateVersion
             // 
@@ -429,30 +456,24 @@ namespace AdeptiScanner_GI
             this.button_loadArtifacts.UseVisualStyleBackColor = true;
             this.button_loadArtifacts.Click += new System.EventHandler(this.button_loadArtifacts_Click);
             // 
-            // button_checkUpdateManual
+            // label_wanderer
             // 
-            this.button_checkUpdateManual.Location = new System.Drawing.Point(226, 186);
-            this.button_checkUpdateManual.Name = "button_checkUpdateManual";
-            this.button_checkUpdateManual.Size = new System.Drawing.Size(117, 23);
-            this.button_checkUpdateManual.TabIndex = 14;
-            this.button_checkUpdateManual.Text = "Check for updates";
-            this.button_checkUpdateManual.UseVisualStyleBackColor = true;
-            this.button_checkUpdateManual.Click += new System.EventHandler(this.button_checkUpdateManual_Click);
+            this.label_wanderer.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.label_wanderer.AutoSize = true;
+            this.label_wanderer.Location = new System.Drawing.Point(490, 640);
+            this.label_wanderer.Name = "label_wanderer";
+            this.label_wanderer.Size = new System.Drawing.Size(88, 13);
+            this.label_wanderer.TabIndex = 47;
+            this.label_wanderer.Text = "Wanderer Name:";
             // 
-            // exportSettings1
+            // text_wanderer
             // 
-            this.exportSettings1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.exportSettings1.Location = new System.Drawing.Point(0, 0);
-            this.exportSettings1.Name = "exportSettings1";
-            this.exportSettings1.Size = new System.Drawing.Size(349, 228);
-            this.exportSettings1.TabIndex = 44;
-            // 
-            // artifactDetails1
-            // 
-            this.artifactDetails1.Location = new System.Drawing.Point(0, 3);
-            this.artifactDetails1.Name = "artifactDetails1";
-            this.artifactDetails1.Size = new System.Drawing.Size(349, 228);
-            this.artifactDetails1.TabIndex = 0;
+            this.text_wanderer.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.text_wanderer.Location = new System.Drawing.Point(584, 637);
+            this.text_wanderer.Name = "text_wanderer";
+            this.text_wanderer.Size = new System.Drawing.Size(190, 20);
+            this.text_wanderer.TabIndex = 46;
+            this.text_wanderer.TextChanged += new System.EventHandler(this.text_wanderer_TextChanged);
             // 
             // ScannerForm
             // 
@@ -460,6 +481,8 @@ namespace AdeptiScanner_GI
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.LightGray;
             this.ClientSize = new System.Drawing.Size(784, 781);
+            this.Controls.Add(this.label_wanderer);
+            this.Controls.Add(this.text_wanderer);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.linkLabel1);
             this.Controls.Add(this.label_dataversion);
@@ -530,6 +553,8 @@ namespace AdeptiScanner_GI
         private System.Windows.Forms.CheckBox checkBox_updateData;
         private System.Windows.Forms.CheckBox checkBox_updateVersion;
         private System.Windows.Forms.Button button_checkUpdateManual;
+        private System.Windows.Forms.Label label_wanderer;
+        private System.Windows.Forms.TextBox text_wanderer;
     }
 }
 

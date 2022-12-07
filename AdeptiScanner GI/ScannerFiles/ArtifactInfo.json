@@ -1,5 +1,5 @@
 {
-	"DataVersion" :  "3.2",
+	"DataVersion" :  "3.3",
 	"Pieces": [
 		{ "name": { "Flower of Life": "flower" } },
 		{ "name": { "Plume of Death": "plume" } },
@@ -135,7 +135,9 @@
 					{ "name": { "Echoes of an Offering": "EchoesOfAnOffering" } },
 					{ "name": { "Vermillion Hereafter": "VermillionHereafter" } },
 					{ "name": { "Deepwood Memories": "DeepwoodMemories" } },
-					{ "name": { "Gilded Dreams": "GildedDreams" } }
+					{ "name": { "Gilded Dreams": "GildedDreams" } },
+					{ "name": { "Desert Pavilion Chronicle": "DesertPavilionChronicle" } },
+					{ "name": { "Flower of Paradise Lost": "FlowerOfParadiseLost" } }
 				]
 			}
 		},
@@ -272,7 +274,9 @@
 					{ "name": { "Echoes of an Offering": "EchoesOfAnOffering" } },
 					{ "name": { "Vermillion Hereafter": "VermillionHereafter" } },
 					{ "name": { "Deepwood Memories": "DeepwoodMemories" } },
-					{ "name": { "Gilded Dreams": "GildedDreams" } }
+					{ "name": { "Gilded Dreams": "GildedDreams" } },
+					{ "name": { "Desert Pavilion Chronicle": "DesertPavilionChronicle" } },
+					{ "name": { "Flower of Paradise Lost": "FlowerOfParadiseLost" } }
 				]
 			}
 		},
@@ -615,6 +619,7 @@
 		{ "name": { "Diona": "Diona" } },
 		{ "name": { "Dori": "Dori" } },
 		{ "name": { "Eula": "Eula" } },
+		{ "name": { "Faruzan": "Faruzan" } },
 		{ "name": { "Fischl": "Fischl" } },
 		{ "name": { "Ganyu": "Ganyu" } },
 		{ "name": { "Gorou": "Gorou" } },
@@ -648,6 +653,7 @@
 		{ "name": { "Thoma": "Thoma" } },
 		{ "name": { "YOURNAMEHEREYOURNAMEHEREYOURNAMEHERE": "Traveler" } },
 		{ "name": { "Venti": "Venti" } },
+		{ "name": { "Wanderer": "Wanderer" } },
 		{ "name": { "Xiangling": "Xiangling" } },
 		{ "name": { "Xiao": "Xiao" } },
 		{ "name": { "Xingqiu": "Xingqiu" } },

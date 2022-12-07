@@ -53,6 +53,7 @@ namespace AdeptiScanner_GI
         internal bool exportAllEquipped = true;
         internal bool useTemplate = false;
         internal string travelerName = "";
+        internal string wandererName = "Wanderer";
         internal bool captureOnread = true;
         internal bool saveImagesGlobal = false;
         internal string clickSleepWait_load = "100";
@@ -830,8 +831,14 @@ namespace AdeptiScanner_GI
             if (settings.ContainsKey("TravelerName"))
             {
                 string readTravelerName = settings["TravelerName"].ToObject<string>();
-                Database.SetTravelerName(readTravelerName);
+                Database.SetCharacterName(readTravelerName, "Traveler");
                 travelerName = readTravelerName;
+            }
+            if (settings.ContainsKey("WandererName"))
+            {
+                string readWandererName = settings["WandererName"].ToObject<string>();
+                Database.SetCharacterName(readWandererName, "Wanderer");
+                wandererName = readWandererName;
             }
             if (settings.ContainsKey("FilterMinLevel"))
             {
@@ -906,6 +913,7 @@ namespace AdeptiScanner_GI
         private void finalizeLoadSettings()
         {
             text_traveler.Text = travelerName;
+            text_wanderer.Text = wandererName;
             checkbox_OCRcapture.Checked = captureOnread;
             checkbox_saveImages.Checked = saveImagesGlobal;
             text_clickSleepWait.Text = clickSleepWait_load;
@@ -1074,6 +1082,7 @@ namespace AdeptiScanner_GI
         {
             JObject settings = new JObject();
             settings["TravelerName"] = text_traveler.Text;
+            settings["WandererName"] = text_wanderer.Text;
             settings["FilterMinLevel"] = minLevel;
             settings["FilterMaxLevel"] = maxLevel;
             settings["FilterMinRarity"] = minRarity;
@@ -1103,7 +1112,15 @@ namespace AdeptiScanner_GI
         private void text_traveler_TextChanged(object sender, EventArgs e)
         {
             travelerName = text_traveler.Text;
-            Database.SetTravelerName(travelerName);
+            Database.SetCharacterName(travelerName, "Traveler");
+        }
+
+
+        private void text_wanderer_TextChanged(object sender, EventArgs e)
+        {
+
+            wandererName = text_wanderer.Text;
+            Database.SetCharacterName(wandererName, "Wanderer");
         }
 
         private void checkbox_OCRcapture_CheckedChanged(object sender, EventArgs e)

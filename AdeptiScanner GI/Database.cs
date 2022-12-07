@@ -13,7 +13,7 @@ namespace AdeptiScanner_GI
         private static System.Globalization.CultureInfo culture = new System.Globalization.CultureInfo("en-GB", false);
         public static string appDir = Application.StartupPath + @"\ScannerFiles";
         public static string appdataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\AdeptiScanner";
-        public static string programVersion = "1.3.0";
+        public static string programVersion = "1.4.0";
         public static string dataVersion = "X.XX";
         //These get filled on startup by other file
         public static List<string> Pieces = new List<string>();
@@ -338,16 +338,16 @@ namespace AdeptiScanner_GI
             }
         }
 
-        public static void SetTravelerName(string name)
+        public static void SetCharacterName(string displayName, string GOODName)
         {
             for (int i = 0; i < Characters_trans.Count; i++)
             {
-                if ( Characters_trans[i].Item2 == "Traveler")
+                if ( Characters_trans[i].Item2 == GOODName)
                 {
                     Characters_trans.RemoveAt(i);
-                    Characters_trans.Insert(i, Tuple.Create("Equipped: " + name, "Traveler"));
+                    Characters_trans.Insert(i, Tuple.Create("Equipped: " + displayName, GOODName));
                     Characters.RemoveAt(i);
-                    Characters.Insert(i, "Equipped: " + name);
+                    Characters.Insert(i, "Equipped: " + displayName);
                     break;
                 }
             }
