@@ -182,6 +182,88 @@ namespace AdeptiScanner_GI
             return artifactListPoint;
         }
 
+
+        public static List<Point> equalizeGrid(List<Point> rawGrid, int rowTolerance, int colTolerance)
+        {
+            List<List<Point>> rows = new List<List<Point>>();
+            List<List<Point>> cols = new List<List<Point>>();
+            //match point to row/col within tolerance, or create new if none found
+            foreach (Point p in rawGrid)
+            {
+                bool hasRow = false;
+                foreach (List<Point> row in rows)
+                {
+                    if (Math.Abs(p.Y - row[0].Y) < rowTolerance)
+                    {
+                        row.Add(p);
+                        hasRow = true;
+                        break;
+                    }
+                }
+                if (!hasRow)
+                {
+                    rows.Add(new List<Point>());
+                    rows.Last().Add(p);
+                }
+
+                bool hasCol = false;
+                foreach (List<Point> col in cols)
+                {
+                    if (Math.Abs(p.X - col[0].X) < colTolerance)
+                    {
+                        col.Add(p);
+                        hasCol = true;
+                        break;
+                    }
+                }
+                if (!hasCol)
+                {
+                    cols.Add(new List<Point>());
+                    cols.Last().Add(p);
+                }
+            }
+
+            //calc average coord for each row/col
+            List<int> rowCoords = new List<int>();
+            foreach (List<Point> row in rows)
+            {
+                int avgY = 0;
+                foreach (Point p in row)
+                {
+                    avgY += p.Y;
+                }
+                avgY = avgY / row.Count;
+                rowCoords.Add(avgY);
+            }
+
+            List<int> colCoords = new List<int>();
+            foreach (List<Point> col in cols)
+            {
+                int avgX = 0;
+                foreach (Point p in col)
+                {
+                    avgX += p.X;
+                }
+                avgX = avgX / col.Count;
+                colCoords.Add(avgX);
+            }
+
+
+            rowCoords.Sort();
+            colCoords.Sort();
+            //create list of all grid points using row/col data
+            List<Point> equalized = new List<Point>();
+            foreach (int y in rowCoords)
+            {
+                foreach (int x in colCoords)
+                {
+                    equalized.Add(new Point(x, y));
+                }
+            }
+            return equalized;
+        }
+
+
         /// <summary>
         /// Find artifact area from an image of the backpack
         /// </summary>

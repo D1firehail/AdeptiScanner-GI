@@ -345,6 +345,7 @@ namespace AdeptiScanner_GI
                     //load current grid/scroll location
                     Bitmap img = ImageProcessing.CaptureScreenshot(saveImages, gridArea, true);
                     List<Point> artifactLocations = ImageProcessing.getArtifactGrid(img, saveImages, gridOffset);
+                    artifactLocations = ImageProcessing.equalizeGrid(artifactLocations, gridArea.Height / 20, gridArea.Width / 20);
 
                     if (artifactLocations.Count == 0)
                     {
@@ -396,6 +397,7 @@ namespace AdeptiScanner_GI
                         System.Threading.Thread.Sleep(scrollTestWait);
                         img = ImageProcessing.CaptureScreenshot(saveImages, gridArea, true);
                         artifactLocations = ImageProcessing.getArtifactGrid(img, saveImages, gridOffset);
+                        artifactLocations = ImageProcessing.equalizeGrid(artifactLocations, gridArea.Height / 20, gridArea.Width / 20);
 
                         if (artifactLocations.Count == 0)
                         {
@@ -427,6 +429,7 @@ namespace AdeptiScanner_GI
                         System.Threading.Thread.Sleep(scrollSleepWait);
                         img = ImageProcessing.CaptureScreenshot(saveImages, gridArea, true);
                         artifactLocations = ImageProcessing.getArtifactGrid(img, saveImages, gridOffset);
+                        artifactLocations = ImageProcessing.equalizeGrid(artifactLocations, gridArea.Height / 20, gridArea.Width / 20);
                     }
 
 
@@ -478,7 +481,7 @@ namespace AdeptiScanner_GI
                             {
                                 if (running)
                                 {
-                                    AppendStatusText("Duplicate artifact found, stopping after this screen", false);
+                                    AppendStatusText("Duplicate artifact found, stopping after this screen" + Environment.NewLine, false);
                                 }
                                 running = false;
                                 Console.WriteLine("Duplicate at " + p.ToString());
