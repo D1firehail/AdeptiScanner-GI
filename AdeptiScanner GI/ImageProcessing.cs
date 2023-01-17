@@ -729,10 +729,10 @@ namespace AdeptiScanner_GI
             int width = img.Width;
             while (i + 1 < img.Height)
             {
-                while (i + 1 < height && rows[i] / (double)width < 0.01)
+                while (i + 1 < height && rows[i] == 0)
                     i++;
                 int rowTop = i;
-                while (i + 1 < height && !(rows[i] / (double)width < 0.01))
+                while (i + 1 < height && !(rows[i] == 0))
                     i++;
                 textRows.Add(Tuple.Create(Math.Max(0, rowTop - 3), Math.Min(height - 1, i + 3)));
             }

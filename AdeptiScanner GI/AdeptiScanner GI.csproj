@@ -80,6 +80,7 @@
     <Compile Include="FirstStart.Designer.cs">
       <DependentUpon>FirstStart.cs</DependentUpon>
     </Compile>
+    <Compile Include="GameVisibilityHandler.cs" />
     <Compile Include="ImageProcessing.cs" />
     <Compile Include="Database.cs" />
     <Compile Include="InventoryItem.cs" />

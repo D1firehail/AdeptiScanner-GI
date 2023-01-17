@@ -67,6 +67,7 @@ namespace AdeptiScanner_GI
             this.button_loadArtifacts = new System.Windows.Forms.Button();
             this.label_wanderer = new System.Windows.Forms.Label();
             this.text_wanderer = new System.Windows.Forms.TextBox();
+            this.checkBox_ProcessHandleFeatures = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.image_preview)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -319,6 +320,7 @@ namespace AdeptiScanner_GI
             // 
             // tabPage3
             // 
+            this.tabPage3.Controls.Add(this.checkBox_ProcessHandleFeatures);
             this.tabPage3.Controls.Add(this.button_checkUpdateManual);
             this.tabPage3.Controls.Add(this.checkBox_updateVersion);
             this.tabPage3.Controls.Add(this.checkBox_updateData);
@@ -475,6 +477,19 @@ namespace AdeptiScanner_GI
             this.text_wanderer.TabIndex = 46;
             this.text_wanderer.TextChanged += new System.EventHandler(this.text_wanderer_TextChanged);
             // 
+            // checkBox_ProcessHandleFeatures
+            // 
+            this.checkBox_ProcessHandleFeatures.AutoSize = true;
+            this.checkBox_ProcessHandleFeatures.Checked = true;
+            this.checkBox_ProcessHandleFeatures.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBox_ProcessHandleFeatures.Location = new System.Drawing.Point(9, 156);
+            this.checkBox_ProcessHandleFeatures.Name = "checkBox_ProcessHandleFeatures";
+            this.checkBox_ProcessHandleFeatures.Size = new System.Drawing.Size(140, 17);
+            this.checkBox_ProcessHandleFeatures.TabIndex = 15;
+            this.checkBox_ProcessHandleFeatures.Text = "Process handle features";
+            this.checkBox_ProcessHandleFeatures.UseVisualStyleBackColor = true;
+            this.checkBox_ProcessHandleFeatures.CheckedChanged += new System.EventHandler(this.checkBox_ProcessHandleFeatures_CheckedChanged);
+            // 
             // ScannerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -555,6 +570,7 @@ namespace AdeptiScanner_GI
         private System.Windows.Forms.Button button_checkUpdateManual;
         private System.Windows.Forms.Label label_wanderer;
         private System.Windows.Forms.TextBox text_wanderer;
+        private System.Windows.Forms.CheckBox checkBox_ProcessHandleFeatures;
     }
 }
 

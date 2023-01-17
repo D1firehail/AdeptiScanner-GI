@@ -333,11 +333,14 @@ namespace AdeptiScanner_GI
                 Point gridOffset = new Point(gridArea.X, gridArea.Y);
                 List<string> foundArtifactHashes = new List<string>();
 
+
+                GameVisibilityHandler.bringGameToFront();
+
                 //make sure cursor is on the correct screen
                 System.Threading.Thread.Sleep(50);
-                System.Windows.Forms.Cursor.Position = new Point(0, 0);
+                System.Windows.Forms.Cursor.Position = new Point(savedGameArea.X, savedGameArea.Y);
                 System.Threading.Thread.Sleep(50);
-                System.Windows.Forms.Cursor.Position = new Point(0, 0);
+                System.Windows.Forms.Cursor.Position = new Point(savedGameArea.X, savedGameArea.Y);
                 System.Threading.Thread.Sleep(50);
 
                 while (running)
@@ -514,6 +517,10 @@ namespace AdeptiScanner_GI
 
                 autoCaptureDone = true;
 
+                //temporarily disable "got focus" event, as that would trigger pause
+                Activated -= eventGotFocus;
+                GameVisibilityHandler.bringScannerToFront();
+                Activated += eventGotFocus;
 
                 AppendStatusText("Scanning complete, awaiting results" + Environment.NewLine
                     + "Time elapsed: " + runtime.ElapsedMilliseconds + "ms" + Environment.NewLine, false);
@@ -554,6 +561,7 @@ namespace AdeptiScanner_GI
             hard_cancel_pos:
                 unregisterKey();
                 runtime.Stop();
+                GameVisibilityHandler.bringScannerToFront();
                 AppendStatusText("Time elapsed: " + runtime.ElapsedMilliseconds + "ms" + Environment.NewLine, true);
                 autoRunning = false;
             }));
@@ -592,12 +600,20 @@ namespace AdeptiScanner_GI
                 debugMode = CaptureDebugMode.FullScreen;
             }
 
+            Rectangle directGameRect = Rectangle.Empty;
             if (debugMode != CaptureDebugMode.Off)
             {
                 img_Raw = ImageProcessing.LoadScreenshot();
             } else
             {
-                img_Raw = ImageProcessing.CaptureScreenshot(saveImages, Rectangle.Empty);
+                GameVisibilityHandler.captureGameProcess();
+                GameVisibilityHandler.bringGameToFront();
+
+                //try to get close estimate of game location, if successfull use that as base instead of the entire primary monitor
+                bool areaObtained = GameVisibilityHandler.getGameLocation(out directGameRect);
+
+                img_Raw = ImageProcessing.CaptureScreenshot(saveImages, directGameRect, areaObtained);
+                GameVisibilityHandler.bringScannerToFront();
             }
 
             Rectangle? tmpGameArea = new Rectangle(0, 0, img_Raw.Width, img_Raw.Height);
@@ -606,10 +622,19 @@ namespace AdeptiScanner_GI
                 tmpGameArea = ImageProcessing.findGameArea(img_Raw);
                 if (tmpGameArea == null)
                 {
-                    MessageBox.Show("Failed to find Game Area" + Environment.NewLine +
-                        "Please make sure you're following the instructions properly."
-                        + Environment.NewLine + "If the problem persists, please contact scanner dev", "Failed to find Game Area"
-                        , MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    if (directGameRect != Rectangle.Empty)
+                    {
+                        //assume directGameRect is a close enough estimate, primarily in case the game is in fullscreen
+                        tmpGameArea = directGameRect;
+                        AppendStatusText("Window header not found, treating whole image area as game" + Environment.NewLine, false);
+                    } else
+                    {
+                        MessageBox.Show("Failed to find Game Area" + Environment.NewLine +
+                            "Please make sure you're following the instructions properly."
+                            + Environment.NewLine + "If the problem persists, please contact scanner dev", "Failed to find Game Area"
+                            , MessageBoxButtons.OK, MessageBoxIcon.Warning);
+
+                    }
                 }
             }
 
@@ -698,7 +723,9 @@ namespace AdeptiScanner_GI
                 }
                 else
                 {
+                    GameVisibilityHandler.bringGameToFront();
                     img_Raw = ImageProcessing.CaptureScreenshot(saveImages, Rectangle.Empty);
+                    GameVisibilityHandler.bringScannerToFront();
                 }
             }
 
@@ -763,6 +790,7 @@ namespace AdeptiScanner_GI
         private void button_resume_Click(object sender, EventArgs e)
         {
             text_full.AppendText("Resuming auto" + Environment.NewLine);
+            GameVisibilityHandler.bringGameToFront();
             pauseAuto = false;
         }
 
@@ -911,6 +939,10 @@ namespace AdeptiScanner_GI
             {
                 lastUpdateCheck = settings["lastUpdateCheck"].ToObject<string>();
             }
+            if (settings.ContainsKey("processHandleInteractions"))
+            {
+                GameVisibilityHandler.enabled = settings["processHandleInteractions"].ToObject<bool>();
+            }
         }
 
         private void finalizeLoadSettings()
@@ -928,6 +960,7 @@ namespace AdeptiScanner_GI
                 checkBox_updateData.Checked = updateData.Value;
             if (updateVersion.HasValue)
                 checkBox_updateVersion.Checked = updateVersion.Value;
+            checkBox_ProcessHandleFeatures.Checked = GameVisibilityHandler.enabled;
 
         }
 
@@ -1105,7 +1138,8 @@ namespace AdeptiScanner_GI
             settings["ignoredDataVersion"] = ignoredDataVersion;
             settings["ignoredProgramVersion"] = ignoredProgramVersion;
             settings["lastUpdateCheck"] = lastUpdateCheck;
-            
+            settings["processHandleInteractions"] = GameVisibilityHandler.enabled;
+
 
             string fileName = Database.appDir + @"\settings.json";
             File.WriteAllText(fileName, settings.ToString());
@@ -1209,6 +1243,11 @@ namespace AdeptiScanner_GI
         private void button_checkUpdateManual_Click(object sender, EventArgs e)
         {
             searchForUpdates(true);
+        }
+
+        private void checkBox_ProcessHandleFeatures_CheckedChanged(object sender, EventArgs e)
+        {
+            GameVisibilityHandler.enabled = checkBox_ProcessHandleFeatures.Checked;
         }
     }
 }
