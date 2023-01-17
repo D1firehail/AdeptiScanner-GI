@@ -1,5 +1,5 @@
 {
-	"DataVersion" :  "3.3",
+	"DataVersion" :  "3.4",
 	"Pieces": [
 		{ "name": { "Flower of Life": "flower" } },
 		{ "name": { "Plume of Death": "plume" } },
@@ -605,6 +605,7 @@
 	],
 	"Characters": [
 		{ "name": { "Albedo": "Albedo" } },
+		{ "name": { "Alhaitham": "Alhaitham" } },
 		{ "name": { "Aloy": "Aloy" } },
 		{ "name": { "Amber": "Amber" } },
 		{ "name": { "Arataki Itto": "AratakiItto" } },
@@ -659,6 +660,7 @@
 		{ "name": { "Xingqiu": "Xingqiu" } },
 		{ "name": { "Xinyan": "Xinyan" } },
 		{ "name": { "Yanfei": "Yanfei" } },
+		{ "name": { "Yaoyao": "Yaoyao" } },
 		{ "name": { "Yelan": "Yelan" } },
 		{ "name": { "Yae Miko": "YaeMiko" } },
 		{ "name": { "Yoimiya": "Yoimiya" } },
