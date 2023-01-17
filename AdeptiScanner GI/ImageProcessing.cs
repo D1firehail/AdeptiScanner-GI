@@ -296,8 +296,8 @@ namespace AdeptiScanner_GI
                     || (imgBytes[i] > 220 && imgBytes[i] < 230 && imgBytes[i + 1] > 80 && imgBytes[i + 1] < 90 && imgBytes[i + 2] > 155 && imgBytes[i + 2] < 165)) //look for artifact name background colour
                 {
                     cols[x]++;
-                    }
                 }
+            }
 
             //Find artifact text columns
             int edgewidth = 0;
