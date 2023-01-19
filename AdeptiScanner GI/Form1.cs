@@ -625,7 +625,7 @@ namespace AdeptiScanner_GI
                     if (directGameRect != Rectangle.Empty)
                     {
                         //assume directGameRect is a close enough estimate, primarily in case the game is in fullscreen
-                        tmpGameArea = directGameRect;
+                        tmpGameArea = new Rectangle(0, 0, directGameRect.Width, directGameRect.Height);
                         AppendStatusText("Window header not found, treating whole image area as game" + Environment.NewLine, false);
                     } else
                     {
@@ -639,15 +639,16 @@ namespace AdeptiScanner_GI
             }
 
             bool ArtifactAreaCaptured = tmpGameArea != null;
+            Rectangle? tmpArtifactArea = null;
             if (debugMode == CaptureDebugMode.ArtifactArea)
             {
-                savedArtifactArea = new Rectangle(0, 0, img_Raw.Width, img_Raw.Height);
+                tmpArtifactArea = new Rectangle(0, 0, img_Raw.Width, img_Raw.Height);
             } else if (tmpGameArea != null)
             {
                 try
                 {
-                    savedArtifactArea = ImageProcessing.findArtifactArea(img_Raw, tmpGameArea.Value);
-                    if (savedArtifactArea.Width == 0 || savedArtifactArea.Height == 0)
+                    tmpArtifactArea = ImageProcessing.findArtifactArea(img_Raw, tmpGameArea.Value);
+                    if (tmpArtifactArea.Value.Width == 0 || tmpArtifactArea.Value.Height == 0)
                         throw new Exception("Detected artifact are has width or height 0");
                 }
                 catch (Exception exc)
@@ -664,6 +665,15 @@ namespace AdeptiScanner_GI
             if (ArtifactAreaCaptured)
             {
                 savedGameArea = tmpGameArea.Value;
+                savedArtifactArea = tmpArtifactArea.Value;
+                if (directGameRect != Rectangle.Empty)
+                {
+                    savedGameArea.X = savedGameArea.X + directGameRect.X;
+                    savedGameArea.Y = savedGameArea.Y + directGameRect.Y;
+
+                    savedArtifactArea.X = savedArtifactArea.X + directGameRect.X;
+                    savedArtifactArea.Y = savedArtifactArea.Y + directGameRect.Y;
+                }
                 btn_OCR.Enabled = true;
                 button_auto.Enabled = true;
             }
@@ -683,10 +693,10 @@ namespace AdeptiScanner_GI
 
                 if (ArtifactAreaCaptured)
                 {
-                    Bitmap artifactImg = new Bitmap(savedArtifactArea.Width, savedArtifactArea.Height);
+                    Bitmap artifactImg = new Bitmap(tmpArtifactArea.Value.Width, tmpArtifactArea.Value.Height);
                     using (Graphics g = Graphics.FromImage(artifactImg))
                     {
-                        g.DrawImage(img_Raw, 0, 0, savedArtifactArea, GraphicsUnit.Pixel);
+                        g.DrawImage(img_Raw, 0, 0, tmpArtifactArea.Value, GraphicsUnit.Pixel);
                     }
                     artifactImg.Save(Database.appDir + @"\images\GenshinArtifactArea " + timestamp + ".png");
                 }
@@ -694,10 +704,10 @@ namespace AdeptiScanner_GI
 
             if (ArtifactAreaCaptured)
             {
-                image_preview.Image = new Bitmap(savedArtifactArea.Width, savedArtifactArea.Height);
+                image_preview.Image = new Bitmap(tmpArtifactArea.Value.Width, tmpArtifactArea.Value.Height);
                 using (Graphics g = Graphics.FromImage(image_preview.Image))
                 {
-                    g.DrawImage(img_Raw, 0, 0, savedArtifactArea, GraphicsUnit.Pixel);
+                    g.DrawImage(img_Raw, 0, 0, tmpArtifactArea.Value, GraphicsUnit.Pixel);
                 }
             }
         }
