@@ -1,5 +1,5 @@
 {
-	"DataVersion" :  "3.4",
+	"DataVersion" :  "3.5",
 	"Pieces": [
 		{ "name": { "Flower of Life": "flower" } },
 		{ "name": { "Plume of Death": "plume" } },
@@ -616,6 +616,7 @@
 		{ "name": { "Chongyun": "Chongyun" } },
 		{ "name": { "Collei": "Collei" } },
 		{ "name": { "Cyno": "Cyno" } },
+		{ "name": { "Dehya": "Dehya" } },
 		{ "name": { "Diluc": "Diluc" } },
 		{ "name": { "Diona": "Diona" } },
 		{ "name": { "Dori": "Dori" } },
@@ -635,6 +636,7 @@
 		{ "name": { "Kujou Sara": "KujouSara" } },
 		{ "name": { "Kuki Shinobu": "KukiShinobu" } },
 		{ "name": { "Lisa": "Lisa" } },
+		{ "name": { "Mika": "Mika" } },
 		{ "name": { "Mona": "Mona" } },
 		{ "name": { "Nahida": "Nahida" } },
 		{ "name": { "Nilou": "Nilou" } },
