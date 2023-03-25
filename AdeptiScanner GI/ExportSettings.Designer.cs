@@ -59,7 +59,7 @@ namespace AdeptiScanner_GI
             this.checkBox_exportEquipped.Location = new System.Drawing.Point(93, 191);
             this.checkBox_exportEquipped.Name = "checkBox_exportEquipped";
             this.checkBox_exportEquipped.Size = new System.Drawing.Size(143, 17);
-            this.checkBox_exportEquipped.TabIndex = 37;
+            this.checkBox_exportEquipped.TabIndex = 5;
             this.checkBox_exportEquipped.Text = "Always include equipped";
             this.checkBox_exportEquipped.UseVisualStyleBackColor = true;
             this.checkBox_exportEquipped.CheckedChanged += new System.EventHandler(this.checkBox_exportEquipped_CheckedChanged);
@@ -70,7 +70,7 @@ namespace AdeptiScanner_GI
             this.checkbox_exportTemplate.Location = new System.Drawing.Point(6, 191);
             this.checkbox_exportTemplate.Name = "checkbox_exportTemplate";
             this.checkbox_exportTemplate.Size = new System.Drawing.Size(88, 17);
-            this.checkbox_exportTemplate.TabIndex = 35;
+            this.checkbox_exportTemplate.TabIndex = 4;
             this.checkbox_exportTemplate.Text = "Use template";
             this.checkbox_exportTemplate.UseVisualStyleBackColor = true;
             this.checkbox_exportTemplate.CheckedChanged += new System.EventHandler(this.checkbox_exportTemplate_CheckedChanged);
@@ -80,7 +80,7 @@ namespace AdeptiScanner_GI
             this.btn_Clear.Location = new System.Drawing.Point(264, 187);
             this.btn_Clear.Name = "btn_Clear";
             this.btn_Clear.Size = new System.Drawing.Size(75, 23);
-            this.btn_Clear.TabIndex = 36;
+            this.btn_Clear.TabIndex = 6;
             this.btn_Clear.Text = "Clear results";
             this.btn_Clear.UseVisualStyleBackColor = true;
             this.btn_Clear.Click += new System.EventHandler(this.btn_Clear_Click);
@@ -91,7 +91,7 @@ namespace AdeptiScanner_GI
             this.trackBar_maxrarity.Maximum = 5;
             this.trackBar_maxrarity.Name = "trackBar_maxrarity";
             this.trackBar_maxrarity.Size = new System.Drawing.Size(77, 45);
-            this.trackBar_maxrarity.TabIndex = 11;
+            this.trackBar_maxrarity.TabIndex = 3;
             this.trackBar_maxrarity.Value = 5;
             this.trackBar_maxrarity.Scroll += new System.EventHandler(this.trackBar_maxrarity_Scroll);
             // 
@@ -101,7 +101,7 @@ namespace AdeptiScanner_GI
             this.trackBar_minrarity.Maximum = 5;
             this.trackBar_minrarity.Name = "trackBar_minrarity";
             this.trackBar_minrarity.Size = new System.Drawing.Size(77, 45);
-            this.trackBar_minrarity.TabIndex = 10;
+            this.trackBar_minrarity.TabIndex = 2;
             this.trackBar_minrarity.Value = 5;
             this.trackBar_minrarity.Scroll += new System.EventHandler(this.trackBar_minrarity_Scroll);
             // 
@@ -175,7 +175,7 @@ namespace AdeptiScanner_GI
             this.trackBar_maxlevel.Maximum = 20;
             this.trackBar_maxlevel.Name = "trackBar_maxlevel";
             this.trackBar_maxlevel.Size = new System.Drawing.Size(257, 45);
-            this.trackBar_maxlevel.TabIndex = 3;
+            this.trackBar_maxlevel.TabIndex = 1;
             this.trackBar_maxlevel.Value = 20;
             this.trackBar_maxlevel.Scroll += new System.EventHandler(this.trackBar_maxlevel_Scroll);
             // 

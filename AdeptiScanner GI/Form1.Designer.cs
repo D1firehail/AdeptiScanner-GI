@@ -52,6 +52,7 @@ namespace AdeptiScanner_GI
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.artifactDetails1 = new AdeptiScanner_GI.ArtifactDetails();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.checkBox_ProcessHandleFeatures = new System.Windows.Forms.CheckBox();
             this.button_checkUpdateManual = new System.Windows.Forms.Button();
             this.checkBox_updateVersion = new System.Windows.Forms.CheckBox();
             this.checkBox_updateData = new System.Windows.Forms.CheckBox();
@@ -67,7 +68,6 @@ namespace AdeptiScanner_GI
             this.button_loadArtifacts = new System.Windows.Forms.Button();
             this.label_wanderer = new System.Windows.Forms.Label();
             this.text_wanderer = new System.Windows.Forms.TextBox();
-            this.checkBox_ProcessHandleFeatures = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.image_preview)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -94,7 +94,7 @@ namespace AdeptiScanner_GI
             this.btn_capture.Location = new System.Drawing.Point(493, 689);
             this.btn_capture.Name = "btn_capture";
             this.btn_capture.Size = new System.Drawing.Size(75, 23);
-            this.btn_capture.TabIndex = 16;
+            this.btn_capture.TabIndex = 0;
             this.btn_capture.Text = "Capture";
             this.btn_capture.UseVisualStyleBackColor = true;
             this.btn_capture.Click += new System.EventHandler(this.btn_capture_Click);
@@ -106,7 +106,7 @@ namespace AdeptiScanner_GI
             this.btn_OCR.Location = new System.Drawing.Point(574, 689);
             this.btn_OCR.Name = "btn_OCR";
             this.btn_OCR.Size = new System.Drawing.Size(75, 23);
-            this.btn_OCR.TabIndex = 18;
+            this.btn_OCR.TabIndex = 1;
             this.btn_OCR.Text = "Read Stats";
             this.btn_OCR.UseVisualStyleBackColor = true;
             this.btn_OCR.Click += new System.EventHandler(this.btn_OCR_Click);
@@ -121,7 +121,7 @@ namespace AdeptiScanner_GI
             this.text_full.ReadOnly = true;
             this.text_full.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.text_full.Size = new System.Drawing.Size(279, 313);
-            this.text_full.TabIndex = 19;
+            this.text_full.TabIndex = 20;
             // 
             // label_full
             // 
@@ -142,7 +142,7 @@ namespace AdeptiScanner_GI
             this.checkbox_OCRcapture.Location = new System.Drawing.Point(492, 614);
             this.checkbox_OCRcapture.Name = "checkbox_OCRcapture";
             this.checkbox_OCRcapture.Size = new System.Drawing.Size(102, 17);
-            this.checkbox_OCRcapture.TabIndex = 23;
+            this.checkbox_OCRcapture.TabIndex = 21;
             this.checkbox_OCRcapture.Text = "Capture on read";
             this.checkbox_OCRcapture.UseVisualStyleBackColor = true;
             this.checkbox_OCRcapture.CheckedChanged += new System.EventHandler(this.checkbox_OCRcapture_CheckedChanged);
@@ -154,7 +154,7 @@ namespace AdeptiScanner_GI
             this.checkbox_saveImages.Location = new System.Drawing.Point(620, 614);
             this.checkbox_saveImages.Name = "checkbox_saveImages";
             this.checkbox_saveImages.Size = new System.Drawing.Size(87, 17);
-            this.checkbox_saveImages.TabIndex = 25;
+            this.checkbox_saveImages.TabIndex = 22;
             this.checkbox_saveImages.Text = "Save images";
             this.checkbox_saveImages.UseVisualStyleBackColor = true;
             this.checkbox_saveImages.CheckedChanged += new System.EventHandler(this.checkbox_saveImages_CheckedChanged);
@@ -166,7 +166,7 @@ namespace AdeptiScanner_GI
             this.button_auto.Location = new System.Drawing.Point(655, 689);
             this.button_auto.Name = "button_auto";
             this.button_auto.Size = new System.Drawing.Size(75, 23);
-            this.button_auto.TabIndex = 28;
+            this.button_auto.TabIndex = 2;
             this.button_auto.Text = "Start Auto";
             this.button_auto.UseVisualStyleBackColor = true;
             this.button_auto.Click += new System.EventHandler(this.button_auto_Click);
@@ -178,7 +178,7 @@ namespace AdeptiScanner_GI
             this.button_softCancel.Location = new System.Drawing.Point(493, 746);
             this.button_softCancel.Name = "button_softCancel";
             this.button_softCancel.Size = new System.Drawing.Size(153, 23);
-            this.button_softCancel.TabIndex = 31;
+            this.button_softCancel.TabIndex = 5;
             this.button_softCancel.Text = "Stop after processing";
             this.button_softCancel.UseVisualStyleBackColor = true;
             this.button_softCancel.Click += new System.EventHandler(this.button_softCancel_Click);
@@ -190,7 +190,7 @@ namespace AdeptiScanner_GI
             this.button_hardCancel.Location = new System.Drawing.Point(574, 718);
             this.button_hardCancel.Name = "button_hardCancel";
             this.button_hardCancel.Size = new System.Drawing.Size(75, 23);
-            this.button_hardCancel.TabIndex = 32;
+            this.button_hardCancel.TabIndex = 4;
             this.button_hardCancel.Text = "Stop now";
             this.button_hardCancel.UseVisualStyleBackColor = true;
             this.button_hardCancel.Click += new System.EventHandler(this.button_hardCancel_Click);
@@ -202,7 +202,7 @@ namespace AdeptiScanner_GI
             this.button_resume.Location = new System.Drawing.Point(493, 718);
             this.button_resume.Name = "button_resume";
             this.button_resume.Size = new System.Drawing.Size(75, 23);
-            this.button_resume.TabIndex = 33;
+            this.button_resume.TabIndex = 3;
             this.button_resume.Text = "Resume Auto";
             this.button_resume.UseVisualStyleBackColor = true;
             this.button_resume.Click += new System.EventHandler(this.button_resume_Click);
@@ -213,7 +213,7 @@ namespace AdeptiScanner_GI
             this.button_export.Location = new System.Drawing.Point(655, 718);
             this.button_export.Name = "button_export";
             this.button_export.Size = new System.Drawing.Size(75, 51);
-            this.button_export.TabIndex = 34;
+            this.button_export.TabIndex = 6;
             this.button_export.Text = "Export Results";
             this.button_export.UseVisualStyleBackColor = true;
             this.button_export.Click += new System.EventHandler(this.button_export_Click);
@@ -234,7 +234,7 @@ namespace AdeptiScanner_GI
             this.text_traveler.Location = new System.Drawing.Point(584, 663);
             this.text_traveler.Name = "text_traveler";
             this.text_traveler.Size = new System.Drawing.Size(190, 20);
-            this.text_traveler.TabIndex = 37;
+            this.text_traveler.TabIndex = 24;
             this.text_traveler.TextChanged += new System.EventHandler(this.text_traveler_TextChanged);
             // 
             // label_appversion
@@ -264,7 +264,7 @@ namespace AdeptiScanner_GI
             this.linkLabel1.Location = new System.Drawing.Point(12, 756);
             this.linkLabel1.Name = "linkLabel1";
             this.linkLabel1.Size = new System.Drawing.Size(38, 13);
-            this.linkLabel1.TabIndex = 43;
+            this.linkLabel1.TabIndex = 7;
             this.linkLabel1.TabStop = true;
             this.linkLabel1.Text = "Github";
             this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
@@ -279,7 +279,7 @@ namespace AdeptiScanner_GI
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(360, 270);
-            this.tabControl1.TabIndex = 45;
+            this.tabControl1.TabIndex = 8;
             // 
             // tabPage1
             // 
@@ -298,7 +298,7 @@ namespace AdeptiScanner_GI
             this.exportSettings1.Location = new System.Drawing.Point(0, 0);
             this.exportSettings1.Name = "exportSettings1";
             this.exportSettings1.Size = new System.Drawing.Size(349, 228);
-            this.exportSettings1.TabIndex = 44;
+            this.exportSettings1.TabIndex = 9;
             // 
             // tabPage2
             // 
@@ -316,7 +316,7 @@ namespace AdeptiScanner_GI
             this.artifactDetails1.Location = new System.Drawing.Point(0, 3);
             this.artifactDetails1.Name = "artifactDetails1";
             this.artifactDetails1.Size = new System.Drawing.Size(349, 228);
-            this.artifactDetails1.TabIndex = 0;
+            this.artifactDetails1.TabIndex = 9;
             // 
             // tabPage3
             // 
@@ -342,12 +342,25 @@ namespace AdeptiScanner_GI
             this.tabPage3.Text = "Advanced";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
+            // checkBox_ProcessHandleFeatures
+            // 
+            this.checkBox_ProcessHandleFeatures.AutoSize = true;
+            this.checkBox_ProcessHandleFeatures.Checked = true;
+            this.checkBox_ProcessHandleFeatures.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBox_ProcessHandleFeatures.Location = new System.Drawing.Point(9, 156);
+            this.checkBox_ProcessHandleFeatures.Name = "checkBox_ProcessHandleFeatures";
+            this.checkBox_ProcessHandleFeatures.Size = new System.Drawing.Size(140, 17);
+            this.checkBox_ProcessHandleFeatures.TabIndex = 16;
+            this.checkBox_ProcessHandleFeatures.Text = "Process handle features";
+            this.checkBox_ProcessHandleFeatures.UseVisualStyleBackColor = true;
+            this.checkBox_ProcessHandleFeatures.CheckedChanged += new System.EventHandler(this.checkBox_ProcessHandleFeatures_CheckedChanged);
+            // 
             // button_checkUpdateManual
             // 
             this.button_checkUpdateManual.Location = new System.Drawing.Point(226, 186);
             this.button_checkUpdateManual.Name = "button_checkUpdateManual";
             this.button_checkUpdateManual.Size = new System.Drawing.Size(117, 23);
-            this.button_checkUpdateManual.TabIndex = 14;
+            this.button_checkUpdateManual.TabIndex = 18;
             this.button_checkUpdateManual.Text = "Check for updates";
             this.button_checkUpdateManual.UseVisualStyleBackColor = true;
             this.button_checkUpdateManual.Click += new System.EventHandler(this.button_checkUpdateManual_Click);
@@ -358,7 +371,7 @@ namespace AdeptiScanner_GI
             this.checkBox_updateVersion.Location = new System.Drawing.Point(9, 133);
             this.checkBox_updateVersion.Name = "checkBox_updateVersion";
             this.checkBox_updateVersion.Size = new System.Drawing.Size(133, 17);
-            this.checkBox_updateVersion.TabIndex = 13;
+            this.checkBox_updateVersion.TabIndex = 15;
             this.checkBox_updateVersion.Text = "Version Update Check";
             this.checkBox_updateVersion.UseVisualStyleBackColor = true;
             this.checkBox_updateVersion.CheckedChanged += new System.EventHandler(this.checkBox_updateVersion_CheckedChanged);
@@ -369,7 +382,7 @@ namespace AdeptiScanner_GI
             this.checkBox_updateData.Location = new System.Drawing.Point(9, 110);
             this.checkBox_updateData.Name = "checkBox_updateData";
             this.checkBox_updateData.Size = new System.Drawing.Size(121, 17);
-            this.checkBox_updateData.TabIndex = 12;
+            this.checkBox_updateData.TabIndex = 14;
             this.checkBox_updateData.Text = "Data Update Check";
             this.checkBox_updateData.UseVisualStyleBackColor = true;
             this.checkBox_updateData.CheckedChanged += new System.EventHandler(this.checkBox_updateData_CheckedChanged);
@@ -379,7 +392,7 @@ namespace AdeptiScanner_GI
             this.button_resetSettings.Location = new System.Drawing.Point(99, 186);
             this.button_resetSettings.Name = "button_resetSettings";
             this.button_resetSettings.Size = new System.Drawing.Size(118, 52);
-            this.button_resetSettings.TabIndex = 9;
+            this.button_resetSettings.TabIndex = 17;
             this.button_resetSettings.Text = "Remove Saved Settings";
             this.button_resetSettings.UseVisualStyleBackColor = true;
             this.button_resetSettings.Click += new System.EventHandler(this.button_resetSettings_Click);
@@ -398,7 +411,7 @@ namespace AdeptiScanner_GI
             this.text_RecheckWait.Location = new System.Drawing.Point(109, 84);
             this.text_RecheckWait.Name = "text_RecheckWait";
             this.text_RecheckWait.Size = new System.Drawing.Size(100, 20);
-            this.text_RecheckWait.TabIndex = 7;
+            this.text_RecheckWait.TabIndex = 13;
             // 
             // label_scrolltestwait
             // 
@@ -414,7 +427,7 @@ namespace AdeptiScanner_GI
             this.text_ScrollTestWait.Location = new System.Drawing.Point(109, 58);
             this.text_ScrollTestWait.Name = "text_ScrollTestWait";
             this.text_ScrollTestWait.Size = new System.Drawing.Size(100, 20);
-            this.text_ScrollTestWait.TabIndex = 5;
+            this.text_ScrollTestWait.TabIndex = 12;
             // 
             // label_scrollsleepwait
             // 
@@ -439,21 +452,21 @@ namespace AdeptiScanner_GI
             this.text_ScrollSleepWait.Location = new System.Drawing.Point(109, 32);
             this.text_ScrollSleepWait.Name = "text_ScrollSleepWait";
             this.text_ScrollSleepWait.Size = new System.Drawing.Size(100, 20);
-            this.text_ScrollSleepWait.TabIndex = 2;
+            this.text_ScrollSleepWait.TabIndex = 11;
             // 
             // text_clickSleepWait
             // 
             this.text_clickSleepWait.Location = new System.Drawing.Point(109, 6);
             this.text_clickSleepWait.Name = "text_clickSleepWait";
             this.text_clickSleepWait.Size = new System.Drawing.Size(100, 20);
-            this.text_clickSleepWait.TabIndex = 1;
+            this.text_clickSleepWait.TabIndex = 10;
             // 
             // button_loadArtifacts
             // 
             this.button_loadArtifacts.Location = new System.Drawing.Point(225, 215);
             this.button_loadArtifacts.Name = "button_loadArtifacts";
             this.button_loadArtifacts.Size = new System.Drawing.Size(118, 23);
-            this.button_loadArtifacts.TabIndex = 0;
+            this.button_loadArtifacts.TabIndex = 19;
             this.button_loadArtifacts.Text = "Load Artifact File";
             this.button_loadArtifacts.UseVisualStyleBackColor = true;
             this.button_loadArtifacts.Click += new System.EventHandler(this.button_loadArtifacts_Click);
@@ -474,21 +487,8 @@ namespace AdeptiScanner_GI
             this.text_wanderer.Location = new System.Drawing.Point(584, 637);
             this.text_wanderer.Name = "text_wanderer";
             this.text_wanderer.Size = new System.Drawing.Size(190, 20);
-            this.text_wanderer.TabIndex = 46;
+            this.text_wanderer.TabIndex = 23;
             this.text_wanderer.TextChanged += new System.EventHandler(this.text_wanderer_TextChanged);
-            // 
-            // checkBox_ProcessHandleFeatures
-            // 
-            this.checkBox_ProcessHandleFeatures.AutoSize = true;
-            this.checkBox_ProcessHandleFeatures.Checked = true;
-            this.checkBox_ProcessHandleFeatures.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBox_ProcessHandleFeatures.Location = new System.Drawing.Point(9, 156);
-            this.checkBox_ProcessHandleFeatures.Name = "checkBox_ProcessHandleFeatures";
-            this.checkBox_ProcessHandleFeatures.Size = new System.Drawing.Size(140, 17);
-            this.checkBox_ProcessHandleFeatures.TabIndex = 15;
-            this.checkBox_ProcessHandleFeatures.Text = "Process handle features";
-            this.checkBox_ProcessHandleFeatures.UseVisualStyleBackColor = true;
-            this.checkBox_ProcessHandleFeatures.CheckedChanged += new System.EventHandler(this.checkBox_ProcessHandleFeatures_CheckedChanged);
             // 
             // ScannerForm
             // 

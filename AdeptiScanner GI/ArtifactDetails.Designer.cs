@@ -57,7 +57,7 @@ namespace AdeptiScanner_GI
             this.text_Type.Name = "text_Type";
             this.text_Type.ReadOnly = true;
             this.text_Type.Size = new System.Drawing.Size(279, 20);
-            this.text_Type.TabIndex = 3;
+            this.text_Type.TabIndex = 1;
             // 
             // text_Set
             // 
@@ -65,7 +65,7 @@ namespace AdeptiScanner_GI
             this.text_Set.Name = "text_Set";
             this.text_Set.ReadOnly = true;
             this.text_Set.Size = new System.Drawing.Size(279, 20);
-            this.text_Set.TabIndex = 2;
+            this.text_Set.TabIndex = 9;
             // 
             // text_statMain
             // 
@@ -73,7 +73,7 @@ namespace AdeptiScanner_GI
             this.text_statMain.Name = "text_statMain";
             this.text_statMain.ReadOnly = true;
             this.text_statMain.Size = new System.Drawing.Size(279, 20);
-            this.text_statMain.TabIndex = 4;
+            this.text_statMain.TabIndex = 2;
             // 
             // text_statSub1
             // 
@@ -132,7 +132,7 @@ namespace AdeptiScanner_GI
             this.text_locked.Name = "text_locked";
             this.text_locked.ReadOnly = true;
             this.text_locked.Size = new System.Drawing.Size(106, 20);
-            this.text_locked.TabIndex = 30;
+            this.text_locked.TabIndex = 4;
             // 
             // label_statSub1
             // 
@@ -185,7 +185,7 @@ namespace AdeptiScanner_GI
             this.text_statSub4.Name = "text_statSub4";
             this.text_statSub4.ReadOnly = true;
             this.text_statSub4.Size = new System.Drawing.Size(279, 20);
-            this.text_statSub4.TabIndex = 14;
+            this.text_statSub4.TabIndex = 8;
             // 
             // text_character
             // 
@@ -193,7 +193,7 @@ namespace AdeptiScanner_GI
             this.text_character.Name = "text_character";
             this.text_character.ReadOnly = true;
             this.text_character.Size = new System.Drawing.Size(279, 20);
-            this.text_character.TabIndex = 26;
+            this.text_character.TabIndex = 10;
             // 
             // label_statSub4
             // 
@@ -210,7 +210,7 @@ namespace AdeptiScanner_GI
             this.text_Level.Name = "text_Level";
             this.text_Level.ReadOnly = true;
             this.text_Level.Size = new System.Drawing.Size(120, 20);
-            this.text_Level.TabIndex = 21;
+            this.text_Level.TabIndex = 3;
             // 
             // label_level
             // 
