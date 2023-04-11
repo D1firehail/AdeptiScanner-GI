@@ -1,5 +1,5 @@
 {
-	"DataVersion" :  "3.5",
+	"DataVersion" :  "3.6",
 	"Pieces": [
 		{ "name": { "Flower of Life": "flower" } },
 		{ "name": { "Plume of Death": "plume" } },
@@ -137,7 +137,9 @@
 					{ "name": { "Deepwood Memories": "DeepwoodMemories" } },
 					{ "name": { "Gilded Dreams": "GildedDreams" } },
 					{ "name": { "Desert Pavilion Chronicle": "DesertPavilionChronicle" } },
-					{ "name": { "Flower of Paradise Lost": "FlowerOfParadiseLost" } }
+					{ "name": { "Flower of Paradise Lost": "FlowerOfParadiseLost" } },
+					{ "name": { "Nymph's Dream": "NymphsDream" } },
+					{ "name": { "Vourukasha's Glow'": "VourukashasGlow" } }
 				]
 			}
 		},
@@ -276,7 +278,9 @@
 					{ "name": { "Deepwood Memories": "DeepwoodMemories" } },
 					{ "name": { "Gilded Dreams": "GildedDreams" } },
 					{ "name": { "Desert Pavilion Chronicle": "DesertPavilionChronicle" } },
-					{ "name": { "Flower of Paradise Lost": "FlowerOfParadiseLost" } }
+					{ "name": { "Flower of Paradise Lost": "FlowerOfParadiseLost" } },
+					{ "name": { "Nymph's Dream": "NymphsDream" } },
+					{ "name": { "Vourukasha's Glow'": "VourukashasGlow" } }
 				]
 			}
 		},
@@ -609,6 +613,7 @@
 		{ "name": { "Aloy": "Aloy" } },
 		{ "name": { "Amber": "Amber" } },
 		{ "name": { "Arataki Itto": "AratakiItto" } },
+		{ "name": { "Baizhu": "Baizhu" } },
 		{ "name": { "Barbara": "Barbara" } },
 		{ "name": { "Beidou": "Beidou" } },
 		{ "name": { "Bennett": "Bennett" } },
@@ -631,6 +636,7 @@
 		{ "name": { "Kaeya": "Kaeya" } },
 		{ "name": { "Kamisato Ayaka": "KamisatoAyaka" } },
 		{ "name": { "Kamisato Ayato": "KamisatoAyato" } },
+		{ "name": { "Kaveh": "Kaveh" } },
 		{ "name": { "Keqing": "Keqing" } },
 		{ "name": { "Klee": "Klee" } },
 		{ "name": { "Kujou Sara": "KujouSara" } },
