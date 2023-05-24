@@ -1,5 +1,5 @@
 {
-	"DataVersion" :  "3.6",
+	"DataVersion" :  "3.7",
 	"Pieces": [
 		{ "name": { "Flower of Life": "flower" } },
 		{ "name": { "Plume of Death": "plume" } },
@@ -638,6 +638,7 @@
 		{ "name": { "Kamisato Ayato": "KamisatoAyato" } },
 		{ "name": { "Kaveh": "Kaveh" } },
 		{ "name": { "Keqing": "Keqing" } },
+		{ "name": { "Kirara": "Kirara" } },
 		{ "name": { "Klee": "Klee" } },
 		{ "name": { "Kujou Sara": "KujouSara" } },
 		{ "name": { "Kuki Shinobu": "KukiShinobu" } },
