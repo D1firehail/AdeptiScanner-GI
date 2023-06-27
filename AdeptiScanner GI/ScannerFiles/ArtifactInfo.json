@@ -1,5 +1,5 @@
 {
-	"DataVersion" :  "3.7",
+	"DataVersion" :  "3.7.1",
 	"Pieces": [
 		{ "name": { "Flower of Life": "flower" } },
 		{ "name": { "Plume of Death": "plume" } },
@@ -642,6 +642,7 @@
 		{ "name": { "Klee": "Klee" } },
 		{ "name": { "Kujou Sara": "KujouSara" } },
 		{ "name": { "Kuki Shinobu": "KukiShinobu" } },
+		{ "name": { "Layla": "Layla" } },
 		{ "name": { "Lisa": "Lisa" } },
 		{ "name": { "Mika": "Mika" } },
 		{ "name": { "Mona": "Mona" } },
