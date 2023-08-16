@@ -1,5 +1,5 @@
 {
-	"DataVersion" :  "3.7.1",
+	"DataVersion" :  "4.0",
 	"Pieces": [
 		{ "name": { "Flower of Life": "flower" } },
 		{ "name": { "Plume of Death": "plume" } },
@@ -139,7 +139,9 @@
 					{ "name": { "Desert Pavilion Chronicle": "DesertPavilionChronicle" } },
 					{ "name": { "Flower of Paradise Lost": "FlowerOfParadiseLost" } },
 					{ "name": { "Nymph's Dream": "NymphsDream" } },
-					{ "name": { "Vourukasha's Glow'": "VourukashasGlow" } }
+					{ "name": { "Vourukasha's Glow": "VourukashasGlow" } },
+					{ "name": { "Golden Troupe": "GoldenTroupe" } },
+					{ "name": { "Marechaussee Hunter": "MarechausseeHunter" } }
 				]
 			}
 		},
@@ -280,7 +282,9 @@
 					{ "name": { "Desert Pavilion Chronicle": "DesertPavilionChronicle" } },
 					{ "name": { "Flower of Paradise Lost": "FlowerOfParadiseLost" } },
 					{ "name": { "Nymph's Dream": "NymphsDream" } },
-					{ "name": { "Vourukasha's Glow'": "VourukashasGlow" } }
+					{ "name": { "Vourukasha's Glow": "VourukashasGlow" } },
+					{ "name": { "Golden Troupe": "GoldenTroupe" } },
+					{ "name": { "Marechaussee Hunter": "MarechausseeHunter" } }
 				]
 			}
 		},
@@ -628,6 +632,7 @@
 		{ "name": { "Eula": "Eula" } },
 		{ "name": { "Faruzan": "Faruzan" } },
 		{ "name": { "Fischl": "Fischl" } },
+		{ "name": { "Freminet": "Freminet" } },
 		{ "name": { "Ganyu": "Ganyu" } },
 		{ "name": { "Gorou": "Gorou" } },
 		{ "name": { "Hu Tao": "HuTao" } },
@@ -644,6 +649,8 @@
 		{ "name": { "Kuki Shinobu": "KukiShinobu" } },
 		{ "name": { "Layla": "Layla" } },
 		{ "name": { "Lisa": "Lisa" } },
+		{ "name": { "Lynette": "Lynette" } },
+		{ "name": { "Lyney": "Lyney" } },
 		{ "name": { "Mika": "Mika" } },
 		{ "name": { "Mona": "Mona" } },
 		{ "name": { "Nahida": "Nahida" } },
