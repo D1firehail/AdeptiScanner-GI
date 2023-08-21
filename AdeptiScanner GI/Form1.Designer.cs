@@ -68,6 +68,7 @@ namespace AdeptiScanner_GI
             this.button_loadArtifacts = new System.Windows.Forms.Button();
             this.label_wanderer = new System.Windows.Forms.Label();
             this.text_wanderer = new System.Windows.Forms.TextBox();
+            this.checkbox_weaponMode = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.image_preview)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -151,7 +152,7 @@ namespace AdeptiScanner_GI
             // 
             this.checkbox_saveImages.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.checkbox_saveImages.AutoSize = true;
-            this.checkbox_saveImages.Location = new System.Drawing.Point(620, 614);
+            this.checkbox_saveImages.Location = new System.Drawing.Point(592, 614);
             this.checkbox_saveImages.Name = "checkbox_saveImages";
             this.checkbox_saveImages.Size = new System.Drawing.Size(87, 17);
             this.checkbox_saveImages.TabIndex = 22;
@@ -490,12 +491,25 @@ namespace AdeptiScanner_GI
             this.text_wanderer.TabIndex = 23;
             this.text_wanderer.TextChanged += new System.EventHandler(this.text_wanderer_TextChanged);
             // 
+            // checkbox_weaponMode
+            // 
+            this.checkbox_weaponMode.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.checkbox_weaponMode.AutoSize = true;
+            this.checkbox_weaponMode.Location = new System.Drawing.Point(676, 614);
+            this.checkbox_weaponMode.Name = "checkbox_weaponMode";
+            this.checkbox_weaponMode.Size = new System.Drawing.Size(96, 17);
+            this.checkbox_weaponMode.TabIndex = 48;
+            this.checkbox_weaponMode.Text = "Weapon mode";
+            this.checkbox_weaponMode.UseVisualStyleBackColor = true;
+            this.checkbox_weaponMode.CheckedChanged += new System.EventHandler(this.checkbox_weaponMode_CheckedChanged);
+            // 
             // ScannerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.LightGray;
             this.ClientSize = new System.Drawing.Size(784, 781);
+            this.Controls.Add(this.checkbox_weaponMode);
             this.Controls.Add(this.label_wanderer);
             this.Controls.Add(this.text_wanderer);
             this.Controls.Add(this.tabControl1);
@@ -571,6 +585,7 @@ namespace AdeptiScanner_GI
         private System.Windows.Forms.Label label_wanderer;
         private System.Windows.Forms.TextBox text_wanderer;
         private System.Windows.Forms.CheckBox checkBox_ProcessHandleFeatures;
+        private System.Windows.Forms.CheckBox checkbox_weaponMode;
     }
 }
 

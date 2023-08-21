@@ -760,20 +760,30 @@ namespace AdeptiScanner_GI
                 }
             }
 
-            img_Filtered = ImageProcessing.getArtifactImg(img_Filtered, readArea, out filtered_rows, saveImages, out bool locked, out int rarity, out Rectangle typeMainArea, out Rectangle levelArea, out Rectangle subArea, out Rectangle setArea, out Rectangle charArea);
-            artifact = ImageProcessing.getArtifacts(img_Filtered, filtered_rows, saveImages, tessEngine, locked, rarity, typeMainArea, levelArea, subArea, setArea, charArea);
-            if (Database.artifactInvalid(rarity, artifact))
+            if (checkbox_weaponMode.Checked)
             {
-                displayInventoryItem(artifact);
-                text_full.AppendText(Environment.NewLine + "---This artifact is invalid---" + Environment.NewLine);
-            } else
-            {
-                scannedItems.Add(artifact);
-                displayInventoryItem(artifact);
-            }
-            text_full.AppendText(Environment.NewLine + "Total stored artifacts:" + scannedItems.Count + Environment.NewLine);
 
-            image_preview.Image = new Bitmap(img_Filtered);
+                img_Filtered = ImageProcessing.getWeaponImg(img_Filtered, readArea, out filtered_rows, saveImages, out bool locked, out Rectangle nameArea, out Rectangle statArea, out Rectangle passiveArea, out Rectangle charArea);
+                image_preview.Image = new Bitmap(img_Filtered);
+            } 
+            else
+            {
+                img_Filtered = ImageProcessing.getArtifactImg(img_Filtered, readArea, out filtered_rows, saveImages, out bool locked, out int rarity, out Rectangle typeMainArea, out Rectangle levelArea, out Rectangle subArea, out Rectangle setArea, out Rectangle charArea);
+                artifact = ImageProcessing.getArtifacts(img_Filtered, filtered_rows, saveImages, tessEngine, locked, rarity, typeMainArea, levelArea, subArea, setArea, charArea);
+                if (Database.artifactInvalid(rarity, artifact))
+                {
+                    displayInventoryItem(artifact);
+                    text_full.AppendText(Environment.NewLine + "---This artifact is invalid---" + Environment.NewLine);
+                }
+                else
+                {
+                    scannedItems.Add(artifact);
+                    displayInventoryItem(artifact);
+                }
+                text_full.AppendText(Environment.NewLine + "Total stored artifacts:" + scannedItems.Count + Environment.NewLine);
+
+                image_preview.Image = new Bitmap(img_Filtered);
+            }
         }
 
         private void button_auto_Click(object sender, EventArgs e)
@@ -1275,6 +1285,12 @@ namespace AdeptiScanner_GI
         private void checkBox_ProcessHandleFeatures_CheckedChanged(object sender, EventArgs e)
         {
             GameVisibilityHandler.enabled = checkBox_ProcessHandleFeatures.Checked;
+            btn_OCR.Enabled = false;
+            button_auto.Enabled = false;
+        }
+
+        private void checkbox_weaponMode_CheckedChanged(object sender, EventArgs e)
+        {
             btn_OCR.Enabled = false;
             button_auto.Enabled = false;
         }

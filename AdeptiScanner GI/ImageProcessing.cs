@@ -349,6 +349,168 @@ namespace AdeptiScanner_GI
             return new Rectangle(gameArea.Left + leftmost, gameArea.Top + top, rightmost - leftmost, height);
         }
 
+        /// <summary>
+        /// Extract and filter the artifact area from an image of the backpack
+        /// </summary>
+        /// <param name="img">Full screenshot containing game</param>
+        /// <param name="area">Area containing the artifact info</param>
+        /// <param name="rows">Filter results per row</param>
+        /// <returns>Filtered image of the artifact area</returns>
+        public static Bitmap getWeaponImg(Bitmap img, Rectangle area, out int[] rows, bool saveImages, out bool locked, out Rectangle nameArea, out Rectangle statArea, out Rectangle passiveArea, out Rectangle charArea)
+        {
+            nameArea = Rectangle.Empty;
+            statArea = Rectangle.Empty;
+            passiveArea = Rectangle.Empty;
+            charArea = Rectangle.Empty;
+
+            locked = false;
+            rows = new int[area.Height];
+            //Get relevant part of image
+            Bitmap areaImg = new Bitmap(area.Width, area.Height);
+            using (Graphics g = Graphics.FromImage(areaImg))
+            {
+                g.DrawImage(img, 0, 0, area, GraphicsUnit.Pixel);
+            }
+            int width = areaImg.Width;
+            int height = areaImg.Height;
+            //Prepare bytewise image processing
+            BitmapData imgData = areaImg.LockBits(new Rectangle(0, 0, width, height), ImageLockMode.ReadWrite, areaImg.PixelFormat);
+            int numBytes = Math.Abs(imgData.Stride) * imgData.Height;
+            byte[] imgBytes = new byte[numBytes];
+            Marshal.Copy(imgData.Scan0, imgBytes, 0, numBytes);
+            int PixelSize = 4; //ARGB, reverse order
+            //some variables to keep track of which part of the image we are in
+            int section = 0; //0 = Name, 1 = Stats, 2 = Lock, 3 = Passive, 4 = character
+            int sectionStart = 0;
+            int sectionEnd = 0;
+            int rightEdge = 0;
+            int leftEdge = width - 1;
+            for (int i = 0; i < numBytes; i += PixelSize)
+            {
+                int x = (i / PixelSize) % width;
+                int y = (i / PixelSize - x) / width;
+                int y_below = Math.Min(((y + 1) * width + x) * PixelSize, numBytes - PixelSize - 1);
+                if (
+                    (section == 0 && (x < width && imgBytes[i] > 140 && imgBytes[i + 1] > 140 && imgBytes[i + 2] > 140)) //look for white-ish text
+                    || (section == 1 && x < width * 0.55 && ((imgBytes[i] > 225 && imgBytes[i + 1] > 225 && imgBytes[i + 2] > 225) || (imgBytes[y_below] > 225 && imgBytes[y_below + 1] > 225 && imgBytes[y_below + 2] > 225))) //look for bright white text, skip right edge
+                    || (section == 3 && (imgBytes[i] > 140 && imgBytes[i + 1] > 80 && imgBytes[i + 2] < 100)) //look for cyan
+                    || ((section == 4) && (imgBytes[i] < 150 && imgBytes[i + 1] < 150 && imgBytes[i + 2] < 150)) //look for black
+                    )
+                {
+                    //Make Black
+                    imgBytes[i] = 0;
+                    imgBytes[i + 1] = 0;
+                    imgBytes[i + 2] = 0;
+                    imgBytes[i + 3] = 255;
+                    rows[y]++;
+                    if (x > rightEdge)
+                        rightEdge = x;
+                    if (x < leftEdge && x != 0)
+                        leftEdge = x;
+
+
+                    if (section == 0)
+                    {
+                        if (sectionEnd != 0 && y > sectionEnd)
+                        {
+                            //found white after gap
+                            nameArea = new Rectangle(0, sectionStart, width, sectionEnd - sectionStart);
+                            section = 1; 
+                            //make white
+                            imgBytes[i] = 255;
+                            imgBytes[i + 1] = 255;
+                            imgBytes[i + 2] = 255;
+                            imgBytes[i + 3] = 255;
+                        } 
+                        else if (sectionStart == 0)
+                        {
+                            //first row of name text
+                            sectionStart = y;
+                        } 
+                        else
+                        {
+                            //advance end row of name text
+                            sectionEnd = y + 3;
+                        }
+                    }
+                }
+                else
+                {
+                    if (section == 2 && imgBytes[i] < 150 && imgBytes[i + 1] > 120 && imgBytes[i + 2] > 200)
+                    {
+                        //if section 2, look for red lock
+                        locked = true;
+                    }
+                    else if (section == 2 && (imgBytes[i] > 140 && imgBytes[i + 1] > 80 && imgBytes[i + 2] < 100))
+                    {
+                        //if section 2, look for cyan text
+                        sectionStart = Math.Max(0, y - 3);
+                        section = 3;
+
+                        //Make Black and continue
+                        imgBytes[i] = 0;
+                        imgBytes[i + 1] = 0;
+                        imgBytes[i + 2] = 0;
+                        imgBytes[i + 3] = 255;
+                        continue;
+                    }
+                    else if (section == 3 && (imgBytes[i + 2] > 250 && imgBytes[i] > 170 && imgBytes[i + 1] > 220))
+                    {
+                        // if section 3, look for yellow-white-ish for character area
+                        passiveArea = new Rectangle(0, sectionStart, width, y - sectionStart);
+                        charArea = new Rectangle(0, y, width, height - y);
+                        section = 4;
+                    }
+                    //Make White
+                    imgBytes[i] = 255;
+                    imgBytes[i + 1] = 255;
+                    imgBytes[i + 2] = 255;
+                    imgBytes[i + 3] = 255;
+                }
+
+                if (x == 0)
+                {
+                    if (section == 1)
+                    {
+                        //check if coming row is white-ish, if so move to section 2
+                        int tmp = (y * width + (int)(width * 0.05)) * PixelSize;
+                        if ((imgBytes[tmp] > 200 && imgBytes[tmp + 1] > 200 && imgBytes[tmp + 2] > 200) && (imgBytes[tmp] < 240 && imgBytes[tmp + 1] < 240 && imgBytes[tmp + 2] < 240))
+                        {
+                            //Make White
+                            imgBytes[i] = 255;
+                            imgBytes[i + 1] = 255;
+                            imgBytes[i + 2] = 255;
+                            imgBytes[i + 3] = 255;
+
+                            statArea = new Rectangle(0, nameArea.Bottom, (int)(width * 0.55), y - nameArea.Bottom);
+                            section = 2;
+                            i += width * PixelSize;
+                        }
+
+                    }
+                }
+            }
+
+            if (section == 3) // reached passive but never reached character region
+            {
+                passiveArea = new Rectangle(0, sectionStart, width, height - sectionStart);
+            }
+            Marshal.Copy(imgBytes, 0, imgData.Scan0, numBytes);
+            areaImg.UnlockBits(imgData);
+
+            //Bitmap thinImg = new Bitmap(rightEdge - leftEdge, height);
+            //using (Graphics g = Graphics.FromImage(thinImg))
+            //{
+            //    g.DrawImage(areaImg, 0, 0, new Rectangle(leftEdge, 0, rightEdge - leftEdge, height), GraphicsUnit.Pixel);
+            //}
+            //areaImg = thinImg;
+
+            string timestamp = DateTime.UtcNow.ToString("yyyy-MM-dd HH-mm-ssff");
+            if (saveImages)
+                areaImg.Save(Database.appDir + @"\images\GenshinArtifactImgFiltered " + timestamp + ".png");
+            return areaImg;
+        }
+
 
         /// <summary>
         /// Extract and filter the artifact area from an image of the backpack
