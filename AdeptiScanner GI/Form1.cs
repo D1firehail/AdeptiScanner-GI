@@ -28,6 +28,7 @@ namespace AdeptiScanner_GI
         private Bitmap img_Filtered;
         private int[] filtered_rows;
         private Rectangle savedArtifactArea = new Rectangle(0, 0, 1, 1);
+        private Rectangle relativeArtifactArea = new Rectangle(0, 0, 1, 1);
         private Rectangle savedGameArea = new Rectangle(0,0,1,1);
         private bool pauseAuto = true;
         private bool softCancelAuto = true;
@@ -666,6 +667,7 @@ namespace AdeptiScanner_GI
             {
                 savedGameArea = tmpGameArea.Value;
                 savedArtifactArea = tmpArtifactArea.Value;
+                relativeArtifactArea = tmpArtifactArea.Value;
                 if (directGameRect != Rectangle.Empty)
                 {
                     savedGameArea.X = savedGameArea.X + directGameRect.X;
@@ -723,18 +725,20 @@ namespace AdeptiScanner_GI
 
             resetTextBoxes();
 
-            if (checkbox_OCRcapture.Checked)
+            bool capture = checkbox_OCRcapture.Checked;
+            if (capture)
             {
                 if (Keyboard.IsKeyDown(Key.LeftShift))
                 {
                     img_Raw = ImageProcessing.LoadScreenshot();
                     savedGameArea = new Rectangle(0, 0, img_Raw.Width, img_Raw.Height);
                     savedArtifactArea = new Rectangle(0, 0, img_Raw.Width, img_Raw.Height);
+                    relativeArtifactArea = new Rectangle(0, 0, img_Raw.Width, img_Raw.Height);
                 }
                 else
                 {
                     GameVisibilityHandler.bringGameToFront();
-                    img_Raw = ImageProcessing.CaptureScreenshot(saveImages, Rectangle.Empty);
+                    img_Raw = ImageProcessing.CaptureScreenshot(saveImages, savedArtifactArea, GameVisibilityHandler.enabled);
                     GameVisibilityHandler.bringScannerToFront();
                 }
             }
@@ -743,7 +747,20 @@ namespace AdeptiScanner_GI
             img_Filtered = new Bitmap(img_Raw);
             InventoryItem artifact;
 
-            img_Filtered = ImageProcessing.getArtifactImg(img_Filtered, savedArtifactArea, out filtered_rows, saveImages, out bool locked, out int rarity, out Rectangle typeMainArea, out Rectangle levelArea, out Rectangle subArea, out Rectangle setArea, out Rectangle charArea);
+            Rectangle readArea = relativeArtifactArea;
+            if (GameVisibilityHandler.enabled)
+            {
+                //using process handle features and the image is exactly the artifact area
+                if (capture)
+                {
+                    readArea = new Rectangle(0, 0, img_Filtered.Width, img_Filtered.Height);
+                } else
+                {
+                    readArea = relativeArtifactArea;
+                }
+            }
+
+            img_Filtered = ImageProcessing.getArtifactImg(img_Filtered, readArea, out filtered_rows, saveImages, out bool locked, out int rarity, out Rectangle typeMainArea, out Rectangle levelArea, out Rectangle subArea, out Rectangle setArea, out Rectangle charArea);
             artifact = ImageProcessing.getArtifacts(img_Filtered, filtered_rows, saveImages, tessEngine, locked, rarity, typeMainArea, levelArea, subArea, setArea, charArea);
             if (Database.artifactInvalid(rarity, artifact))
             {
@@ -1258,6 +1275,8 @@ namespace AdeptiScanner_GI
         private void checkBox_ProcessHandleFeatures_CheckedChanged(object sender, EventArgs e)
         {
             GameVisibilityHandler.enabled = checkBox_ProcessHandleFeatures.Checked;
+            btn_OCR.Enabled = false;
+            button_auto.Enabled = false;
         }
     }
 }
