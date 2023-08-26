@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31605.320
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33712.159
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdeptiScanner GI", "AdeptiScanner GI\AdeptiScanner GI.csproj", "{2C37347B-B97C-4C85-8C32-EDD759A80224}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeaponDataParser", "WeaponDataParser\WeaponDataParser.csproj", "{59D63296-26F0-4B25-9A1F-489E324DB43D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{2C37347B-B97C-4C85-8C32-EDD759A80224}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2C37347B-B97C-4C85-8C32-EDD759A80224}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2C37347B-B97C-4C85-8C32-EDD759A80224}.Release|Any CPU.Build.0 = Release|Any CPU
+		{59D63296-26F0-4B25-9A1F-489E324DB43D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{59D63296-26F0-4B25-9A1F-489E324DB43D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{59D63296-26F0-4B25-9A1F-489E324DB43D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{59D63296-26F0-4B25-9A1F-489E324DB43D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
