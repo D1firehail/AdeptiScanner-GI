@@ -62,6 +62,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Weapon.cs" />
     <Compile Include="ArtifactDetails.cs">
       <SubType>UserControl</SubType>
     </Compile>

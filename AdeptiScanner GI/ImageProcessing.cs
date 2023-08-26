@@ -1018,5 +1018,63 @@ namespace AdeptiScanner_GI
 
             return foundArtifact;
         }
+
+        public static Weapon getWeapon(Bitmap img, int[] rows, bool saveImages, TesseractEngine tessEngine, bool locked, Rectangle nameArea, Rectangle statArea, Rectangle refinementArea, Rectangle charArea)
+        {
+            //get all potential text rows
+            List<Tuple<int, int>> textRows = new List<Tuple<int, int>>();
+            int i = 0;
+            int height = img.Height;
+            int width = img.Width;
+            while (i + 1 < img.Height)
+            {
+                while (i + 1 < height && rows[i] == 0)
+                    i++;
+                int rowTop = i;
+                while (i + 1 < height && !(rows[i] == 0))
+                    i++;
+                textRows.Add(Tuple.Create(Math.Max(0, rowTop - 3), Math.Min(height - 1, i + 3)));
+            }
+
+            Weapon foundWeapon = new Weapon();
+            foundWeapon.locked = locked;
+            i = 0;
+
+            //Name
+
+            //Based on name, level and ascension
+
+            //Refinement, filter to just 12345. Last character in the raw result should be the refinement number
+            while (i < textRows.Count && textRows[i].Item2 <= refinementArea.Top)
+                i++;
+            tessEngine.SetVariable("tessedit_char_whitelist", "12345");
+            for (; i < textRows.Count && textRows[i].Item2 > refinementArea.Top; i++)
+            {
+                if (refinementArea.Equals(Rectangle.Empty))
+                    break;
+                string result = OCRRow(img, textRows[i].Item1, textRows[i].Item2, new List<string>(), out int resultIndex, out int dist, out string rawText, "", saveImages, tessEngine);
+                if (rawText.Length != 0)
+                {
+                    string lastNum = rawText.Substring(rawText.Length - 1);
+                    foundWeapon.refinement = int.Parse(lastNum);
+                    i++;
+                    break;
+                }
+            }
+            tessEngine.SetVariable("tessedit_char_whitelist", "");
+
+            //Character
+            for (i = textRows.Count - 1; i > Math.Max(0, textRows.Count - 6) && textRows[i].Item1 > charArea.Top - 10; i--)
+            {
+                string result = OCRRow(img, textRows[i].Item1, textRows[i].Item2, Database.Characters, out int resultIndex, out int dist, out string rawText, "", saveImages, tessEngine);
+                if (dist < 5)
+                {
+                    foundWeapon.character = Database.Characters_trans[resultIndex];
+                    break;
+                }
+            }
+
+            return foundWeapon;
+        }
     }
 }

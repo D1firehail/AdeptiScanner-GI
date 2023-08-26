@@ -362,6 +362,13 @@ namespace AdeptiScanner_GI
                 || (rarity == 4 && (item.level.Item2 > 16 || item.subs.Count > 4 || item.subs.Count < 2)) 
                 || (rarity == 5 && (item.level.Item2 > 20 || item.subs.Count > 4 || item.subs.Count < 3));
         }
+
+        public static bool weaponInvalid(Weapon item)
+        {
+            return item.level == null || item.name == null || item.level.Item2 > 90 
+                || (item.name.Item3 < 3 && item.level.Item2 > 70) 
+                || (item.name.Item3 >= 3 && item.refinement == null);
+        }
     }
 
 }

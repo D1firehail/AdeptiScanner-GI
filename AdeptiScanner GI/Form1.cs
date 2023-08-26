@@ -748,7 +748,6 @@ namespace AdeptiScanner_GI
 
 
             img_Filtered = new Bitmap(img_Raw);
-            Artifact artifact;
 
             Rectangle readArea = relativeArtifactArea;
             if (GameVisibilityHandler.enabled)
@@ -766,13 +765,27 @@ namespace AdeptiScanner_GI
             if (checkbox_weaponMode.Checked)
             {
 
-                img_Filtered = ImageProcessing.getWeaponImg(img_Filtered, readArea, out filtered_rows, saveImages, out bool locked, out Rectangle nameArea, out Rectangle statArea, out Rectangle passiveArea, out Rectangle charArea);
+                img_Filtered = ImageProcessing.getWeaponImg(img_Filtered, readArea, out filtered_rows, saveImages, out bool locked, out Rectangle nameArea, out Rectangle statArea, out Rectangle refinementArea, out Rectangle charArea);
+                Weapon weapon = ImageProcessing.getWeapon(img_Filtered, filtered_rows, saveImages, tessEngine, locked, nameArea, statArea, refinementArea, charArea);
+                if (Database.weaponInvalid(weapon))
+                {
+                    displayInventoryItem(weapon);
+                    text_full.AppendText(Environment.NewLine + "---This weapon is invalid---" + Environment.NewLine);
+                } 
+                else
+                {
+                    //TODO add to list of scanned weapons
+                    displayInventoryItem(weapon);
+                }
+                //TODO display total stored weapons
+
                 image_preview.Image = new Bitmap(img_Filtered);
             } 
             else
             {
+
                 img_Filtered = ImageProcessing.getArtifactImg(img_Filtered, readArea, out filtered_rows, saveImages, out bool locked, out int rarity, out Rectangle typeMainArea, out Rectangle levelArea, out Rectangle subArea, out Rectangle setArea, out Rectangle charArea);
-                artifact = ImageProcessing.getArtifacts(img_Filtered, filtered_rows, saveImages, tessEngine, locked, rarity, typeMainArea, levelArea, subArea, setArea, charArea);
+                Artifact artifact = ImageProcessing.getArtifacts(img_Filtered, filtered_rows, saveImages, tessEngine, locked, rarity, typeMainArea, levelArea, subArea, setArea, charArea);
                 if (Database.artifactInvalid(rarity, artifact))
                 {
                     displayInventoryItem(artifact);
