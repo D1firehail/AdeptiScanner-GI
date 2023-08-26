@@ -356,11 +356,11 @@ namespace AdeptiScanner_GI
         /// <param name="area">Area containing the artifact info</param>
         /// <param name="rows">Filter results per row</param>
         /// <returns>Filtered image of the artifact area</returns>
-        public static Bitmap getWeaponImg(Bitmap img, Rectangle area, out int[] rows, bool saveImages, out bool locked, out Rectangle nameArea, out Rectangle statArea, out Rectangle passiveArea, out Rectangle charArea)
+        public static Bitmap getWeaponImg(Bitmap img, Rectangle area, out int[] rows, bool saveImages, out bool locked, out Rectangle nameArea, out Rectangle statArea, out Rectangle refineArea, out Rectangle charArea)
         {
             nameArea = Rectangle.Empty;
             statArea = Rectangle.Empty;
-            passiveArea = Rectangle.Empty;
+            refineArea = Rectangle.Empty;
             charArea = Rectangle.Empty;
 
             locked = false;
@@ -380,7 +380,7 @@ namespace AdeptiScanner_GI
             Marshal.Copy(imgData.Scan0, imgBytes, 0, numBytes);
             int PixelSize = 4; //ARGB, reverse order
             //some variables to keep track of which part of the image we are in
-            int section = 0; //0 = Name, 1 = Stats, 2 = Lock, 3 = Passive, 4 = character
+            int section = 0; //0 = Name, 1 = Stats, 2 = Lock, 3 = Refinement text, 4 = character
             int sectionStart = 0;
             int sectionEnd = 0;
             int rightEdge = 0;
@@ -393,7 +393,7 @@ namespace AdeptiScanner_GI
                 if (
                     (section == 0 && (x < width && imgBytes[i] > 140 && imgBytes[i + 1] > 140 && imgBytes[i + 2] > 140)) //look for white-ish text
                     || (section == 1 && x < width * 0.55 && ((imgBytes[i] > 225 && imgBytes[i + 1] > 225 && imgBytes[i + 2] > 225) || (imgBytes[y_below] > 225 && imgBytes[y_below + 1] > 225 && imgBytes[y_below + 2] > 225))) //look for bright white text, skip right edge
-                    || (section == 3 && (imgBytes[i] > 140 && imgBytes[i + 1] > 80 && imgBytes[i + 2] < 100)) //look for cyan
+                    || (section == 3 && (imgBytes[i] > 100 && imgBytes[i] < 160 && imgBytes[i + 1] > 160 && imgBytes[i + 2] > 200 && imgBytes[i + 2] < 230)) //look for "Gold"
                     || ((section == 4) && (imgBytes[i] < 150 && imgBytes[i + 1] < 150 && imgBytes[i + 2] < 150)) //look for black
                     )
                 {
@@ -432,6 +432,13 @@ namespace AdeptiScanner_GI
                             //advance end row of name text
                             sectionEnd = y + 3;
                         }
+                    } else 
+                    if (section == 3)
+                    {
+                        if (y < sectionEnd && y + 3 != sectionEnd)
+                        {
+                            sectionEnd = Math.Min(y + 3, height - 1);
+                        }
                     }
                 }
                 else
@@ -441,10 +448,11 @@ namespace AdeptiScanner_GI
                         //if section 2, look for red lock
                         locked = true;
                     }
-                    else if (section == 2 && (imgBytes[i] > 140 && imgBytes[i + 1] > 80 && imgBytes[i + 2] < 100))
+                    else if (section == 2 && (imgBytes[i] > 100 && imgBytes[i] < 160 && imgBytes[i + 1] > 160 && imgBytes[i + 2] > 200 && imgBytes[i + 2] < 230))
                     {
-                        //if section 2, look for cyan text
+                        //if section 2, look for "Gold" text
                         sectionStart = Math.Max(0, y - 3);
+                        sectionEnd = Math.Min(y + 3, height - 1);
                         section = 3;
 
                         //Make Black and continue
@@ -457,7 +465,7 @@ namespace AdeptiScanner_GI
                     else if (section == 3 && (imgBytes[i + 2] > 250 && imgBytes[i] > 170 && imgBytes[i + 1] > 220))
                     {
                         // if section 3, look for yellow-white-ish for character area
-                        passiveArea = new Rectangle(0, sectionStart, width, y - sectionStart);
+                        refineArea = new Rectangle(0, sectionStart, width, sectionEnd - sectionStart);
                         charArea = new Rectangle(0, y, width, height - y);
                         section = 4;
                     }
@@ -493,7 +501,7 @@ namespace AdeptiScanner_GI
 
             if (section == 3) // reached passive but never reached character region
             {
-                passiveArea = new Rectangle(0, sectionStart, width, height - sectionStart);
+                refineArea = new Rectangle(0, sectionStart, width, sectionEnd - sectionStart);
             }
             Marshal.Copy(imgBytes, 0, imgData.Scan0, numBytes);
             areaImg.UnlockBits(imgData);
