@@ -62,6 +62,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Character.cs" />
+    <Compile Include="EnkaApi.cs" />
     <Compile Include="Weapon.cs" />
     <Compile Include="ArtifactDetails.cs">
       <SubType>UserControl</SubType>

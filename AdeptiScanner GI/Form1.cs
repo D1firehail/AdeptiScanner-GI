@@ -39,6 +39,7 @@ namespace AdeptiScanner_GI
         private bool autoCaptureDone = false;
         internal List<Artifact> scannedArtifacts = new List<Artifact>();
         internal List<Weapon> scannedWeapons = new List<Weapon>();
+        internal List<Character> scannedCharacters = new List<Character>();
         private bool cancelOCRThreads = false;
         private const int ThreadCount = 6; //--------------------------------------------------------
         private bool[] threadRunning = new bool[ThreadCount];
@@ -1162,9 +1163,27 @@ namespace AdeptiScanner_GI
                 return;
             }
             string timestamp = DateTime.UtcNow.ToString("yyyy-MM-dd HH-mm-ssff");
-            JObject currData = Artifact.listToGOODArtifacts(scannedArtifacts, minLevel, maxLevel, minRarity, maxRarity, exportAllEquipped);
-            JObject wepData = Weapon.listToGOODWeapons(scannedWeapons);
-            currData.Add("weapons", wepData["weapons"]);
+
+            JObject currData = new JObject();
+            if (scannedArtifacts.Count > 0)
+            {
+                JObject artis = Artifact.listToGOODArtifacts(scannedArtifacts, minLevel, maxLevel, minRarity, maxRarity, exportAllEquipped);
+                currData.Add("artifacts", artis["artifacts"]);
+            }
+
+            if (scannedWeapons.Count > 0)
+            {
+                JObject wepData = Weapon.listToGOODWeapons(scannedWeapons);
+                currData.Add("weapons", wepData["weapons"]);
+            }
+
+            if (scannedCharacters.Count > 0)
+            {
+                JObject charData = Character.listToGOODCharacter(scannedCharacters);
+                currData.Add("characters", charData["characters"]);
+            }
+
+
             if (useTemplate && !File.Exists(Database.appDir + @"\ExportTemplate.json"))
             {
                 MessageBox.Show("No export template found, exporting without one" + Environment.NewLine + "To use an export template, place valid GOOD-format json in ScannerFiles and rename to \"ExportTemplate.json\"", 
@@ -1174,8 +1193,25 @@ namespace AdeptiScanner_GI
             if (useTemplate)
             {
                 JObject template = JsonConvert.DeserializeObject<JObject>(File.ReadAllText(Database.appDir + @"\ExportTemplate.json"));
-                template.Remove("artifacts");
-                template.Add("artifacts", currData["artifacts"]);
+                if (currData.ContainsKey("artifact"))
+                {
+                    template.Remove("artifacts");
+                    template.Add("artifacts", currData["artifacts"]);
+                }
+
+                if (currData.ContainsKey("weapons"))
+                {
+                    template.Remove("weapons");
+                    template.Add("weapons", currData["weapons"]);
+                }
+
+                if (currData.ContainsKey("characters"))
+                {
+                    template.Remove("characters");
+                    template.Add("characters", currData["characters"]);
+                }
+
+
                 currData = template;
             }
             else

@@ -28,6 +28,10 @@ namespace AdeptiScanner_GI
         public static Dictionary<string, List<string>> WeaponLevels = new Dictionary<string, List<string>>();
         public static Dictionary<string, List<Tuple<string, int, int>>> WeaponLevels_trans = new Dictionary<string, List<Tuple<string, int, int>>>();
 
+        public static Dictionary<int, string> CharacterNames = new Dictionary<int, string>();
+        public static Dictionary<string, string> SkillTypes = new Dictionary<string, string>();
+
+
 
         public List<string> MainStats = new List<string>();
         public List<Tuple<string, string, double, int>> MainStats_trans = new List<Tuple<string, string, double, int>>();
@@ -262,6 +266,22 @@ namespace AdeptiScanner_GI
             }
         }
 
+        static void readEnka(JArray enka)
+        {
+            foreach (JObject data in enka)
+            {
+                if (data["name"].ToObject<string>().Equals("charNames") )
+                {
+                    CharacterNames = data["data"].ToObject<Dictionary<int, string>>();
+                }
+
+                if (data["name"].ToObject<string>().Equals("skillTypes"))
+                {
+                    SkillTypes = data["data"].ToObject<Dictionary<string, string>>();
+                }
+            }
+        }
+
         static void readWeapons(JArray weapons)
         {
             foreach (JObject weapon in weapons)
@@ -360,6 +380,11 @@ namespace AdeptiScanner_GI
                 if (entry.Key == "Weapons")
                 {
                     readWeapons(entry_arr);
+                }
+
+                if (entry.Key == "Enka")
+                {
+                    readEnka(entry_arr);
                 }
 
             }
