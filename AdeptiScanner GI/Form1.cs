@@ -45,7 +45,7 @@ namespace AdeptiScanner_GI
         private ConcurrentQueue<Bitmap>[] threadQueues = new ConcurrentQueue<Bitmap>[ThreadCount];
         private ConcurrentQueue<Bitmap> badResults = new ConcurrentQueue<Bitmap>();
         private TesseractEngine[] threadEngines = new TesseractEngine[ThreadCount];
-        private List<Artifact>[] threadResults = new List<Artifact>[ThreadCount];
+        private List<object>[] threadResults = new List<object>[ThreadCount];
         private bool rememberSettings = true;
 
         internal int minLevel = 0;
@@ -124,7 +124,7 @@ namespace AdeptiScanner_GI
                 {
                     DefaultPageSegMode = PageSegMode.SingleLine
                 };
-                threadResults[i] = new List<Artifact>();
+                threadResults[i] = new List<object>();
             }
 
             //simple junk defaults
@@ -267,7 +267,7 @@ namespace AdeptiScanner_GI
                       .IsInRole(WindowsBuiltInRole.Administrator);
         }
 
-        private void runOCRThread(int threadIndex)
+        private void runOCRThread(int threadIndex, bool weaponMode)
         {
             Task.Run((() =>
             {
@@ -282,18 +282,36 @@ namespace AdeptiScanner_GI
                         //    img.Save(Database.appDir + @"\images\GenshinArtifactImg " + timestamp + ".png");
                         Rectangle area = new Rectangle(0, 0, img.Width, img.Height);
                         Bitmap filtered = new Bitmap(img);
-                        filtered = ImageProcessing.getArtifactImg(filtered, area, out int[] rows, saveImages, out bool locked, out int rarity, out Rectangle typeMainArea, out Rectangle levelArea, out Rectangle subArea, out Rectangle setArea, out Rectangle charArea);
-
-                        Artifact item = ImageProcessing.getArtifacts(filtered, rows, saveImages, threadEngines[threadIndex], locked, rarity, typeMainArea, levelArea, subArea, setArea, charArea);
-
-                        if (Database.artifactInvalid(rarity, item))
+                        if (weaponMode)
                         {
-                            badResults.Enqueue(img);
+                            filtered = ImageProcessing.getWeaponImg(filtered, area, out int[] rows, saveImages, out bool locked, out Rectangle nameArea, out Rectangle statArea, out Rectangle refinementArea, out Rectangle charArea);
+                            Weapon weapon = ImageProcessing.getWeapon(filtered, rows, saveImages, threadEngines[threadIndex], locked, nameArea, statArea, refinementArea, charArea);
+
+                            if (Database.weaponInvalid(weapon))
+                            {
+                                badResults.Enqueue(img);
+                            }
+                            else
+                            {
+                                threadResults[threadIndex].Add(weapon);
+                            }
                         }
                         else
                         {
-                            threadResults[threadIndex].Add(item);
+                            filtered = ImageProcessing.getArtifactImg(filtered, area, out int[] rows, saveImages, out bool locked, out int rarity, out Rectangle typeMainArea, out Rectangle levelArea, out Rectangle subArea, out Rectangle setArea, out Rectangle charArea);
+
+                            Artifact item = ImageProcessing.getArtifacts(filtered, rows, saveImages, threadEngines[threadIndex], locked, rarity, typeMainArea, levelArea, subArea, setArea, charArea);
+
+                            if (Database.artifactInvalid(rarity, item))
+                            {
+                                badResults.Enqueue(img);
+                            }
+                            else
+                            {
+                                threadResults[threadIndex].Add(item);
+                            }
                         }
+                        
                     }
                     else if (autoCaptureDone || softCancelAuto || hardCancelAuto)
                     {
@@ -310,7 +328,7 @@ namespace AdeptiScanner_GI
             }));
         }
 
-        private void runAuto(bool saveImages, int clickSleepWait = 100, int scrollSleepWait = 1500, int scrollTestWait = 100, int recheckSleepWait = 300)
+        private void artifactAuto(bool saveImages, int clickSleepWait = 100, int scrollSleepWait = 1500, int scrollTestWait = 100, int recheckSleepWait = 300)
         {
             text_full.Text = "Starting auto-run. ---Press ESCAPE to pause---" + Environment.NewLine + "If no artifact switching happens, you forgot to run as admin" + Environment.NewLine;
             autoRunning = true;
@@ -320,8 +338,8 @@ namespace AdeptiScanner_GI
             for (int i = 0; i < ThreadCount; i++)
             {
                 threadQueues[i] = new ConcurrentQueue<Bitmap>();
-                threadResults[i] = new List<Artifact>();
-                runOCRThread(i);
+                threadResults[i] = new List<object>();
+                runOCRThread(i, false);
             }
 
             Task.Run((() =>
@@ -424,7 +442,7 @@ namespace AdeptiScanner_GI
                         }
                         /*Console.WriteLine("firstY " + firstY + Environment.NewLine
                             + "startTop " + startTop + Environment.NewLine
-                            + "currTop " + artifactLocations[0].Y + Environment.NewLine
+                            + "currTop " + weaponLocations[0].Y + Environment.NewLine
                             + "distPerScroll " + distPerScroll + Environment.NewLine
                             + "distToScroll " + distToScroll + Environment.NewLine
                             + "scrollsNeeded " + scrollsNeeded + Environment.NewLine + Environment.NewLine); */
@@ -539,9 +557,16 @@ namespace AdeptiScanner_GI
                         }
                         System.Threading.Thread.Sleep(1000);
                     }
-                    foreach (Artifact item in threadResults[i])
+                    foreach (object item in threadResults[i])
                     {
-                        scannedArtifacts.Add(item);
+                        if (item is Artifact arti)
+                        {
+                            scannedArtifacts.Add(arti);
+                        } 
+                        else if (item is Weapon wep)
+                        {
+                            scannedWeapons.Add(wep);
+                        }
                     }
                 }
 
@@ -558,6 +583,268 @@ namespace AdeptiScanner_GI
                     filtered.Save(Database.appDir + @"\images\GenshinArtifactImg " + timestamp + ".png");
                     filtered = ImageProcessing.getArtifactImg(filtered, area, out int[] rows, true, out bool locked, out int rarity, out Rectangle typeMainArea, out Rectangle levelArea, out Rectangle subArea, out Rectangle setArea, out Rectangle charArea);
                     Artifact item = ImageProcessing.getArtifacts(filtered, rows, true, tessEngine, locked, rarity, typeMainArea, levelArea, subArea, setArea, charArea);
+                    AppendStatusText(item.ToString() + Environment.NewLine, false);
+                }
+
+                AppendStatusText("All bad results displayed" + Environment.NewLine, false);
+
+            hard_cancel_pos:
+                unregisterKey();
+                runtime.Stop();
+                GameVisibilityHandler.bringScannerToFront();
+                AppendStatusText("Time elapsed: " + runtime.ElapsedMilliseconds + "ms" + Environment.NewLine, true);
+                autoRunning = false;
+            }));
+        }
+
+        private void weaponAuto(bool saveImages, int clickSleepWait = 100, int scrollSleepWait = 1500, int scrollTestWait = 100, int recheckSleepWait = 300)
+        {
+            text_full.Text = "Starting auto-run. ---Press ESCAPE to pause---" + Environment.NewLine + "If no artifact switching happens, you forgot to run as admin" + Environment.NewLine;
+            autoRunning = true;
+            autoCaptureDone = false;
+            registerKey(); //activate pause auto hotkey
+            //start worker threads
+            for (int i = 0; i < ThreadCount; i++)
+            {
+                threadQueues[i] = new ConcurrentQueue<Bitmap>();
+                threadResults[i] = new List<object>();
+                runOCRThread(i, true);
+            }
+
+            Task.Run((() =>
+            {
+                Stopwatch runtime = new Stopwatch();
+                runtime.Start();
+                System.Security.Cryptography.SHA1CryptoServiceProvider sha1 = new System.Security.Cryptography.SHA1CryptoServiceProvider();
+                bool running = true;
+                bool firstRun = true;
+                int firstY = 0;
+                int firstRows = 0;
+                int nextThread = 0;
+                Rectangle gridArea = new Rectangle(savedGameArea.X, savedGameArea.Y, savedArtifactArea.X - savedGameArea.X, savedGameArea.Height);
+                Point gridOffset = new Point(gridArea.X, gridArea.Y);
+                List<string> foundWeapon = new List<string>();
+
+
+                GameVisibilityHandler.bringGameToFront();
+
+                //make sure cursor is on the correct screen
+                System.Threading.Thread.Sleep(50);
+                System.Windows.Forms.Cursor.Position = new Point(savedGameArea.X, savedGameArea.Y);
+                System.Threading.Thread.Sleep(50);
+                System.Windows.Forms.Cursor.Position = new Point(savedGameArea.X, savedGameArea.Y);
+                System.Threading.Thread.Sleep(50);
+
+                while (running)
+                {
+                    //load current grid/scroll location
+                    Bitmap img = ImageProcessing.CaptureScreenshot(saveImages, gridArea, true);
+                    List<Point> weaponLocations = ImageProcessing.getArtifactGrid(img, saveImages, gridOffset);
+                    weaponLocations = ImageProcessing.equalizeGrid(weaponLocations, gridArea.Height / 20, gridArea.Width / 20);
+
+                    if (weaponLocations.Count == 0)
+                    {
+                        break;
+                    }
+                    int startTop = weaponLocations[0].Y;
+                    int startBot = startTop;
+                    int rows = 1;
+                    int distToScroll = 0;
+                    foreach (Point p in weaponLocations)
+                    {
+                        if (p.Y > startBot + 3)
+                        {
+                            startBot = p.Y;
+                            rows++;
+                        }
+                    }
+                    if (firstRun)
+                    {
+                        firstY = startTop;
+                        firstRows = rows;
+                    }
+
+                    if (rows >= 1)
+                    {
+                        distToScroll = (int)((startBot - (double)firstY) / rows * (rows + 1));
+                    }
+
+                    if (!firstRun)
+                    {
+                        while (pauseAuto)
+                        {
+                            if (hardCancelAuto)
+                            {
+                                goto hard_cancel_pos;
+                            }
+                            if (softCancelAuto)
+                            {
+                                running = false;
+                                pauseAuto = false;
+                                goto soft_cancel_pos;
+                            }
+                            System.Threading.Thread.Sleep(1000);
+                        }
+                        //test scroll distance
+                        sim.Mouse.VerticalScroll(-1);
+                        System.Threading.Thread.Sleep(scrollTestWait);
+                        sim.Mouse.VerticalScroll(-1);
+                        System.Threading.Thread.Sleep(scrollTestWait);
+                        img = ImageProcessing.CaptureScreenshot(saveImages, gridArea, true);
+                        weaponLocations = ImageProcessing.getArtifactGrid(img, saveImages, gridOffset);
+                        weaponLocations = ImageProcessing.equalizeGrid(weaponLocations, gridArea.Height / 20, gridArea.Width / 20);
+
+                        if (weaponLocations.Count == 0)
+                        {
+                            break;
+                        }
+                        int distPerScroll = (startTop - weaponLocations[0].Y) / 2;
+                        int scrollsNeeded = 0;
+                        if (distPerScroll > 0)
+                        {
+                            scrollsNeeded = distToScroll / distPerScroll;
+                        }
+
+                        if (scrollsNeeded <= 0 || distPerScroll == 0 || rows < Math.Max(firstRows - 1, 0))
+                        {
+                            running = false;
+                        }
+
+                        while (scrollsNeeded > 0)
+                        {
+                            sim.Mouse.VerticalScroll(-1);
+                            scrollsNeeded--;
+                        }
+                        System.Threading.Thread.Sleep(scrollSleepWait);
+                        img = ImageProcessing.CaptureScreenshot(saveImages, gridArea, true);
+                        weaponLocations = ImageProcessing.getArtifactGrid(img, saveImages, gridOffset);
+                        weaponLocations = ImageProcessing.equalizeGrid(weaponLocations, gridArea.Height / 20, gridArea.Width / 20);
+                    }
+
+
+                    firstRun = false;
+
+                    //select and OCR each artifact in list
+                    bool repeat = false;
+                    bool hasNonDupes = false;
+                    for (int i = 0; i < weaponLocations.Count;)
+                    {
+                        Point p = weaponLocations[i];
+                        while (pauseAuto)
+                        {
+                            if (hardCancelAuto)
+                            {
+                                goto hard_cancel_pos;
+                            }
+
+                            if (softCancelAuto)
+                            {
+                                running = false;
+                                pauseAuto = false;
+                                goto soft_cancel_pos;
+                            }
+                            System.Threading.Thread.Sleep(1000);
+                        }
+                        clickPos(p.X, p.Y);
+                        System.Threading.Thread.Sleep(clickSleepWait);
+
+                        Bitmap weaponSC = ImageProcessing.CaptureScreenshot(saveImages, savedArtifactArea, true);
+
+                        //check if weapon already found using hash of pixels, without the right edge due to lock/unlock animation
+                        Bitmap withoutLock = new Bitmap(weaponSC.Width * 3 / 4, weaponSC.Height);
+                        using (Graphics g = Graphics.FromImage(withoutLock))
+                        {
+                            g.DrawImage(weaponSC, 0, 0, new Rectangle(0, 0, weaponSC.Width * 3 / 4, weaponSC.Height), GraphicsUnit.Pixel);
+                        }
+                        BitmapData imgData = withoutLock.LockBits(new Rectangle(0, 0, withoutLock.Width, withoutLock.Height), ImageLockMode.ReadWrite, withoutLock.PixelFormat);
+                        int numBytes = Math.Abs(imgData.Stride) * imgData.Height;
+                        byte[] imgBytes = new byte[numBytes];
+                        Marshal.Copy(imgData.Scan0, imgBytes, 0, numBytes);
+                        int PixelSize = 4; //ARGB, reverse order
+                        withoutLock.UnlockBits(imgData);
+                        //https://stackoverflow.com/a/800469 with some liberty
+                        string hash = string.Concat(sha1.ComputeHash(imgBytes).Select(x => x.ToString("X2")));
+
+                        if (foundWeapon.Contains(hash))
+                        {
+                            if (!repeat)
+                            {
+                                repeat = true;
+                                System.Threading.Thread.Sleep(recheckSleepWait);
+                                continue;
+                            }
+
+                        } 
+                        else
+                        {
+                            hasNonDupes = true;
+                        }
+                        foundWeapon.Add(hash);
+
+                        //queue up processing of artifact
+                        threadQueues[nextThread].Enqueue(weaponSC);
+                        nextThread = (nextThread + 1) % ThreadCount;
+
+                        i++;
+                        repeat = false;
+                    }
+
+
+                    if (!hasNonDupes)
+                    {
+                        AppendStatusText("Screen has only duplicate weapons, stopping" + Environment.NewLine, false);
+                        running = false;
+                    }
+
+                }
+
+            soft_cancel_pos:
+
+                autoCaptureDone = true;
+
+                //temporarily disable "got focus" event, as that would trigger pause
+                Activated -= eventGotFocus;
+                GameVisibilityHandler.bringScannerToFront();
+                Activated += eventGotFocus;
+
+                AppendStatusText("Scanning complete, awaiting results" + Environment.NewLine
+                    + "Time elapsed: " + runtime.ElapsedMilliseconds + "ms" + Environment.NewLine, false);
+                for (int i = 0; i < ThreadCount; i++)
+                {
+                    while (threadRunning[i] || pauseAuto)
+                    {
+                        if (hardCancelAuto)
+                        {
+                            goto hard_cancel_pos;
+                        }
+                        System.Threading.Thread.Sleep(1000);
+                    }
+                    foreach (object item in threadResults[i])
+                    {
+                        if (item is Artifact arti)
+                        {
+                            scannedArtifacts.Add(arti);
+                        }
+                        else if (item is Weapon wep)
+                        {
+                            scannedWeapons.Add(wep);
+                        }
+                    }
+                }
+
+
+                AppendStatusText("Auto finished" + Environment.NewLine
+                    + " Good results: " + scannedWeapons.Count + ", Bad results: " + badResults.Count + Environment.NewLine
+                    + "Time elapsed: " + runtime.ElapsedMilliseconds + "ms" + Environment.NewLine + Environment.NewLine, false);
+
+                while (badResults.TryDequeue(out Bitmap img))
+                {
+                    Rectangle area = new Rectangle(0, 0, img.Width, img.Height);
+                    Bitmap filtered = new Bitmap(img);
+                    string timestamp = DateTime.UtcNow.ToString("yyyy-MM-dd HH-mm-ssff");
+                    filtered.Save(Database.appDir + @"\images\GenshinArtifactImg " + timestamp + ".png");
+                    filtered = ImageProcessing.getWeaponImg(filtered, area, out int[] rows, saveImages, out bool locked, out Rectangle nameArea, out Rectangle statArea, out Rectangle refinementArea, out Rectangle charArea);
+                    Weapon item = ImageProcessing.getWeapon(filtered, rows, saveImages, tessEngine, locked, nameArea, statArea, refinementArea, charArea);
                     AppendStatusText(item.ToString() + Environment.NewLine, false);
                 }
 
@@ -838,7 +1125,14 @@ namespace AdeptiScanner_GI
             int.TryParse(text_RecheckWait.Text, out int recheckWait);
             if (recheckWait == 0)
                 recheckWait = 300;
-            runAuto(false, clickSleepWait, scrollSleepWait, scrollTestWait, recheckWait);
+            if (checkbox_weaponMode.Checked)
+            {
+                weaponAuto(false, clickSleepWait, scrollSleepWait, scrollTestWait, recheckWait);
+            } 
+            else
+            {
+                artifactAuto(false, clickSleepWait, scrollSleepWait, scrollTestWait, recheckWait);
+            }
         }
 
         private void button_resume_Click(object sender, EventArgs e)
