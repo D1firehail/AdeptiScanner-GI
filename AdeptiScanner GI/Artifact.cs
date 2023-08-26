@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace AdeptiScanner_GI
 {
-    public class InventoryItem
+    public class Artifact
     {
         public Tuple<string, string> piece;
         public Tuple<string, string, double, int> main;
@@ -15,7 +15,7 @@ namespace AdeptiScanner_GI
         public bool locked = false;
         public int rarity = 0;
 
-        public InventoryItem()
+        public Artifact()
         {
 
         }
@@ -118,9 +118,9 @@ namespace AdeptiScanner_GI
             return result;
         }
 
-        public static InventoryItem fromGOODArtifact(JObject GOODArtifact)
+        public static Artifact fromGOODArtifact(JObject GOODArtifact)
         {
-            InventoryItem res = new InventoryItem();
+            Artifact res = new Artifact();
             if (GOODArtifact.ContainsKey("rarity"))
             {
                 res.rarity = GOODArtifact["rarity"].ToObject<int>();
@@ -218,11 +218,11 @@ namespace AdeptiScanner_GI
             return res;
         }
 
-        public static JObject listToGOODArtifacts(List<InventoryItem> items, int minLevel, int maxLevel, int minRarity, int maxRarity, bool exportAllEquipped)
+        public static JObject listToGOODArtifacts(List<Artifact> items, int minLevel, int maxLevel, int minRarity, int maxRarity, bool exportAllEquipped)
         {
             JObject result = new JObject();
             JArray artifactJArr = new JArray();
-            foreach (InventoryItem item in items)
+            foreach (Artifact item in items)
             {
                 if ( (exportAllEquipped && item.character != null) || (item.level.Item2 >= minLevel && item.level.Item2 <= maxLevel && item.rarity >= minRarity && item.rarity <= maxRarity) )
                     artifactJArr.Add(item.toGOODArtifact());

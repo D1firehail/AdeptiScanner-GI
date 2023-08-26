@@ -83,7 +83,7 @@
     <Compile Include="GameVisibilityHandler.cs" />
     <Compile Include="ImageProcessing.cs" />
     <Compile Include="Database.cs" />
-    <Compile Include="InventoryItem.cs" />
+    <Compile Include="Artifact.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>

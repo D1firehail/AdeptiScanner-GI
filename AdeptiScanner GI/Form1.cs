@@ -37,14 +37,14 @@ namespace AdeptiScanner_GI
 
         internal bool autoRunning = false;
         private bool autoCaptureDone = false;
-        internal List<InventoryItem> scannedItems = new List<InventoryItem>();
+        internal List<Artifact> scannedArtifacts = new List<Artifact>();
         private bool cancelOCRThreads = false;
         private const int ThreadCount = 6; //--------------------------------------------------------
         private bool[] threadRunning = new bool[ThreadCount];
         private ConcurrentQueue<Bitmap>[] threadQueues = new ConcurrentQueue<Bitmap>[ThreadCount];
         private ConcurrentQueue<Bitmap> badResults = new ConcurrentQueue<Bitmap>();
         private TesseractEngine[] threadEngines = new TesseractEngine[ThreadCount];
-        private List<InventoryItem>[] threadResults = new List<InventoryItem>[ThreadCount];
+        private List<Artifact>[] threadResults = new List<Artifact>[ThreadCount];
         private bool rememberSettings = true;
 
         internal int minLevel = 0;
@@ -123,7 +123,7 @@ namespace AdeptiScanner_GI
                 {
                     DefaultPageSegMode = PageSegMode.SingleLine
                 };
-                threadResults[i] = new List<InventoryItem>();
+                threadResults[i] = new List<Artifact>();
             }
 
             //simple junk defaults
@@ -250,10 +250,13 @@ namespace AdeptiScanner_GI
             artifactDetails1.ResetText();
         }
 
-        private void displayInventoryItem(InventoryItem item)
+        private void displayInventoryItem(object item)
         {
             text_full.Text = item.ToString();
-            artifactDetails1.DisplayArtifact(item);
+            if (item is Artifact arti)
+            {
+                artifactDetails1.DisplayArtifact(arti);
+            }
         }
 
         //https://stackoverflow.com/questions/11660184/c-sharp-check-if-run-as-administrator
@@ -280,7 +283,7 @@ namespace AdeptiScanner_GI
                         Bitmap filtered = new Bitmap(img);
                         filtered = ImageProcessing.getArtifactImg(filtered, area, out int[] rows, saveImages, out bool locked, out int rarity, out Rectangle typeMainArea, out Rectangle levelArea, out Rectangle subArea, out Rectangle setArea, out Rectangle charArea);
 
-                        InventoryItem item = ImageProcessing.getArtifacts(filtered, rows, saveImages, threadEngines[threadIndex], locked, rarity, typeMainArea, levelArea, subArea, setArea, charArea);
+                        Artifact item = ImageProcessing.getArtifacts(filtered, rows, saveImages, threadEngines[threadIndex], locked, rarity, typeMainArea, levelArea, subArea, setArea, charArea);
 
                         if (Database.artifactInvalid(rarity, item))
                         {
@@ -316,7 +319,7 @@ namespace AdeptiScanner_GI
             for (int i = 0; i < ThreadCount; i++)
             {
                 threadQueues[i] = new ConcurrentQueue<Bitmap>();
-                threadResults[i] = new List<InventoryItem>();
+                threadResults[i] = new List<Artifact>();
                 runOCRThread(i);
             }
 
@@ -535,15 +538,15 @@ namespace AdeptiScanner_GI
                         }
                         System.Threading.Thread.Sleep(1000);
                     }
-                    foreach (InventoryItem item in threadResults[i])
+                    foreach (Artifact item in threadResults[i])
                     {
-                        scannedItems.Add(item);
+                        scannedArtifacts.Add(item);
                     }
                 }
 
 
                 AppendStatusText("Auto finished" + Environment.NewLine
-                    + " Good results: " + scannedItems.Count + ", Bad results: " + badResults.Count + Environment.NewLine
+                    + " Good results: " + scannedArtifacts.Count + ", Bad results: " + badResults.Count + Environment.NewLine
                     + "Time elapsed: " + runtime.ElapsedMilliseconds + "ms" + Environment.NewLine + Environment.NewLine, false);
 
                 while (badResults.TryDequeue(out Bitmap img))
@@ -553,7 +556,7 @@ namespace AdeptiScanner_GI
                     string timestamp = DateTime.UtcNow.ToString("yyyy-MM-dd HH-mm-ssff");
                     filtered.Save(Database.appDir + @"\images\GenshinArtifactImg " + timestamp + ".png");
                     filtered = ImageProcessing.getArtifactImg(filtered, area, out int[] rows, true, out bool locked, out int rarity, out Rectangle typeMainArea, out Rectangle levelArea, out Rectangle subArea, out Rectangle setArea, out Rectangle charArea);
-                    InventoryItem item = ImageProcessing.getArtifacts(filtered, rows, true, tessEngine, locked, rarity, typeMainArea, levelArea, subArea, setArea, charArea);
+                    Artifact item = ImageProcessing.getArtifacts(filtered, rows, true, tessEngine, locked, rarity, typeMainArea, levelArea, subArea, setArea, charArea);
                     AppendStatusText(item.ToString() + Environment.NewLine, false);
                 }
 
@@ -745,7 +748,7 @@ namespace AdeptiScanner_GI
 
 
             img_Filtered = new Bitmap(img_Raw);
-            InventoryItem artifact;
+            Artifact artifact;
 
             Rectangle readArea = relativeArtifactArea;
             if (GameVisibilityHandler.enabled)
@@ -777,10 +780,10 @@ namespace AdeptiScanner_GI
                 }
                 else
                 {
-                    scannedItems.Add(artifact);
+                    scannedArtifacts.Add(artifact);
                     displayInventoryItem(artifact);
                 }
-                text_full.AppendText(Environment.NewLine + "Total stored artifacts:" + scannedItems.Count + Environment.NewLine);
+                text_full.AppendText(Environment.NewLine + "Total stored artifacts:" + scannedArtifacts.Count + Environment.NewLine);
 
                 image_preview.Image = new Bitmap(img_Filtered);
             }
@@ -851,7 +854,7 @@ namespace AdeptiScanner_GI
                 return;
             }
             string timestamp = DateTime.UtcNow.ToString("yyyy-MM-dd HH-mm-ssff");
-            JObject currData = InventoryItem.listToGOODArtifacts(scannedItems, minLevel, maxLevel, minRarity, maxRarity, exportAllEquipped);
+            JObject currData = Artifact.listToGOODArtifacts(scannedArtifacts, minLevel, maxLevel, minRarity, maxRarity, exportAllEquipped);
             if (useTemplate && !File.Exists(Database.appDir + @"\ExportTemplate.json"))
             {
                 MessageBox.Show("No export template found, exporting without one" + Environment.NewLine + "To use an export template, place valid GOOD-format json in ScannerFiles and rename to \"ExportTemplate.json\"", 
@@ -1228,21 +1231,21 @@ namespace AdeptiScanner_GI
                     {
                         try
                         {
-                            int startArtiAmount = scannedItems.Count();
+                            int startArtiAmount = scannedArtifacts.Count();
                             JObject GOODjson = JsonConvert.DeserializeObject<JObject>(File.ReadAllText(file));
                             if (GOODjson.ContainsKey("artifacts"))
                             {
                                 JArray artifacts = GOODjson["artifacts"].ToObject<JArray>();
                                 foreach (JObject artifact in artifacts)
                                 {
-                                    InventoryItem importedArtifact = InventoryItem.fromGOODArtifact(artifact);
+                                    Artifact importedArtifact = Artifact.fromGOODArtifact(artifact);
                                     if (importedArtifact != null)
                                     {
-                                        scannedItems.Add(importedArtifact);
+                                        scannedArtifacts.Add(importedArtifact);
                                     }
                                 }
                             }
-                            int endArtiAmount = scannedItems.Count();
+                            int endArtiAmount = scannedArtifacts.Count();
                             text_full.AppendText("Imported " + (endArtiAmount - startArtiAmount) + " aritfacts (new total " + endArtiAmount + ") from file: " + file + Environment.NewLine);
                             break;
                         }

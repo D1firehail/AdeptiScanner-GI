@@ -353,7 +353,7 @@ namespace AdeptiScanner_GI
             }
         }
 
-        public static bool artifactInvalid(int rarity, InventoryItem item)
+        public static bool artifactInvalid(int rarity, Artifact item)
         {
             return rarity < 0 || rarity > 5 || item.piece == null || item.main == null || item.level == null || item.subs == null || item.set == null
                 || (rarity == 1 && (item.level.Item2 > 4 || item.subs.Count > 1)) 

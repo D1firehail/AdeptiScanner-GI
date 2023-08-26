@@ -890,7 +890,7 @@ namespace AdeptiScanner_GI
         /// </summary>
         /// <param name="img">Image of artifact area, filtered</param>
         /// <param name="rows">Filter results per row</param>
-        public static InventoryItem getArtifacts(Bitmap img, int[] rows, bool saveImages, TesseractEngine tessEngine, bool locked, int rarity, Rectangle typeMainArea, Rectangle levelArea, Rectangle subArea, Rectangle setArea, Rectangle charArea)
+        public static Artifact getArtifacts(Bitmap img, int[] rows, bool saveImages, TesseractEngine tessEngine, bool locked, int rarity, Rectangle typeMainArea, Rectangle levelArea, Rectangle subArea, Rectangle setArea, Rectangle charArea)
         {
             //get all potential text rows
             List<Tuple<int, int>> textRows = new List<Tuple<int, int>>();
@@ -911,7 +911,7 @@ namespace AdeptiScanner_GI
             textRows.RemoveAt(0);
 
 
-            InventoryItem foundArtifact = new InventoryItem();
+            Artifact foundArtifact = new Artifact();
             foundArtifact.locked = locked;
             foundArtifact.rarity = rarity;
             i = 0;

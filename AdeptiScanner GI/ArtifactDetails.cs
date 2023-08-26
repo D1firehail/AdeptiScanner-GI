@@ -31,7 +31,7 @@ namespace AdeptiScanner_GI
             text_character.Text = "";
         }
 
-        public void DisplayArtifact(InventoryItem item)
+        public void DisplayArtifact(Artifact item)
         {
             
             if (item.level != null)
