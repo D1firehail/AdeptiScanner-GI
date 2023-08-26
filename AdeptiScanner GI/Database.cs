@@ -23,6 +23,11 @@ namespace AdeptiScanner_GI
         public static List<string> Levels = new List<string>();
         public static List<Tuple<string, int>> Levels_trans = new List<Tuple<string, int>>();
         public static Database[] rarityData = new Database[5];
+        public static List<string> WeaponNames = new List<string>();
+        public static List<Tuple<string, int>> WeaponNames_trans = new List<Tuple<string, int>>();
+        public static Dictionary<string, List<string>> WeaponLevels = new Dictionary<string, List<string>>();
+        public static Dictionary<string, List<Tuple<string, int, int>>> WeaponLevels_trans = new Dictionary<string, List<Tuple<string, int, int>>>();
+
 
         public List<string> MainStats = new List<string>();
         public List<Tuple<string, string, double, int>> MainStats_trans = new List<Tuple<string, string, double, int>>();
@@ -257,6 +262,32 @@ namespace AdeptiScanner_GI
             }
         }
 
+        static void readWeapons(JArray weapons)
+        {
+            foreach (JObject weapon in weapons)
+            {
+                string name = weapon["key"].ToObject<string>();
+                int rarity = weapon["rarity"].ToObject<int>();
+                WeaponNames.Add(name);
+                WeaponNames_trans.Add(Tuple.Create(name, rarity));
+
+                List<JObject> stats = weapon["stats"].ToObject<List<JObject>>();
+                List<string> levels = new List<string>();
+                List<Tuple<string, int, int>> levels_trans = new List<Tuple<string, int, int>>();
+
+                foreach (var statPoint in stats)
+                {
+                    string baseAtk = statPoint["baseAtk"].ToObject<string>();
+                    int level = statPoint["level"].ToObject<int>();
+                    int ascension = statPoint["ascension"].ToObject<int>();
+                    levels.Add(baseAtk);
+                    levels_trans.Add(Tuple.Create(baseAtk, level, ascension));
+                }
+                WeaponLevels[name] = levels;
+                WeaponLevels_trans[name] = levels_trans;
+            }
+        }
+
         /// <summary>
         /// Generate all possible text to look for and assign to filter word lists
         /// </summary>
@@ -326,6 +357,11 @@ namespace AdeptiScanner_GI
                     readPieces(entry_arr);
                 }
 
+                if (entry.Key == "Weapons")
+                {
+                    readWeapons(entry_arr);
+                }
+
             }
 
             //Level filter
@@ -366,8 +402,8 @@ namespace AdeptiScanner_GI
         public static bool weaponInvalid(Weapon item)
         {
             return item.level == null || item.name == null || item.level.Item2 > 90 
-                || (item.name.Item3 < 3 && item.level.Item2 > 70) 
-                || (item.name.Item3 >= 3 && item.refinement == null);
+                || (item.name.Item2 < 3 && item.level.Item2 > 70) 
+                || (item.name.Item2 >= 3 && item.refinement == null);
         }
     }
 

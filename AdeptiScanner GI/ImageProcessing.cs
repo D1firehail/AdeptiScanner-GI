@@ -1041,6 +1041,36 @@ namespace AdeptiScanner_GI
             i = 0;
 
             //Name
+            while (i < textRows.Count && textRows[i].Item2 <= nameArea.Top)
+                i++;
+            for (; i < textRows.Count && textRows[i].Item2 > nameArea.Top; i++)
+            {
+                string result = OCRRow(img, textRows[i].Item1, textRows[i].Item2, Database.WeaponNames, out int resultIndex, out int dist, out string rawText, "", saveImages, tessEngine);
+                if (dist < 3)
+                {
+                    foundWeapon.name = Database.WeaponNames_trans[resultIndex];
+                    i++;
+                    break;
+                }
+            }
+
+            if (foundWeapon.name != null)
+            {
+                string name = foundWeapon.name.Item1;
+                //Level (base attack)
+                while (i < textRows.Count && textRows[i].Item2 <= statArea.Top)
+                    i++;
+                for (; i < textRows.Count && textRows[i].Item2 > statArea.Top; i++)
+                {
+                    string result = OCRRow(img, textRows[i].Item1, textRows[i].Item2, Database.WeaponLevels[name], out int resultIndex, out int dist, out string rawText, "", saveImages, tessEngine);
+                    if (dist == 0)
+                    {
+                        foundWeapon.level = Database.WeaponLevels_trans[name][resultIndex];
+                        i++;
+                        break;
+                    }
+                }
+            }
 
             //Based on name, level and ascension
 
