@@ -38,6 +38,7 @@ namespace AdeptiScanner_GI
         internal bool autoRunning = false;
         private bool autoCaptureDone = false;
         internal List<Artifact> scannedArtifacts = new List<Artifact>();
+        internal List<Weapon> scannedWeapons = new List<Weapon>();
         private bool cancelOCRThreads = false;
         private const int ThreadCount = 6; //--------------------------------------------------------
         private bool[] threadRunning = new bool[ThreadCount];
@@ -774,10 +775,10 @@ namespace AdeptiScanner_GI
                 } 
                 else
                 {
-                    //TODO add to list of scanned weapons
+                    scannedWeapons.Add(weapon);
                     displayInventoryItem(weapon);
                 }
-                //TODO display total stored weapons
+                text_full.AppendText(Environment.NewLine + "Total stored weapons:" + scannedWeapons.Count + Environment.NewLine);
 
                 image_preview.Image = new Bitmap(img_Filtered);
             } 
@@ -868,6 +869,8 @@ namespace AdeptiScanner_GI
             }
             string timestamp = DateTime.UtcNow.ToString("yyyy-MM-dd HH-mm-ssff");
             JObject currData = Artifact.listToGOODArtifacts(scannedArtifacts, minLevel, maxLevel, minRarity, maxRarity, exportAllEquipped);
+            JObject wepData = Weapon.listToGOODWeapons(scannedWeapons);
+            currData.Add("weapons", wepData["weapons"]);
             if (useTemplate && !File.Exists(Database.appDir + @"\ExportTemplate.json"))
             {
                 MessageBox.Show("No export template found, exporting without one" + Environment.NewLine + "To use an export template, place valid GOOD-format json in ScannerFiles and rename to \"ExportTemplate.json\"", 

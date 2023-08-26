@@ -77,12 +77,13 @@ namespace AdeptiScanner_GI
                     return;
                 }
 
-                DialogResult dialogResult = MessageBox.Show("This will clear " + ScannerForm.INSTANCE.scannedArtifacts.Count + " artifacts from the results." + Environment.NewLine + "Are you sure?", "Clear Results", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                DialogResult dialogResult = MessageBox.Show("This will clear " + ScannerForm.INSTANCE.scannedArtifacts.Count + " artifacts and "  + ScannerForm.INSTANCE.scannedWeapons.Count + " weapons from the results." + Environment.NewLine + "Are you sure?", "Clear Results", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
                 if (dialogResult == DialogResult.Yes)
                 {
-                    ScannerForm.INSTANCE.AppendStatusText("Cleared " + ScannerForm.INSTANCE.scannedArtifacts.Count + " items from results" + Environment.NewLine, false);
+                    ScannerForm.INSTANCE.AppendStatusText("Cleared " + ScannerForm.INSTANCE.scannedArtifacts.Count + " artifacts and " + ScannerForm.INSTANCE.scannedWeapons.Count + " from results" + Environment.NewLine, false);
                     ScannerForm.INSTANCE.scannedArtifacts.Clear();
+                    ScannerForm.INSTANCE.scannedWeapons.Clear();
                 }
             }
         }
