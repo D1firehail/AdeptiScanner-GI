@@ -19,6 +19,22 @@ AdeptiScanner requires some tools produced by Microsoft to work, they're commonl
   - Scanner updates will open the download page for the new version, and export your settings so the new version can import them next time you run it
 - You can manually update game data by replacing the `ArtifactInfo.json` file inside `ScannerFiles`with an updated one. Latest version can be found [here](https://raw.githubusercontent.com/D1firehail/AdeptiScanner-GI/master/AdeptiScanner%20GI/ScannerFiles/ArtifactInfo.json)
 
+## Weapon Mode
+- Weapon mode is used the same way as regular (Artifact) mode
+- Sorting your weapon list by level is recommended, to avoid missing low-rarity weapons you actually care about
+- When using Auto functionality in weapon mode, the scan will stop when ***all*** weapons on a page are identical to an already scanned one, as opposed to when ***one*** is for artifact mode
+
+## Character import via enka.network
+1. (optional) Scan your artifacts and/or weapons
+   - This lets AdeptiScanner show which characters you own but haven't imported yet
+2. Make sure your profile showcase is set to show character details
+   - If you changed this setting, exit to title screen and then go back in to quickly refresh your showcase data
+3. Open the `Characters` tab in AdeptiScanner, enter your UID and click Fetch
+4. Change your showcased characters and repeat from step 3.
+   - If you followed step 1, the text box below the Fetch button should show a list of characters you've yet to import but own according to your artifact/weapon scan results
+   - You can exit to title screen and then go back in to quickly refresh your showcase data
+
+
 ## How to prepare for scanning
 1. Setting the game to windowed mode with a resolution of 1600x900 is recommended, but not required
    - Other aspect ratios and resolutions are likely to work, but not tested to the same degree
@@ -81,6 +97,7 @@ You're now ready for manual or automatic artifact scanning
 - I'm also in the [Genshin Optimizer Discord](https://discord.com/invite/CXUbQXyfUs). Feel free to @ me for smaller issues, but for longer things it's better to stick to the Genshin Dev discord or DMing me
 
 ## Acknowledgements
+- Character importing relies on the API [Enka.Network](https://enka.network/)
 - Some functions used are heavily based on code from [WFInfo](https://github.com/WFCD/WFinfo), an OCR-based companion program for Warframe
 - The tesseract model used was trained and provided by the creator of [this similar program](https://github.com/Andrewthe13th/Genshin_Scanner)
 - The main purpose of this scanner is to more easily import your artifacts into [Genshin Optimizer](https://frzyc.github.io/genshin-optimizer/), but it should be compatible with any other program that uses the GOOD format
