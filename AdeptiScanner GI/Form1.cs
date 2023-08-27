@@ -11,7 +11,6 @@ using System.Linq;
 using System.Net;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Input;
@@ -1361,6 +1360,27 @@ namespace AdeptiScanner_GI
             this.updateVersion = updateVersion;
             checkBox_updateData.Checked = updateData;
             checkBox_updateVersion.Checked = updateVersion;
+        }
+
+        public void UpdateCharacterList(List<Character> characterList)
+        {
+            if (InvokeRequired)
+            {
+                this.Invoke(new Action<List<Character>>(UpdateCharacterList), new object[] { characterList });
+                return;
+            }
+
+            int beforeCount = scannedCharacters.Count;
+            foreach (Character character in characterList)
+            {
+                //remove any old copy of the character, then add new one
+                scannedCharacters = scannedCharacters.Where(c => !character.key.Equals(c.key)).ToList();
+                scannedCharacters.Add(character);
+            }
+
+            int diff = scannedCharacters.Count - beforeCount;
+
+            AppendStatusText("New character info: " + diff + " added, " + (characterList.Count - diff) + " updated, " + scannedCharacters.Count + " total" + Environment.NewLine, false);
         }
 
         private void searchForUpdates(bool isManual)

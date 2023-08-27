@@ -1,17 +1,12 @@
 ﻿using Newtonsoft.Json.Linq;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Sockets;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
 
 namespace AdeptiScanner_GI
 {
     public class Character
     {
-        string key;
+        public string key;
         int level;
         int constellation;
         int ascension;
@@ -28,7 +23,7 @@ namespace AdeptiScanner_GI
                 character.key = charKey;
             } else
             {
-                character.key = "UNKNOWN";
+                character.key = "UNKNOWN_" + avatarId;
             }
 
             JObject propMap = enkaData["propMap"].ToObject<JObject>();
