@@ -22,5 +22,39 @@ namespace AdeptiScanner_GI
             string uid = string.Copy(text_UID.Text);
             EnkaApi.RequestUid(uid);
         }
+
+        public void UpdateMissingChars(List<Artifact> artifacts, List<Weapon> weapons, List<Character> characters) 
+        {
+            List<Tuple<string, string>> names = new List<Tuple<string, string>>();
+            foreach (Artifact arti in artifacts)
+            {
+                if (arti.character != null && !names.Any(name => name.Item2.Equals(arti.character.Item2)))
+                {
+                    //if name is non-null and not already added, add it!
+                    names.Add(arti.character);
+                }
+            }
+
+            foreach (Weapon wep in weapons) 
+            { 
+
+                if (wep.character != null && !names.Any(name => name.Item2.Equals(wep.character.Item2)))
+                {
+                    //if name is non-null and not already added, add it!
+                    names.Add(wep.character);
+                }
+            }
+
+            //filter out names that are already fetched
+            List<Tuple<string, string>> unfetchedNames = names.Where(name => !characters.Any(c => c.key.Equals(name.Item2))).ToList();
+
+            string missingChars = string.Empty;
+            foreach (Tuple<string, string> name in unfetchedNames)
+            {
+                missingChars += name.Item1.Replace("Equipped: ", "") + Environment.NewLine;
+            }
+
+            text_remainingCharacters.Text = missingChars;
+        }
     }
 }

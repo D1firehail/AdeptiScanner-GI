@@ -66,11 +66,11 @@ namespace AdeptiScanner_GI
             this.text_ScrollSleepWait = new System.Windows.Forms.TextBox();
             this.text_clickSleepWait = new System.Windows.Forms.TextBox();
             this.button_loadArtifacts = new System.Windows.Forms.Button();
+            this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.enkaTab = new AdeptiScanner_GI.EnkaTab();
             this.label_wanderer = new System.Windows.Forms.Label();
             this.text_wanderer = new System.Windows.Forms.TextBox();
             this.checkbox_weaponMode = new System.Windows.Forms.CheckBox();
-            this.tabPage4 = new System.Windows.Forms.TabPage();
-            this.enkaTab = new AdeptiScanner_GI.EnkaTab();
             ((System.ComponentModel.ISupportInitialize)(this.image_preview)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -119,19 +119,19 @@ namespace AdeptiScanner_GI
             // 
             this.text_full.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.text_full.Location = new System.Drawing.Point(493, 295);
+            this.text_full.Location = new System.Drawing.Point(455, 295);
             this.text_full.Multiline = true;
             this.text_full.Name = "text_full";
             this.text_full.ReadOnly = true;
             this.text_full.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.text_full.Size = new System.Drawing.Size(279, 313);
+            this.text_full.Size = new System.Drawing.Size(317, 313);
             this.text_full.TabIndex = 20;
             // 
             // label_full
             // 
             this.label_full.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label_full.AutoSize = true;
-            this.label_full.Location = new System.Drawing.Point(465, 298);
+            this.label_full.Location = new System.Drawing.Point(426, 298);
             this.label_full.Name = "label_full";
             this.label_full.Size = new System.Drawing.Size(23, 13);
             this.label_full.TabIndex = 20;
@@ -143,7 +143,7 @@ namespace AdeptiScanner_GI
             this.checkbox_OCRcapture.AutoSize = true;
             this.checkbox_OCRcapture.Checked = true;
             this.checkbox_OCRcapture.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkbox_OCRcapture.Location = new System.Drawing.Point(492, 614);
+            this.checkbox_OCRcapture.Location = new System.Drawing.Point(455, 614);
             this.checkbox_OCRcapture.Name = "checkbox_OCRcapture";
             this.checkbox_OCRcapture.Size = new System.Drawing.Size(102, 17);
             this.checkbox_OCRcapture.TabIndex = 21;
@@ -155,7 +155,7 @@ namespace AdeptiScanner_GI
             // 
             this.checkbox_saveImages.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.checkbox_saveImages.AutoSize = true;
-            this.checkbox_saveImages.Location = new System.Drawing.Point(592, 614);
+            this.checkbox_saveImages.Location = new System.Drawing.Point(563, 614);
             this.checkbox_saveImages.Name = "checkbox_saveImages";
             this.checkbox_saveImages.Size = new System.Drawing.Size(87, 17);
             this.checkbox_saveImages.TabIndex = 22;
@@ -226,7 +226,7 @@ namespace AdeptiScanner_GI
             // 
             this.label_traveler.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.label_traveler.AutoSize = true;
-            this.label_traveler.Location = new System.Drawing.Point(490, 666);
+            this.label_traveler.Location = new System.Drawing.Point(452, 666);
             this.label_traveler.Name = "label_traveler";
             this.label_traveler.Size = new System.Drawing.Size(80, 13);
             this.label_traveler.TabIndex = 38;
@@ -235,9 +235,9 @@ namespace AdeptiScanner_GI
             // text_traveler
             // 
             this.text_traveler.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.text_traveler.Location = new System.Drawing.Point(584, 663);
+            this.text_traveler.Location = new System.Drawing.Point(546, 663);
             this.text_traveler.Name = "text_traveler";
-            this.text_traveler.Size = new System.Drawing.Size(190, 20);
+            this.text_traveler.Size = new System.Drawing.Size(228, 20);
             this.text_traveler.TabIndex = 24;
             this.text_traveler.TextChanged += new System.EventHandler(this.text_traveler_TextChanged);
             // 
@@ -476,37 +476,6 @@ namespace AdeptiScanner_GI
             this.button_loadArtifacts.UseVisualStyleBackColor = true;
             this.button_loadArtifacts.Click += new System.EventHandler(this.button_loadArtifacts_Click);
             // 
-            // label_wanderer
-            // 
-            this.label_wanderer.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.label_wanderer.AutoSize = true;
-            this.label_wanderer.Location = new System.Drawing.Point(490, 640);
-            this.label_wanderer.Name = "label_wanderer";
-            this.label_wanderer.Size = new System.Drawing.Size(88, 13);
-            this.label_wanderer.TabIndex = 47;
-            this.label_wanderer.Text = "Wanderer Name:";
-            // 
-            // text_wanderer
-            // 
-            this.text_wanderer.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.text_wanderer.Location = new System.Drawing.Point(584, 637);
-            this.text_wanderer.Name = "text_wanderer";
-            this.text_wanderer.Size = new System.Drawing.Size(190, 20);
-            this.text_wanderer.TabIndex = 23;
-            this.text_wanderer.TextChanged += new System.EventHandler(this.text_wanderer_TextChanged);
-            // 
-            // checkbox_weaponMode
-            // 
-            this.checkbox_weaponMode.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.checkbox_weaponMode.AutoSize = true;
-            this.checkbox_weaponMode.Location = new System.Drawing.Point(676, 614);
-            this.checkbox_weaponMode.Name = "checkbox_weaponMode";
-            this.checkbox_weaponMode.Size = new System.Drawing.Size(96, 17);
-            this.checkbox_weaponMode.TabIndex = 48;
-            this.checkbox_weaponMode.Text = "Weapon mode";
-            this.checkbox_weaponMode.UseVisualStyleBackColor = true;
-            this.checkbox_weaponMode.CheckedChanged += new System.EventHandler(this.checkbox_weaponMode_CheckedChanged);
-            // 
             // tabPage4
             // 
             this.tabPage4.Controls.Add(this.enkaTab);
@@ -524,6 +493,38 @@ namespace AdeptiScanner_GI
             this.enkaTab.Name = "enkaTab";
             this.enkaTab.Size = new System.Drawing.Size(349, 228);
             this.enkaTab.TabIndex = 0;
+            // 
+            // label_wanderer
+            // 
+            this.label_wanderer.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.label_wanderer.AutoSize = true;
+            this.label_wanderer.Location = new System.Drawing.Point(452, 640);
+            this.label_wanderer.Name = "label_wanderer";
+            this.label_wanderer.Size = new System.Drawing.Size(88, 13);
+            this.label_wanderer.TabIndex = 47;
+            this.label_wanderer.Text = "Wanderer Name:";
+            // 
+            // text_wanderer
+            // 
+            this.text_wanderer.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.text_wanderer.Location = new System.Drawing.Point(546, 637);
+            this.text_wanderer.Name = "text_wanderer";
+            this.text_wanderer.Size = new System.Drawing.Size(228, 20);
+            this.text_wanderer.TabIndex = 23;
+            this.text_wanderer.TextChanged += new System.EventHandler(this.text_wanderer_TextChanged);
+            // 
+            // checkbox_weaponMode
+            // 
+            this.checkbox_weaponMode.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.checkbox_weaponMode.AutoSize = true;
+            this.checkbox_weaponMode.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.checkbox_weaponMode.Location = new System.Drawing.Point(665, 614);
+            this.checkbox_weaponMode.Name = "checkbox_weaponMode";
+            this.checkbox_weaponMode.Size = new System.Drawing.Size(107, 17);
+            this.checkbox_weaponMode.TabIndex = 48;
+            this.checkbox_weaponMode.Text = "Weapon mode";
+            this.checkbox_weaponMode.UseVisualStyleBackColor = true;
+            this.checkbox_weaponMode.CheckedChanged += new System.EventHandler(this.checkbox_weaponMode_CheckedChanged);
             // 
             // ScannerForm
             // 

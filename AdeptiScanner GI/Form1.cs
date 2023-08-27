@@ -1385,6 +1385,8 @@ namespace AdeptiScanner_GI
 
             int diff = scannedCharacters.Count - beforeCount;
 
+            enkaTab.UpdateMissingChars(scannedArtifacts, scannedWeapons, scannedCharacters);
+
             AppendStatusText("New character info: " + diff + " added, " + (characterList.Count - diff) + " updated, " + scannedCharacters.Count + " total" + Environment.NewLine, false);
         }
 
