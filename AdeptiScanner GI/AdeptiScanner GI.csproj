@@ -64,6 +64,12 @@
   <ItemGroup>
     <Compile Include="Character.cs" />
     <Compile Include="EnkaApi.cs" />
+    <Compile Include="EnkaTab.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="EnkaTab.Designer.cs">
+      <DependentUpon>EnkaTab.cs</DependentUpon>
+    </Compile>
     <Compile Include="Weapon.cs" />
     <Compile Include="ArtifactDetails.cs">
       <SubType>UserControl</SubType>
@@ -104,6 +110,9 @@
     </Compile>
     <EmbeddedResource Include="ArtifactDetails.resx">
       <DependentUpon>ArtifactDetails.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EnkaTab.resx">
+      <DependentUpon>EnkaTab.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ExportSettings.resx">
       <DependentUpon>ExportSettings.cs</DependentUpon>

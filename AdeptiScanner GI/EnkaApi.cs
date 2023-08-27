@@ -51,7 +51,7 @@ namespace AdeptiScanner_GI
             ans.Wait();
 
             HttpResponseMessage result = ans.Result;
-            int waitTime = 60;
+            int waitTime = 5;
 
             if (result.IsSuccessStatusCode)
             {
@@ -70,7 +70,8 @@ namespace AdeptiScanner_GI
             }
             else
             {
-                ScannerForm.INSTANCE.AppendStatusText("Enka request FAILED with status code: " + result.StatusCode + Environment.NewLine, false);
+                ScannerForm.INSTANCE.AppendStatusText("Enka request FAILED with status code: " + result.StatusCode + Environment.NewLine 
+                    + "Make sure the UID you entered is valid, and verify Enka is up by trying in your browser" + Environment.NewLine, false);
             }
 
             lock (EnkaRequestLock)
@@ -103,6 +104,7 @@ namespace AdeptiScanner_GI
                 UseCookies = false
             };
             client = new HttpClient(handler);
+            client.Timeout = TimeSpan.FromSeconds(10);
             client.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("AdeptiScanner", Database.programVersion));
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }

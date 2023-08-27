@@ -69,11 +69,14 @@ namespace AdeptiScanner_GI
             this.label_wanderer = new System.Windows.Forms.Label();
             this.text_wanderer = new System.Windows.Forms.TextBox();
             this.checkbox_weaponMode = new System.Windows.Forms.CheckBox();
+            this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.enkaTab = new AdeptiScanner_GI.EnkaTab();
             ((System.ComponentModel.ISupportInitialize)(this.image_preview)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.tabPage3.SuspendLayout();
+            this.tabPage4.SuspendLayout();
             this.SuspendLayout();
             // 
             // image_preview
@@ -276,6 +279,7 @@ namespace AdeptiScanner_GI
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Controls.Add(this.tabPage3);
+            this.tabControl1.Controls.Add(this.tabPage4);
             this.tabControl1.Location = new System.Drawing.Point(425, 12);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
@@ -503,6 +507,24 @@ namespace AdeptiScanner_GI
             this.checkbox_weaponMode.UseVisualStyleBackColor = true;
             this.checkbox_weaponMode.CheckedChanged += new System.EventHandler(this.checkbox_weaponMode_CheckedChanged);
             // 
+            // tabPage4
+            // 
+            this.tabPage4.Controls.Add(this.enkaTab);
+            this.tabPage4.Location = new System.Drawing.Point(4, 22);
+            this.tabPage4.Name = "tabPage4";
+            this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage4.Size = new System.Drawing.Size(352, 244);
+            this.tabPage4.TabIndex = 3;
+            this.tabPage4.Text = "Characters";
+            this.tabPage4.UseVisualStyleBackColor = true;
+            // 
+            // enkaTab
+            // 
+            this.enkaTab.Location = new System.Drawing.Point(0, 0);
+            this.enkaTab.Name = "enkaTab";
+            this.enkaTab.Size = new System.Drawing.Size(349, 228);
+            this.enkaTab.TabIndex = 0;
+            // 
             // ScannerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -539,6 +561,7 @@ namespace AdeptiScanner_GI
             this.tabPage2.ResumeLayout(false);
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
+            this.tabPage4.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -586,6 +609,8 @@ namespace AdeptiScanner_GI
         private System.Windows.Forms.TextBox text_wanderer;
         private System.Windows.Forms.CheckBox checkBox_ProcessHandleFeatures;
         private System.Windows.Forms.CheckBox checkbox_weaponMode;
+        private System.Windows.Forms.TabPage tabPage4;
+        private EnkaTab enkaTab;
     }
 }
 

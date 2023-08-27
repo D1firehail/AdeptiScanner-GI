@@ -67,6 +67,7 @@ namespace AdeptiScanner_GI
         internal string ignoredDataVersion = "";
         internal string ignoredProgramVersion = "";
         internal string lastUpdateCheck = "";
+        internal string uid = "";
 
         enum panelChoices
         {
@@ -1229,7 +1230,7 @@ namespace AdeptiScanner_GI
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            System.Diagnostics.Process.Start("https://github.com/D1firehail/AdeptiScanner-GI");
+            Process.Start("https://github.com/D1firehail/AdeptiScanner-GI");
         }
 
         private void loadSettings()
@@ -1328,6 +1329,10 @@ namespace AdeptiScanner_GI
             {
                 GameVisibilityHandler.enabled = settings["processHandleInteractions"].ToObject<bool>();
             }
+            if (settings.ContainsKey("uid"))
+            {
+                uid = settings["uid"].ToObject<string>();
+            }
         }
 
         private void finalizeLoadSettings()
@@ -1340,7 +1345,7 @@ namespace AdeptiScanner_GI
             text_ScrollSleepWait.Text = scrollSleepWait_load;
             text_ScrollTestWait.Text = scrollTestWait_load;
             text_RecheckWait.Text = recheckWait_load;
-
+            enkaTab.text_UID.Text = uid;
             if (updateData.HasValue)
                 checkBox_updateData.Checked = updateData.Value;
             if (updateVersion.HasValue)
@@ -1545,6 +1550,7 @@ namespace AdeptiScanner_GI
             settings["ignoredProgramVersion"] = ignoredProgramVersion;
             settings["lastUpdateCheck"] = lastUpdateCheck;
             settings["processHandleInteractions"] = GameVisibilityHandler.enabled;
+            settings["uid"] = enkaTab.text_UID.Text;
 
 
             string fileName = Database.appDir + @"\settings.json";
