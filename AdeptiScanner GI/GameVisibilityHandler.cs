@@ -67,6 +67,21 @@ namespace AdeptiScanner_GI
             return ans;
         }
 
+        public static bool? IsGameFocused()
+        {
+            if (game == IntPtr.Zero ||!enabled)
+            {
+                return null;
+            }
+
+            IntPtr foreground = GetForegroundWindow();
+            if (foreground != IntPtr.Zero && foreground == game)
+            {
+                return true;
+            }
+            return false;
+        }
+
         public static void bringScannerToFront()
         {
             if (ScannerForm.INSTANCE.InvokeRequired)
@@ -77,8 +92,11 @@ namespace AdeptiScanner_GI
             SetForegroundWindow(ScannerForm.INSTANCE.Handle.ToInt32());
         }
 
-        [DllImport("User32.dll")]
+        [DllImport("user32.dll")]
         public static extern Int32 SetForegroundWindow(int hWnd);
+
+        [DllImport("user32.dll")]
+        public static extern IntPtr GetForegroundWindow();
 
         [DllImport("user32.dll")]
         static extern bool ShowWindow(int hWnd, int nCmdShow);

@@ -28,11 +28,13 @@ namespace AdeptiScanner_GI
         private int[] filtered_rows;
         private Rectangle savedArtifactArea = new Rectangle(0, 0, 1, 1);
         private Rectangle relativeArtifactArea = new Rectangle(0, 0, 1, 1);
-        private Rectangle savedGameArea = new Rectangle(0,0,1,1);
+        private Rectangle savedGameArea = new Rectangle(0, 0, 1, 1);
         private bool pauseAuto = true;
         private bool softCancelAuto = true;
         private bool hardCancelAuto = true;
-        private KeyHandler ghk;
+        private KeyHandler pauseHotkey; // Escape key, pause auto
+        private KeyHandler readHotkey; // P key, read stats
+        private DateTime soonestAllowedHotkeyUse = DateTime.MinValue; // Used to avoid spam activations and lockups caused by them
 
         internal bool autoRunning = false;
         private bool autoCaptureDone = false;
@@ -83,7 +85,7 @@ namespace AdeptiScanner_GI
             ScannerForm.INSTANCE = this;
             if (Directory.Exists(Database.appdataPath) && Database.appDir != Database.appdataPath)
             {
-                foreach( string filePath in Directory.EnumerateFiles(Database.appdataPath))
+                foreach (string filePath in Directory.EnumerateFiles(Database.appdataPath))
                 {
                     string fileName = filePath.Replace(Database.appdataPath, "");
                     string localFilePath = Database.appDir + fileName;
@@ -111,7 +113,7 @@ namespace AdeptiScanner_GI
             }
             catch (Exception e)
             {
-                MessageBox.Show("Error trying to access Tessdata file" + Environment.NewLine + Environment.NewLine + 
+                MessageBox.Show("Error trying to access Tessdata file" + Environment.NewLine + Environment.NewLine +
                     "Exact error:" + Environment.NewLine + e.ToString(),
                     "Scanner could not start", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Environment.Exit(-1);
@@ -138,11 +140,11 @@ namespace AdeptiScanner_GI
             }
             img_Filtered = new Bitmap(img_Raw);
             image_preview.Image = new Bitmap(img_Raw);
-            FormClosing += GenshinArtifactOCR_FormClosing;
             if (!updateData.HasValue || !updateVersion.HasValue)
             {
                 Application.Run(new FirstStart());
-            } else
+            }
+            else
             {
                 searchForUpdates(false);
             }
@@ -151,12 +153,12 @@ namespace AdeptiScanner_GI
         private void eventFormClosing(object sender, FormClosingEventArgs e)
         {
             if (rememberSettings)
+            {
                 saveSettings();
-        }
+            }
 
-        private void GenshinArtifactOCR_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            unregisterKey();
+            unregisterPauseKey();
+            unregisterReadKey();
         }
 
         private bool TryPauseAuto()
@@ -178,38 +180,84 @@ namespace AdeptiScanner_GI
             TryPauseAuto();
         }
 
-        public void registerKey()
+        public void registerPauseKey()
         {
             if (InvokeRequired)
             {
-                this.Invoke(new Action(registerKey));
+                Invoke(new Action(registerPauseKey));
                 return;
             }
-            if (ghk == null)
+            if (pauseHotkey == null)
             {
-                ghk = new KeyHandler(Keys.Escape, this);
+                pauseHotkey = new KeyHandler(Keys.Escape, this);
             }
-            ghk.Register();
+            pauseHotkey.Register();
         }
 
-        public void unregisterKey()
+        public void unregisterPauseKey()
         {
             if (InvokeRequired)
             {
-                this.Invoke(new Action(unregisterKey));
+                Invoke(new Action(unregisterPauseKey));
                 return;
             }
-            if (ghk == null)
+            if (pauseHotkey == null)
             {
                 return;
             }
-            ghk.Unregister();
+            pauseHotkey.Unregister();
+        }
+
+        public void registerReadKey()
+        {
+            if (InvokeRequired)
+            {
+                Invoke(new Action(registerReadKey));
+                return;
+            }
+            if (readHotkey == null)
+            {
+                readHotkey = new KeyHandler(Keys.P, this);
+            }
+            readHotkey.Register();
+        }
+
+        public void unregisterReadKey()
+        {
+            if (InvokeRequired)
+            {
+                Invoke(new Action(unregisterReadKey));
+                return;
+            }
+            if (readHotkey == null)
+            {
+                return;
+            }
+            readHotkey.Unregister();
         }
 
         protected override void WndProc(ref Message m)
         {
             if (m.Msg == KeyHandler.WM_HOTKEY_MSG_ID)
-                TryPauseAuto();
+            {
+                // block if last press was too recently. Exception if auto is running and not paused, to be safe
+                if ( (!pauseAuto && autoRunning) || DateTime.UtcNow > soonestAllowedHotkeyUse)
+                {
+                    if (pauseHotkey != null && pauseHotkey.GetHashCode() == m.WParam)
+                    {
+                        TryPauseAuto();
+                    }
+                    if (readHotkey != null && readHotkey.GetHashCode() == m.WParam)
+                    {
+                        if (btn_OCR.Enabled)
+                        {
+                            btn_OCR_Click(this, new HotkeyEventArgs());
+                        }
+                    }
+                }
+
+                soonestAllowedHotkeyUse = DateTime.UtcNow + TimeSpan.FromSeconds(0.2);
+            }
             base.WndProc(ref m);
         }
 
@@ -313,7 +361,7 @@ namespace AdeptiScanner_GI
                                 threadResults[threadIndex].Add(item);
                             }
                         }
-                        
+
                     }
                     else if (autoCaptureDone || softCancelAuto || hardCancelAuto)
                     {
@@ -332,10 +380,10 @@ namespace AdeptiScanner_GI
 
         private void artifactAuto(bool saveImages, int clickSleepWait = 100, int scrollSleepWait = 1500, int scrollTestWait = 100, int recheckSleepWait = 300)
         {
-            text_full.Text = "Starting auto-run. ---Press ESCAPE to pause---" + Environment.NewLine + "If no artifact switching happens, you forgot to run as admin" + Environment.NewLine;
+            text_full.Text = "Starting auto-run. ---Press ESCAPE to pause---" + Environment.NewLine;
             autoRunning = true;
             autoCaptureDone = false;
-            registerKey(); //activate pause auto hotkey
+            registerPauseKey(); //activate pause auto hotkey
             //start worker threads
             for (int i = 0; i < ThreadCount; i++)
             {
@@ -431,7 +479,7 @@ namespace AdeptiScanner_GI
                         {
                             break;
                         }
-                        int distPerScroll = (startTop - artifactLocations[0].Y ) / 2;
+                        int distPerScroll = (startTop - artifactLocations[0].Y) / 2;
                         int scrollsNeeded = 0;
                         if (distPerScroll > 0)
                         {
@@ -564,7 +612,7 @@ namespace AdeptiScanner_GI
                         if (item is Artifact arti)
                         {
                             scannedArtifacts.Add(arti);
-                        } 
+                        }
                         else if (item is Weapon wep)
                         {
                             scannedWeapons.Add(wep);
@@ -591,7 +639,7 @@ namespace AdeptiScanner_GI
                 AppendStatusText("All bad results displayed" + Environment.NewLine, false);
 
             hard_cancel_pos:
-                unregisterKey();
+                unregisterPauseKey();
                 runtime.Stop();
                 GameVisibilityHandler.bringScannerToFront();
                 AppendStatusText("Time elapsed: " + runtime.ElapsedMilliseconds + "ms" + Environment.NewLine, true);
@@ -601,10 +649,10 @@ namespace AdeptiScanner_GI
 
         private void weaponAuto(bool saveImages, int clickSleepWait = 100, int scrollSleepWait = 1500, int scrollTestWait = 100, int recheckSleepWait = 300)
         {
-            text_full.Text = "Starting auto-run. ---Press ESCAPE to pause---" + Environment.NewLine + "If no artifact switching happens, you forgot to run as admin" + Environment.NewLine;
+            text_full.Text = "Starting auto-run. ---Press ESCAPE to pause---" + Environment.NewLine;
             autoRunning = true;
             autoCaptureDone = false;
-            registerKey(); //activate pause auto hotkey
+            registerPauseKey(); //activate pause auto hotkey
             //start worker threads
             for (int i = 0; i < ThreadCount; i++)
             {
@@ -776,7 +824,7 @@ namespace AdeptiScanner_GI
                                 continue;
                             }
 
-                        } 
+                        }
                         else
                         {
                             hasNonDupes = true;
@@ -853,7 +901,7 @@ namespace AdeptiScanner_GI
                 AppendStatusText("All bad results displayed" + Environment.NewLine, false);
 
             hard_cancel_pos:
-                unregisterKey();
+                unregisterPauseKey();
                 runtime.Stop();
                 GameVisibilityHandler.bringScannerToFront();
                 AppendStatusText("Time elapsed: " + runtime.ElapsedMilliseconds + "ms" + Environment.NewLine, true);
@@ -861,8 +909,9 @@ namespace AdeptiScanner_GI
             }));
         }
 
-        enum CaptureDebugMode { 
-            Off, 
+        enum CaptureDebugMode
+        {
+            Off,
             FullScreen,
             GameWindow,
             ArtifactArea
@@ -885,11 +934,13 @@ namespace AdeptiScanner_GI
                 if (Keyboard.IsKeyDown(Key.LeftCtrl))
                 {
                     debugMode = CaptureDebugMode.GameWindow;
-                } else
+                }
+                else
                 {
                     debugMode = CaptureDebugMode.ArtifactArea;
                 }
-            } else if (Keyboard.IsKeyDown(Key.LeftCtrl)) 
+            }
+            else if (Keyboard.IsKeyDown(Key.LeftCtrl))
             {
                 debugMode = CaptureDebugMode.FullScreen;
             }
@@ -898,7 +949,8 @@ namespace AdeptiScanner_GI
             if (debugMode != CaptureDebugMode.Off)
             {
                 img_Raw = ImageProcessing.LoadScreenshot();
-            } else
+            }
+            else
             {
                 GameVisibilityHandler.captureGameProcess();
                 GameVisibilityHandler.bringGameToFront();
@@ -921,7 +973,8 @@ namespace AdeptiScanner_GI
                         //assume directGameRect is a close enough estimate, primarily in case the game is in fullscreen
                         tmpGameArea = new Rectangle(0, 0, directGameRect.Width, directGameRect.Height);
                         AppendStatusText("Window header not found, treating whole image area as game" + Environment.NewLine, false);
-                    } else
+                    }
+                    else
                     {
                         MessageBox.Show("Failed to find Game Area" + Environment.NewLine +
                             "Please make sure you're following the instructions properly."
@@ -937,7 +990,8 @@ namespace AdeptiScanner_GI
             if (debugMode == CaptureDebugMode.ArtifactArea)
             {
                 tmpArtifactArea = new Rectangle(0, 0, img_Raw.Width, img_Raw.Height);
-            } else if (tmpGameArea != null)
+            }
+            else if (tmpGameArea != null)
             {
                 try
                 {
@@ -1018,7 +1072,7 @@ namespace AdeptiScanner_GI
 
             resetTextBoxes();
 
-            bool capture = checkbox_OCRcapture.Checked;
+            bool capture = checkbox_OCRcapture.Checked || e is HotkeyEventArgs;
             if (capture)
             {
                 if (Keyboard.IsKeyDown(Key.LeftShift))
@@ -1030,9 +1084,15 @@ namespace AdeptiScanner_GI
                 }
                 else
                 {
+                    bool? alreadyFocused = GameVisibilityHandler.IsGameFocused();
                     GameVisibilityHandler.bringGameToFront();
                     img_Raw = ImageProcessing.CaptureScreenshot(saveImages, savedArtifactArea, GameVisibilityHandler.enabled);
-                    GameVisibilityHandler.bringScannerToFront();
+                    if (alreadyFocused == false)
+                    {
+                        // no need to force scanner into focus if game was already focused (possible if activation is via hotkey)
+                        // also no need if we don't know if the game was focused
+                        GameVisibilityHandler.bringScannerToFront();
+                    }
                 }
             }
 
@@ -1046,7 +1106,8 @@ namespace AdeptiScanner_GI
                 if (capture)
                 {
                     readArea = new Rectangle(0, 0, img_Filtered.Width, img_Filtered.Height);
-                } else
+                }
+                else
                 {
                     readArea = relativeArtifactArea;
                 }
@@ -1061,7 +1122,7 @@ namespace AdeptiScanner_GI
                 {
                     displayInventoryItem(weapon);
                     text_full.AppendText(Environment.NewLine + "---This weapon is invalid---" + Environment.NewLine);
-                } 
+                }
                 else
                 {
                     scannedWeapons.Add(weapon);
@@ -1070,7 +1131,7 @@ namespace AdeptiScanner_GI
                 text_full.AppendText(Environment.NewLine + "Total stored weapons:" + scannedWeapons.Count + Environment.NewLine);
 
                 image_preview.Image = new Bitmap(img_Filtered);
-            } 
+            }
             else
             {
 
@@ -1096,7 +1157,7 @@ namespace AdeptiScanner_GI
         {
             if (!IsAdministrator() && !Keyboard.IsKeyDown(Key.LeftShift))
             {
-                MessageBox.Show("Cannot automatically scroll artifacts without admin perms" + Environment.NewLine + Environment.NewLine 
+                MessageBox.Show("Cannot automatically scroll artifacts without admin perms" + Environment.NewLine + Environment.NewLine
                 + "To use auto mode, restart scanner as admin",
                 "Insufficient permissions", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
@@ -1130,7 +1191,7 @@ namespace AdeptiScanner_GI
             if (checkbox_weaponMode.Checked)
             {
                 weaponAuto(false, clickSleepWait, scrollSleepWait, scrollTestWait, recheckWait);
-            } 
+            }
             else
             {
                 artifactAuto(false, clickSleepWait, scrollSleepWait, scrollTestWait, recheckWait);
@@ -1187,13 +1248,13 @@ namespace AdeptiScanner_GI
 
             if (useTemplate && !File.Exists(Path.Join(Database.appDir, "ExportTemplate.json")))
             {
-                MessageBox.Show("No export template found, exporting without one" + Environment.NewLine + "To use an export template, place valid GOOD-format json in ScannerFiles and rename to \"ExportTemplate.json\"", 
+                MessageBox.Show("No export template found, exporting without one" + Environment.NewLine + "To use an export template, place valid GOOD-format json in ScannerFiles and rename to \"ExportTemplate.json\"",
                     "No export template found", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 useTemplate = false;
             }
             if (useTemplate)
             {
-                JObject template = JsonConvert.DeserializeObject<JObject>(File.ReadAllText( Path.Join(Database.appDir, "ExportTemplate.json")));
+                JObject template = JsonConvert.DeserializeObject<JObject>(File.ReadAllText(Path.Join(Database.appDir, "ExportTemplate.json")));
                 if (currData.ContainsKey("artifact"))
                 {
                     template.Remove("artifacts");
@@ -1242,7 +1303,8 @@ namespace AdeptiScanner_GI
             try
             {
                 settings = JsonConvert.DeserializeObject<JObject>(File.ReadAllText(fileName));
-            } catch (Exception)
+            }
+            catch (Exception)
             {
                 return;
             }
@@ -1415,7 +1477,7 @@ namespace AdeptiScanner_GI
                 try
                 {
                     var request = webclient.GetStringAsync("https://api.github.com/repos/D1firehail/AdeptiScanner-GI/releases");
-                    bool  requestCompleted = request.Wait(TimeSpan.FromMinutes(1));
+                    bool requestCompleted = request.Wait(TimeSpan.FromMinutes(1));
                     if (!requestCompleted)
                     {
                         throw new TimeoutException("Version update check did not complete within 1 minute, ignoring");
@@ -1434,11 +1496,12 @@ namespace AdeptiScanner_GI
                         programVersionBody = latest["body"].ToObject<string>();
 
                     }
-                } catch(Exception exc)
+                }
+                catch (Exception exc)
                 {
                     Debug.WriteLine(exc.ToString());
                 }
-                if (programVersionPrerelease || programVersionDraft || programVersionTitle.ToLower().Equals("v"+Database.programVersion))
+                if (programVersionPrerelease || programVersionDraft || programVersionTitle.ToLower().Equals("v" + Database.programVersion))
                 {
                     programVersionTitle = "";
                 }
@@ -1471,12 +1534,13 @@ namespace AdeptiScanner_GI
                     dataVersionString = "";
                 }
             }
-            if ( (programVersionTitle.Length > 0 && (isManual || programVersionTitle != ignoredProgramVersion)) 
+            if ((programVersionTitle.Length > 0 && (isManual || programVersionTitle != ignoredProgramVersion))
                 || (dataVersionString.Length > 0 && (isManual || dataVersionString != ignoredDataVersion)))
             {
                 UpdatePrompt tmp = new UpdatePrompt(programVersionTitle, programVersionBody, dataVersionString, dataVersionJson);
                 tmp.Show();
-            } else if (isManual)
+            }
+            else if (isManual)
             {
                 MessageBox.Show("No updates found",
                 "Update checker", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -1496,7 +1560,8 @@ namespace AdeptiScanner_GI
             try
             {
                 File.WriteAllText(Path.Join(Database.appDir, "ArtifactInfo.json"), newData);
-            } catch (Exception exc)
+            }
+            catch (Exception exc)
             {
                 MessageBox.Show("Update failed, error: " + Environment.NewLine + Environment.NewLine + exc.ToString(), "Update failed",
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -1518,7 +1583,7 @@ namespace AdeptiScanner_GI
             if (!Directory.Exists(Database.appdataPath))
                 Directory.CreateDirectory(Database.appdataPath);
 
-            string[] filesToCopy = { "settings.json", "ExportTemplate.json"};
+            string[] filesToCopy = { "settings.json", "ExportTemplate.json" };
 
             foreach (string file in filesToCopy)
             {
@@ -1691,6 +1756,23 @@ namespace AdeptiScanner_GI
         {
             btn_OCR.Enabled = false;
             button_auto.Enabled = false;
+        }
+
+        private void checkBox_readHotkey_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBox_readHotkey.Checked)
+            {
+
+                registerReadKey();
+                if (!IsAdministrator())
+                {
+                    AppendStatusText( Environment.NewLine + "Read hotkey enabled, HOWEVER while the game is focused it only works if you RUN AS ADMIN." + Environment.NewLine, false);
+                }
+            }
+            else
+            {
+                unregisterReadKey();
+            }
         }
     }
 }
