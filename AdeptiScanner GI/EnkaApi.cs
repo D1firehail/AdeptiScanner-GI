@@ -14,7 +14,12 @@ namespace AdeptiScanner_GI
         static List<Character> ProcessData(JObject enkaJson)
         {
             List<Character> characters = new List<Character>();
-            List<JObject> chars = enkaJson["avatarInfoList"].ToObject<List<JObject>>();
+            if (!enkaJson.TryGetValue("avatarInfoList", out JToken avatarInfo))
+            {
+                return null;
+            }
+
+            List<JObject> chars = avatarInfo.ToObject<List<JObject>>();
             foreach (JObject charJson in chars)
             {
                 characters.Add(Character.FromEnkaData(charJson));
@@ -65,7 +70,15 @@ namespace AdeptiScanner_GI
                 }
 
                 var chars = ProcessData(enkaJson);
-                ScannerForm.INSTANCE.UpdateCharacterList(chars);
+                if (chars != null)
+                {
+                    ScannerForm.INSTANCE.UpdateCharacterList(chars);
+                } else
+                {
+                    ScannerForm.INSTANCE.AppendStatusText(Environment.NewLine + "Enka data contained no character details." + Environment.NewLine 
+                        + "Character showcase is either empty or set to \"Hide Character Details\"." + Environment.NewLine
+                        + "Please add some characters to your showcase and read character import section of the instructions for usage." + Environment.NewLine + Environment.NewLine, false);
+                }
                 ScannerForm.INSTANCE.AppendStatusText("Enka request done, cooldown: " + waitTime + "s" + Environment.NewLine, false);
             }
             else
