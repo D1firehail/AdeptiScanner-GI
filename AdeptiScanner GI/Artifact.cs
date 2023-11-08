@@ -77,7 +77,7 @@ namespace AdeptiScanner_GI
             return text;
         }
 
-        public JObject toGOODArtifact()
+        public JObject toGOODArtifact(bool includeLocation = true)
         {
             JObject result = new JObject();
 
@@ -93,7 +93,7 @@ namespace AdeptiScanner_GI
             if (subs != null)
             {
                 JArray subsJArr = new JArray();
-                foreach(Tuple<string, string, double> sub in subs)
+                foreach (Tuple<string, string, double> sub in subs)
                 {
                     JObject subJObj = new JObject();
                     subJObj.Add("key", JToken.FromObject(sub.Item2));
@@ -102,10 +102,13 @@ namespace AdeptiScanner_GI
                 }
                 result.Add("substats", subsJArr);
             }
-            if (character != null)
-                result.Add("location", JToken.FromObject(character.Item2));
-            else
-                result.Add("location", JToken.FromObject(""));
+            if (includeLocation)
+            {
+                if (character != null)
+                    result.Add("location", JToken.FromObject(character.Item2));
+                else
+                    result.Add("location", JToken.FromObject(""));
+            }
 
             result.Add("lock", JToken.FromObject(locked));
 
@@ -218,14 +221,14 @@ namespace AdeptiScanner_GI
             return res;
         }
 
-        public static JObject listToGOODArtifacts(List<Artifact> items, int minLevel, int maxLevel, int minRarity, int maxRarity, bool exportAllEquipped)
+        public static JObject listToGOODArtifacts(List<Artifact> items, int minLevel, int maxLevel, int minRarity, int maxRarity, bool exportAllEquipped, bool exportEquipStatus)
         {
             JObject result = new JObject();
             JArray artifactJArr = new JArray();
             foreach (Artifact item in items)
             {
                 if ( (exportAllEquipped && item.character != null) || (item.level.Item2 >= minLevel && item.level.Item2 <= maxLevel && item.rarity >= minRarity && item.rarity <= maxRarity) )
-                    artifactJArr.Add(item.toGOODArtifact());
+                    artifactJArr.Add(item.toGOODArtifact(exportEquipStatus));
             }
             result.Add("artifacts", artifactJArr);
             return result;

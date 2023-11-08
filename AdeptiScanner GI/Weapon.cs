@@ -50,7 +50,7 @@ namespace AdeptiScanner_GI
             return text;
         }
 
-        public JObject toGOODWeapon()
+        public JObject toGOODWeapon(bool includeLocation = true)
         {
             JObject result = new JObject();
 
@@ -65,22 +65,25 @@ namespace AdeptiScanner_GI
                 result.Add("refinement", JToken.FromObject(refinement.Value));
             else if (name != null && name.Item2 < 3)
                 result.Add("refinement", 1);
-            if (character != null)
-                result.Add("location", JToken.FromObject(character.Item2));
-            else
-                result.Add("location", JToken.FromObject(""));
+            if (includeLocation)
+            {
+                if (character != null)
+                    result.Add("location", JToken.FromObject(character.Item2));
+                else
+                    result.Add("location", JToken.FromObject(""));
+            }
 
             result.Add("lock", JToken.FromObject(locked));
             return result;
         }
 
-        public static JObject listToGOODWeapons(List<Weapon> items)
+        public static JObject listToGOODWeapons(List<Weapon> items, bool exportEquipStatus)
         {
             JObject result = new JObject();
             JArray weaponJArr = new JArray();
             foreach (Weapon item in items)
             {
-                weaponJArr.Add(item.toGOODWeapon());
+                weaponJArr.Add(item.toGOODWeapon(exportEquipStatus));
             }
             result.Add("weapons", weaponJArr);
             return result;

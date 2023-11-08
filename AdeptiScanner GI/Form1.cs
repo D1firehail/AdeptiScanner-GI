@@ -68,6 +68,7 @@ namespace AdeptiScanner_GI
         internal string ignoredProgramVersion = "";
         internal string lastUpdateCheck = "";
         internal string uid = "";
+        internal bool exportEquipStatus = true;
 
         enum panelChoices
         {
@@ -1167,13 +1168,13 @@ namespace AdeptiScanner_GI
             JObject currData = new JObject();
             if (scannedArtifacts.Count > 0)
             {
-                JObject artis = Artifact.listToGOODArtifacts(scannedArtifacts, minLevel, maxLevel, minRarity, maxRarity, exportAllEquipped);
+                JObject artis = Artifact.listToGOODArtifacts(scannedArtifacts, minLevel, maxLevel, minRarity, maxRarity, exportAllEquipped, exportEquipStatus);
                 currData.Add("artifacts", artis["artifacts"]);
             }
 
             if (scannedWeapons.Count > 0)
             {
-                JObject wepData = Weapon.listToGOODWeapons(scannedWeapons);
+                JObject wepData = Weapon.listToGOODWeapons(scannedWeapons, exportEquipStatus);
                 currData.Add("weapons", wepData["weapons"]);
             }
 
@@ -1333,6 +1334,10 @@ namespace AdeptiScanner_GI
             if (settings.ContainsKey("uid"))
             {
                 uid = settings["uid"].ToObject<string>();
+            }
+            if (settings.ContainsKey("ExportEquipStatus"))
+            {
+                exportEquipStatus = settings["ExportEquipStatus"].ToObject<bool>();
             }
         }
 
@@ -1568,6 +1573,7 @@ namespace AdeptiScanner_GI
             settings["lastUpdateCheck"] = lastUpdateCheck;
             settings["processHandleInteractions"] = GameVisibilityHandler.enabled;
             settings["uid"] = enkaTab.text_UID.Text;
+            settings["ExportEquipStatus"] = exportEquipStatus;
 
 
             string fileName = Path.Join(Database.appDir, "settings.json");

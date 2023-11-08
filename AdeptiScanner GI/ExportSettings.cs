@@ -28,6 +28,7 @@ namespace AdeptiScanner_GI
                 label_maxraritynumber.Text = "" + trackBar_maxrarity.Value;
                 checkBox_exportEquipped.Checked = ScannerForm.INSTANCE.exportAllEquipped;
                 checkbox_exportTemplate.Checked = ScannerForm.INSTANCE.useTemplate;
+                checkBox_exportEquipStatus.Checked = ScannerForm.INSTANCE.exportEquipStatus;
             }
         }
 
@@ -51,7 +52,7 @@ namespace AdeptiScanner_GI
 
         private void trackBar_minrarity_Scroll(object sender, EventArgs e)
         {
-            label_minraritynumber.Text = "" + trackBar_minrarity.Value; 
+            label_minraritynumber.Text = "" + trackBar_minrarity.Value;
             if (ScannerForm.INSTANCE != null)
             {
                 ScannerForm.INSTANCE.minRarity = trackBar_minrarity.Value;
@@ -60,7 +61,7 @@ namespace AdeptiScanner_GI
 
         private void trackBar_maxrarity_Scroll(object sender, EventArgs e)
         {
-            label_maxraritynumber.Text = "" + trackBar_maxrarity.Value; 
+            label_maxraritynumber.Text = "" + trackBar_maxrarity.Value;
             if (ScannerForm.INSTANCE != null)
             {
                 ScannerForm.INSTANCE.maxRarity = trackBar_maxrarity.Value;
@@ -77,7 +78,7 @@ namespace AdeptiScanner_GI
                     return;
                 }
 
-                DialogResult dialogResult = MessageBox.Show("This will clear " + ScannerForm.INSTANCE.scannedArtifacts.Count + " artifacts and "  + ScannerForm.INSTANCE.scannedWeapons.Count + " weapons from the results." + Environment.NewLine + "Are you sure?", "Clear Results", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                DialogResult dialogResult = MessageBox.Show("This will clear " + ScannerForm.INSTANCE.scannedArtifacts.Count + " artifacts and " + ScannerForm.INSTANCE.scannedWeapons.Count + " weapons from the results." + Environment.NewLine + "Are you sure?", "Clear Results", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
                 if (dialogResult == DialogResult.Yes)
                 {
@@ -101,6 +102,14 @@ namespace AdeptiScanner_GI
             if (ScannerForm.INSTANCE != null)
             {
                 ScannerForm.INSTANCE.exportAllEquipped = checkBox_exportEquipped.Checked;
+            }
+        }
+
+        private void checkBox_ExportEquipStatus_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ScannerForm.INSTANCE != null)
+            {
+                ScannerForm.INSTANCE.exportEquipStatus = checkBox_exportEquipStatus.Checked;
             }
         }
     }
