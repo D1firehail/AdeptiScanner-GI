@@ -11,8 +11,8 @@ namespace AdeptiScanner_GI
     class Database
     {
         private static System.Globalization.CultureInfo culture = new System.Globalization.CultureInfo("en-GB", false);
-        public static string appDir = Application.StartupPath + @"\ScannerFiles";
-        public static string appdataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\AdeptiScanner";
+        public static string appDir = Path.Join(Application.StartupPath, "ScannerFiles");
+        public static string appdataPath = Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "AdeptiScanner");
         public static string programVersion = "2.0.0";
         public static string dataVersion = "X.XX";
         //These get filled on startup by other file
@@ -321,7 +321,7 @@ namespace AdeptiScanner_GI
             JObject allJson = new JObject();
             try
             {
-                allJson = JsonConvert.DeserializeObject<JObject>(File.ReadAllText(appDir + @"\ArtifactInfo.json"));
+                allJson = JsonConvert.DeserializeObject<JObject>(File.ReadAllText(Path.Join(appDir, "ArtifactInfo.json")));
             } 
             catch (Exception e)
             {

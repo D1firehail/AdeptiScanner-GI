@@ -8,14 +8,14 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Input;
 using Tesseract;
-using WindowsInput;
+using InputSimulatorEx;
+using System.Net.Http;
 
 namespace AdeptiScanner_GI
 {
@@ -280,7 +280,7 @@ namespace AdeptiScanner_GI
                     {
                         //string timestamp = DateTime.UtcNow.ToString("yyyy-MM-dd HH-mm-ssff");
                         //if (saveImages)
-                        //    img.Save(Database.appDir + @"\images\GenshinArtifactImg " + timestamp + ".png");
+                        //    img.Save(Path.Join(Database.appDir, "images", "GenshinArtifactImg_" + timestamp + ".png"));
                         Rectangle area = new Rectangle(0, 0, img.Width, img.Height);
                         Bitmap filtered = new Bitmap(img);
                         if (weaponMode)
@@ -347,7 +347,7 @@ namespace AdeptiScanner_GI
             {
                 Stopwatch runtime = new Stopwatch();
                 runtime.Start();
-                System.Security.Cryptography.SHA1CryptoServiceProvider sha1 = new System.Security.Cryptography.SHA1CryptoServiceProvider();
+                System.Security.Cryptography.SHA1 sha1 = System.Security.Cryptography.SHA1.Create();
                 bool running = true;
                 bool firstRun = true;
                 int firstY = 0;
@@ -497,7 +497,7 @@ namespace AdeptiScanner_GI
                         int numBytes = Math.Abs(imgData.Stride) * imgData.Height;
                         byte[] imgBytes = new byte[numBytes];
                         Marshal.Copy(imgData.Scan0, imgBytes, 0, numBytes);
-                        int PixelSize = 4; //ARGB, reverse order
+                        //int PixelSize = 4; //ARGB, reverse order
                         withoutLock.UnlockBits(imgData);
                         //https://stackoverflow.com/a/800469 with some liberty
                         string hash = string.Concat(sha1.ComputeHash(imgBytes).Select(x => x.ToString("X2")));
@@ -581,7 +581,7 @@ namespace AdeptiScanner_GI
                     Rectangle area = new Rectangle(0, 0, img.Width, img.Height);
                     Bitmap filtered = new Bitmap(img);
                     string timestamp = DateTime.UtcNow.ToString("yyyy-MM-dd HH-mm-ssff");
-                    filtered.Save(Database.appDir + @"\images\GenshinArtifactImg " + timestamp + ".png");
+                    filtered.Save(Path.Join(Database.appDir, "images", "GenshinArtifactImg_" + timestamp + ".png"));
                     filtered = ImageProcessing.getArtifactImg(filtered, area, out int[] rows, true, out bool locked, out int rarity, out Rectangle typeMainArea, out Rectangle levelArea, out Rectangle subArea, out Rectangle setArea, out Rectangle charArea);
                     Artifact item = ImageProcessing.getArtifacts(filtered, rows, true, tessEngine, locked, rarity, typeMainArea, levelArea, subArea, setArea, charArea);
                     AppendStatusText(item.ToString() + Environment.NewLine, false);
@@ -616,7 +616,7 @@ namespace AdeptiScanner_GI
             {
                 Stopwatch runtime = new Stopwatch();
                 runtime.Start();
-                System.Security.Cryptography.SHA1CryptoServiceProvider sha1 = new System.Security.Cryptography.SHA1CryptoServiceProvider();
+                System.Security.Cryptography.SHA1 sha1 = System.Security.Cryptography.SHA1.Create();
                 bool running = true;
                 bool firstRun = true;
                 int firstY = 0;
@@ -761,7 +761,7 @@ namespace AdeptiScanner_GI
                         int numBytes = Math.Abs(imgData.Stride) * imgData.Height;
                         byte[] imgBytes = new byte[numBytes];
                         Marshal.Copy(imgData.Scan0, imgBytes, 0, numBytes);
-                        int PixelSize = 4; //ARGB, reverse order
+                        //int PixelSize = 4; //ARGB, reverse order
                         withoutLock.UnlockBits(imgData);
                         //https://stackoverflow.com/a/800469 with some liberty
                         string hash = string.Concat(sha1.ComputeHash(imgBytes).Select(x => x.ToString("X2")));
@@ -843,7 +843,7 @@ namespace AdeptiScanner_GI
                     Rectangle area = new Rectangle(0, 0, img.Width, img.Height);
                     Bitmap filtered = new Bitmap(img);
                     string timestamp = DateTime.UtcNow.ToString("yyyy-MM-dd HH-mm-ssff");
-                    filtered.Save(Database.appDir + @"\images\GenshinArtifactImg " + timestamp + ".png");
+                    filtered.Save(Path.Join(Database.appDir, "images", "GenshinArtifactImg_" + timestamp + ".png"));
                     filtered = ImageProcessing.getWeaponImg(filtered, area, out int[] rows, saveImages, out bool locked, out Rectangle nameArea, out Rectangle statArea, out Rectangle refinementArea, out Rectangle charArea);
                     Weapon item = ImageProcessing.getWeapon(filtered, rows, saveImages, tessEngine, locked, nameArea, statArea, refinementArea, charArea);
                     AppendStatusText(item.ToString() + Environment.NewLine, false);
@@ -982,7 +982,7 @@ namespace AdeptiScanner_GI
                     {
                         g.DrawImage(img_Raw, 0, 0, tmpGameArea.Value, GraphicsUnit.Pixel);
                     }
-                    gameImg.Save(Database.appDir + @"\images\GenshinGameArea " + timestamp + ".png");
+                    gameImg.Save(Path.Join(Database.appDir, "images", "GenshinGameArea_" + timestamp + ".png"));
                 }
 
                 if (ArtifactAreaCaptured)
@@ -992,7 +992,7 @@ namespace AdeptiScanner_GI
                     {
                         g.DrawImage(img_Raw, 0, 0, tmpArtifactArea.Value, GraphicsUnit.Pixel);
                     }
-                    artifactImg.Save(Database.appDir + @"\images\GenshinArtifactArea " + timestamp + ".png");
+                    artifactImg.Save(Path.Join(Database.appDir, "images", "GenshinArtifactArea_" + timestamp + ".png"));
                 }
             }
 
@@ -1184,7 +1184,7 @@ namespace AdeptiScanner_GI
             }
 
 
-            if (useTemplate && !File.Exists(Database.appDir + @"\ExportTemplate.json"))
+            if (useTemplate && !File.Exists(Path.Join(Database.appDir, "ExportTemplate.json")))
             {
                 MessageBox.Show("No export template found, exporting without one" + Environment.NewLine + "To use an export template, place valid GOOD-format json in ScannerFiles and rename to \"ExportTemplate.json\"", 
                     "No export template found", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -1192,7 +1192,7 @@ namespace AdeptiScanner_GI
             }
             if (useTemplate)
             {
-                JObject template = JsonConvert.DeserializeObject<JObject>(File.ReadAllText(Database.appDir + @"\ExportTemplate.json"));
+                JObject template = JsonConvert.DeserializeObject<JObject>(File.ReadAllText( Path.Join(Database.appDir, "ExportTemplate.json")));
                 if (currData.ContainsKey("artifact"))
                 {
                     template.Remove("artifacts");
@@ -1222,10 +1222,11 @@ namespace AdeptiScanner_GI
                 //currData.Add("characters", new JArray());
                 //currData.Add("weapons", new JArray());
             }
-            string fileName = Database.appDir + @"\Scan_Results" + @"\export" + timestamp + ".GOOD.json";
+            string fileName = Path.Join(Database.appDir, @"Scan_Results", "export" + timestamp + ".GOOD.json");
             File.WriteAllText(fileName, currData.ToString());
             text_full.AppendText("Exported to \"" + fileName + "\"" + Environment.NewLine);
-            Process.Start("explorer.exe", Database.appDir + @"\Scan_Results");
+
+            Process.Start("explorer.exe", Path.Join(Database.appDir, "Scan_Results"));
         }
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -1235,12 +1236,12 @@ namespace AdeptiScanner_GI
 
         private void loadSettings()
         {
-            string fileName = Database.appDir + @"\settings.json";
+            string fileName = Path.Join(Database.appDir, "settings.json");
             JObject settings = null;
             try
             {
                 settings = JsonConvert.DeserializeObject<JObject>(File.ReadAllText(fileName));
-            } catch (Exception e)
+            } catch (Exception)
             {
                 return;
             }
@@ -1396,8 +1397,8 @@ namespace AdeptiScanner_GI
             if (timestamp == lastUpdateCheck && !isManual)
                 return;
             lastUpdateCheck = timestamp;
-            WebClient webclient = new WebClient();
-            webclient.Headers.Add("user-agent", "AdeptiScanner");
+            HttpClient webclient = new HttpClient();
+            webclient.DefaultRequestHeaders.Add("user-agent", "AdeptiScanner");
 
             string programVersionTitle = "";
             string programVersionBody = "";
@@ -1408,7 +1409,13 @@ namespace AdeptiScanner_GI
             {
                 try
                 {
-                    string response = webclient.DownloadString("https://api.github.com/repos/D1firehail/AdeptiScanner-GI/releases");
+                    var request = webclient.GetStringAsync("https://api.github.com/repos/D1firehail/AdeptiScanner-GI/releases");
+                    bool  requestCompleted = request.Wait(TimeSpan.FromMinutes(1));
+                    if (!requestCompleted)
+                    {
+                        throw new TimeoutException("Version update check did not complete within 1 minute, ignoring");
+                    }
+                    string response = request.Result;
                     JArray releases = JsonConvert.DeserializeObject<JArray>(response);
                     if (releases.First.HasValues)
                     {
@@ -1439,7 +1446,13 @@ namespace AdeptiScanner_GI
             {
                 try
                 {
-                    string response = webclient.DownloadString("https://raw.githubusercontent.com/D1firehail/AdeptiScanner-GI/master/AdeptiScanner%20GI/ScannerFiles/ArtifactInfo.json");
+                    var request = webclient.GetStringAsync("https://raw.githubusercontent.com/D1firehail/AdeptiScanner-GI/master/AdeptiScanner%20GI/ScannerFiles/ArtifactInfo.json");
+                    bool requestCompleted = request.Wait(TimeSpan.FromMinutes(1));
+                    if (!requestCompleted)
+                    {
+                        throw new TimeoutException("Data update check did not complete within 1 minute, ignoring");
+                    }
+                    string response = request.Result;
                     JObject artifactInfo = JsonConvert.DeserializeObject<JObject>(response);
                     dataVersionString = artifactInfo["DataVersion"].ToObject<string>();
                     dataVersionJson = response;
@@ -1477,7 +1490,7 @@ namespace AdeptiScanner_GI
 
             try
             {
-                File.WriteAllText(Database.appDir + @"\ArtifactInfo.json", newData);
+                File.WriteAllText(Path.Join(Database.appDir, "ArtifactInfo.json"), newData);
             } catch (Exception exc)
             {
                 MessageBox.Show("Update failed, error: " + Environment.NewLine + Environment.NewLine + exc.ToString(), "Update failed",
@@ -1500,15 +1513,17 @@ namespace AdeptiScanner_GI
             if (!Directory.Exists(Database.appdataPath))
                 Directory.CreateDirectory(Database.appdataPath);
 
-            string[] filesToCopy = { @"\settings.json", @"\ExportTemplate.json"};
+            string[] filesToCopy = { "settings.json", "ExportTemplate.json"};
 
             foreach (string file in filesToCopy)
             {
-                if (!File.Exists(Database.appDir + file))
+                string dirPath = Path.Join(Database.appDir, file);
+                string appDataPath = Path.Join(Database.appdataPath, file);
+                if (!File.Exists(dirPath))
                     continue;
-                if (File.Exists(Database.appdataPath + file))
-                    File.Delete(Database.appdataPath + file);
-                File.Copy(Database.appDir + file, Database.appdataPath + file);
+                if (File.Exists(appDataPath))
+                    File.Delete(appDataPath);
+                File.Copy(dirPath, appDataPath);
             }
             System.Diagnostics.Process.Start("https://github.com/D1firehail/AdeptiScanner-GI/releases/latest");
             Application.Exit();
@@ -1555,7 +1570,7 @@ namespace AdeptiScanner_GI
             settings["uid"] = enkaTab.text_UID.Text;
 
 
-            string fileName = Database.appDir + @"\settings.json";
+            string fileName = Path.Join(Database.appDir, "settings.json");
             File.WriteAllText(fileName, settings.ToString());
         }
 
@@ -1639,7 +1654,7 @@ namespace AdeptiScanner_GI
 
             if (dialogResult == DialogResult.Yes)
             {
-                File.Delete(Database.appDir + @"\settings.json");
+                File.Delete(Path.Join(Database.appDir, "settings.json"));
                 rememberSettings = false;
             }
         }

@@ -19,7 +19,7 @@ namespace AdeptiScanner_GI
 
         private void btn_Fetch_Click(object sender, EventArgs e)
         {
-            string uid = string.Copy(text_UID.Text);
+            string uid = new string(text_UID.Text);
             EnkaApi.RequestUid(uid);
         }
 

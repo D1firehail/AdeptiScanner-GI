@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Tesseract;
 
@@ -177,7 +176,7 @@ namespace AdeptiScanner_GI
                         g.FillRectangle(Brushes.Cyan, tup.Item1, tup.Item3, tup.Item2 - tup.Item1, 3);
                     }
                 }
-                areaImg.Save(Database.appDir + @"\images\GenshinArtifactGridFiltered " + timestamp + ".png");
+                areaImg.Save(Path.Join(Database.appDir, "images", "GenshinArtifactGridFiltered_" + timestamp + ".png"));
             }
             return artifactListPoint;
         }
@@ -515,7 +514,7 @@ namespace AdeptiScanner_GI
 
             string timestamp = DateTime.UtcNow.ToString("yyyy-MM-dd HH-mm-ssff");
             if (saveImages)
-                areaImg.Save(Database.appDir + @"\images\GenshinArtifactImgFiltered " + timestamp + ".png");
+                areaImg.Save(Path.Join(Database.appDir, "images", "GenshinArtifactImgFiltered_" + timestamp + ".png"));
             return areaImg;
         }
 
@@ -680,7 +679,7 @@ namespace AdeptiScanner_GI
 
             string timestamp = DateTime.UtcNow.ToString("yyyy-MM-dd HH-mm-ssff");
             if (saveImages)
-                areaImg.Save(Database.appDir + @"\images\GenshinArtifactImgFiltered " + timestamp + ".png");
+                areaImg.Save(Path.Join(Database.appDir, "images", "GenshinArtifactImgFiltered_" + timestamp + ".png"));
             return areaImg;
         }
 
@@ -701,7 +700,7 @@ namespace AdeptiScanner_GI
             }
             string timestamp = DateTime.UtcNow.ToString("yyyy-MM-dd HH-mm-ssff");
             if (saveImages)
-                img.Save(Database.appDir + @"\images\GenshinScreen " + timestamp + ".png");
+                img.Save(Path.Join(Database.appDir, "images", "GenshinScreen_" + timestamp + ".png"));
             return img;
         }
 
@@ -822,7 +821,7 @@ namespace AdeptiScanner_GI
                             break;
                         }
                     }
-                    catch (Exception e)
+                    catch (Exception)
                     {
 
                     }
@@ -860,7 +859,7 @@ namespace AdeptiScanner_GI
 
             string timestamp = DateTime.UtcNow.ToString("yyyy-MM-dd HH-mm-ssff");
             if (saveImages)
-                scanArea.Save(Database.appDir + @"\images\GenshinTextRow " + timestamp + ".png");
+                scanArea.Save(Path.Join(Database.appDir, "images", "GenshinTextRow_" + timestamp + ".png"));
 
             //Do OCR and append to prevRaw
             string text = prevRaw;

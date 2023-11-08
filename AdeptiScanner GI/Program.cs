@@ -12,10 +12,11 @@ namespace AdeptiScanner_GI
         [STAThread]
         static void Main()
         {
+            Application.SetHighDpiMode(HighDpiMode.PerMonitorV2);
             Directory.CreateDirectory(Database.appDir);
-            Directory.CreateDirectory(Database.appDir + @"\tessdata");
-            Directory.CreateDirectory(Database.appDir + @"\images");
-            Directory.CreateDirectory(Database.appDir + @"\Scan_Results");
+            Directory.CreateDirectory(Path.Join(Database.appDir, "tessdata"));
+            Directory.CreateDirectory(Path.Join(Database.appDir, "images"));
+            Directory.CreateDirectory(Path.Join(Database.appDir, "Scan_Results"));
             Database.GenerateFilters();
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
