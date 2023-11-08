@@ -101,6 +101,7 @@ namespace AdeptiScanner_GI
             finalizeLoadSettings();
             label_dataversion.Text = "Data Version: " + Database.dataVersion;
             label_appversion.Text = "Program Version: " + Database.programVersion;
+            label_admin.Text = "Admin: " + IsAdministrator();
             this.Text = "AdeptiScanner_GI V" + Database.programVersion;
             FormClosing += eventFormClosing;
             Activated += eventGotFocus;
@@ -241,7 +242,7 @@ namespace AdeptiScanner_GI
             if (m.Msg == KeyHandler.WM_HOTKEY_MSG_ID)
             {
                 // block if last press was too recently. Exception if auto is running and not paused, to be safe
-                if ( (!pauseAuto && autoRunning) || DateTime.UtcNow > soonestAllowedHotkeyUse)
+                if ((!pauseAuto && autoRunning) || DateTime.UtcNow > soonestAllowedHotkeyUse)
                 {
                     if (pauseHotkey != null && pauseHotkey.GetHashCode() == m.WParam)
                     {
@@ -1766,7 +1767,7 @@ namespace AdeptiScanner_GI
                 registerReadKey();
                 if (!IsAdministrator())
                 {
-                    AppendStatusText( Environment.NewLine + "Read hotkey enabled, HOWEVER while the game is focused it only works if you RUN AS ADMIN." + Environment.NewLine, false);
+                    AppendStatusText(Environment.NewLine + "Read hotkey enabled, HOWEVER while the game is focused it only works if you RUN AS ADMIN." + Environment.NewLine, false);
                 }
             }
             else

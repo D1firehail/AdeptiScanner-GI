@@ -72,6 +72,7 @@ namespace AdeptiScanner_GI
             text_wanderer = new System.Windows.Forms.TextBox();
             checkbox_weaponMode = new System.Windows.Forms.CheckBox();
             checkBox_readHotkey = new System.Windows.Forms.CheckBox();
+            label_admin = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)image_preview).BeginInit();
             tabControl1.SuspendLayout();
             tabPage1.SuspendLayout();
@@ -579,12 +580,24 @@ namespace AdeptiScanner_GI
             checkBox_readHotkey.UseVisualStyleBackColor = true;
             checkBox_readHotkey.CheckedChanged += checkBox_readHotkey_CheckedChanged;
             // 
+            // label_admin
+            // 
+            label_admin.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
+            label_admin.AutoSize = true;
+            label_admin.Location = new System.Drawing.Point(350, 872);
+            label_admin.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label_admin.Name = "label_admin";
+            label_admin.Size = new System.Drawing.Size(84, 15);
+            label_admin.TabIndex = 50;
+            label_admin.Text = "Admin: XXXXX";
+            // 
             // ScannerForm
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             BackColor = System.Drawing.Color.LightGray;
             ClientSize = new System.Drawing.Size(915, 901);
+            Controls.Add(label_admin);
             Controls.Add(checkBox_readHotkey);
             Controls.Add(checkbox_weaponMode);
             Controls.Add(label_wanderer);
@@ -667,6 +680,7 @@ namespace AdeptiScanner_GI
         private System.Windows.Forms.TabPage tabPage4;
         private EnkaTab enkaTab;
         private System.Windows.Forms.CheckBox checkBox_readHotkey;
+        private System.Windows.Forms.Label label_admin;
     }
 }
 
