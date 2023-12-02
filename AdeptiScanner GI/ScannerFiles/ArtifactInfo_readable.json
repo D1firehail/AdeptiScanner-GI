@@ -1,5 +1,5 @@
 {
-	"DataVersion": "4.2",
+	"DataVersion": "4.2b",
 	"Pieces": [
 		{ "name": { "Flower of Life": "flower" } },
 		{ "name": { "Plume of Death": "plume" } },
@@ -756,7 +756,7 @@
 				"10000075": "Wanderer",
 				"10000076": "Faruzan",
 				"10000077": "Yaoyao",
-				"10000078": "Alhatham",
+				"10000078": "Alhaitham",
 				"10000079": "Dehya",
 				"10000080": "Mika",
 				"10000081": "Kaveh",
