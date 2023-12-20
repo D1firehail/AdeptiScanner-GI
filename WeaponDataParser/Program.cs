@@ -10,7 +10,7 @@ namespace WeaponDataParser // Note: actual namespace depends on the project name
         static void Main(string[] args)
         {
             Console.WriteLine("Starting weapon parser");
-            string basePath = @"E:\Github\AdeptiScanner GI\AdeptiScanner GI\Weapons";//Environment.CurrentDirectory;
+            string basePath = @"C:\Users\Daniel\source\repos\D1firehail\AdeptiScanner-GI\AdeptiScanner GI\Weapons";//Environment.CurrentDirectory;
             Dictionary<string, List<double>> curveDict = GetGrowthCurves(Path.Combine(basePath, "expCurve.json"));
 
             JArray weapons = new JArray();
