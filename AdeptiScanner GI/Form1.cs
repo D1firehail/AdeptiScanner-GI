@@ -1294,7 +1294,11 @@ namespace AdeptiScanner_GI
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Process.Start("https://github.com/D1firehail/AdeptiScanner-GI");
+            Process myProcess = new Process();
+
+            myProcess.StartInfo.UseShellExecute = true;
+            myProcess.StartInfo.FileName = "https://github.com/D1firehail/AdeptiScanner-GI";
+            myProcess.Start();
         }
 
         private void loadSettings()
@@ -1596,7 +1600,12 @@ namespace AdeptiScanner_GI
                     File.Delete(appDataPath);
                 File.Copy(dirPath, appDataPath);
             }
-            System.Diagnostics.Process.Start("https://github.com/D1firehail/AdeptiScanner-GI/releases/latest");
+            Process myProcess = new Process();
+
+            myProcess.StartInfo.UseShellExecute = true;
+            myProcess.StartInfo.FileName = "https://github.com/D1firehail/AdeptiScanner-GI/releases/latest";
+            myProcess.Start();
+
             Application.Exit();
         }
 
