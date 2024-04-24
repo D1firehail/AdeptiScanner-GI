@@ -12,6 +12,7 @@ AdeptiScanner requires some tools produced by Microsoft to work, they're commonl
 - According to my interpretation of the [Genshin TOS](https://genshin.mihoyo.com/en/company/terms), use of this scanner should be allowed as I do not believe it causes an unfair competitive advantage. To my knowledge, nobody has gotten in trouble for the use of this or similar programs so far, but if you're worried about it I suggest avoiding the auto mode.
 - AdeptiScanner relies on specific colour values to identify the contents of the image
     - Anything that changes in-game colours can mess up the results. Examples of programs/features that can interfere is Reshade, Windows Night Light, F.lux, Nvidia Filters and Colourblind compensation tools.
+    - Image sharpening also affects colours in this way. The most common example of this is "Radeon Image Sharpening" in AMD Radeon Software.
 
 ## Updating for a new version
 - There's an optional in-app update checker, which can notify you of game data updates and scanner updates
