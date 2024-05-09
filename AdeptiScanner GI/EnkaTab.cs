@@ -50,33 +50,33 @@ namespace AdeptiScanner_GI
 
         public void UpdateMissingChars(List<Artifact> artifacts, List<Weapon> weapons, List<Character> characters) 
         {
-            List<Tuple<string, string>> names = new List<Tuple<string, string>>();
+            List<CharacterNameData> names = new List<CharacterNameData>();
             foreach (Artifact arti in artifacts)
             {
-                if (arti.character != null && !names.Any(name => name.Item2.Equals(arti.character.Item2)))
+                if (arti.character != null && !names.Any(name => name.Key.Equals(arti.character.Value.Key)))
                 {
                     //if name is non-null and not already added, add it!
-                    names.Add(arti.character);
+                    names.Add(arti.character.Value);
                 }
             }
 
             foreach (Weapon wep in weapons) 
-            { 
+            {
 
-                if (wep.character != null && !names.Any(name => name.Item2.Equals(wep.character.Item2)))
+                if (wep.character != null && !names.Any(name => name.Key.Equals(wep.character.Value.Key)))
                 {
                     //if name is non-null and not already added, add it!
-                    names.Add(wep.character);
+                    names.Add(wep.character.Value);
                 }
             }
 
             //filter out names that are already fetched
-            List<Tuple<string, string>> unfetchedNames = names.Where(name => !characters.Any(c => c.key.Equals(name.Item2))).ToList();
+            List<CharacterNameData> unfetchedNames = names.Where(name => !characters.Any(c => c.key.Equals(name.Key))).ToList();
 
             string missingChars = string.Empty;
-            foreach (Tuple<string, string> name in unfetchedNames)
+            foreach (CharacterNameData name in unfetchedNames)
             {
-                missingChars += name.Item1.Replace("Equipped: ", "") + Environment.NewLine;
+                missingChars += name.Text.Replace("Equipped: ", "") + Environment.NewLine;
             }
 
             text_remainingCharacters.Text = missingChars;

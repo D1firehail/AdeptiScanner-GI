@@ -6,12 +6,12 @@ namespace AdeptiScanner_GI
 {
     public class Artifact
     {
-        public Tuple<string, string> piece;
-        public Tuple<string, string, double, int> main;
-        public Tuple<string, int> level;
-        public List<Tuple<string, string, double>> subs;
-        public Tuple<string, string> set;
-        public Tuple<string, string> character;
+        public PieceData? piece;
+        public ArtifactMainStatData? main;
+        public ArtifactLevelData? level;
+        public List<ArtifactSubStatData> subs;
+        public ArtifactSetData? set;
+        public CharacterNameData? character;
         public bool locked = false;
         public int rarity = 0;
 
@@ -82,22 +82,22 @@ namespace AdeptiScanner_GI
             JObject result = new JObject();
 
             if (set != null)
-                result.Add("setKey", JToken.FromObject(set.Item2));
+                result.Add("setKey", JToken.FromObject(set.Value.Key));
             result.Add("rarity", JToken.FromObject(rarity));
             if (main != null)
-                result.Add("level", JToken.FromObject(main.Item4));
+                result.Add("level", JToken.FromObject(main.Value.Level));
             if (piece != null)
-                result.Add("slotKey", JToken.FromObject(piece.Item2));
+                result.Add("slotKey", JToken.FromObject(piece.Value.StatKey));
             if (main != null)
-                result.Add("mainStatKey", JToken.FromObject(main.Item2));
+                result.Add("mainStatKey", JToken.FromObject(main.Value.StatKey));
             if (subs != null)
             {
                 JArray subsJArr = new JArray();
-                foreach (Tuple<string, string, double> sub in subs)
+                foreach (ArtifactSubStatData sub in subs)
                 {
                     JObject subJObj = new JObject();
-                    subJObj.Add("key", JToken.FromObject(sub.Item2));
-                    subJObj.Add("value", JToken.FromObject(sub.Item3));
+                    subJObj.Add("key", JToken.FromObject(sub.StatKey));
+                    subJObj.Add("value", JToken.FromObject(sub.StatValue));
                     subsJArr.Add(subJObj);
                 }
                 result.Add("substats", subsJArr);
@@ -105,7 +105,7 @@ namespace AdeptiScanner_GI
             if (includeLocation)
             {
                 if (character != null)
-                    result.Add("location", JToken.FromObject(character.Item2));
+                    result.Add("location", JToken.FromObject(character.Value.Key));
                 else
                     result.Add("location", JToken.FromObject(""));
             }
@@ -135,11 +135,11 @@ namespace AdeptiScanner_GI
             if (GOODArtifact.ContainsKey("setKey"))
             {
                 string setKey = GOODArtifact["setKey"].ToObject<string>();
-                for (int i = 0; i < rarityDb.Sets_trans.Count; i++)
+                for (int i = 0; i < rarityDb.Sets.Count; i++)
                 {
-                    if (rarityDb.Sets_trans[i].Item2 == setKey)
+                    if (rarityDb.Sets[i].Key == setKey)
                     {
-                        res.set = rarityDb.Sets_trans[i];
+                        res.set = rarityDb.Sets[i];
                         break;
                     }
                 }
@@ -147,11 +147,11 @@ namespace AdeptiScanner_GI
             if (GOODArtifact.ContainsKey("slotKey"))
             {
                 string slotKey = GOODArtifact["slotKey"].ToObject<string>();
-                for (int i = 0; i < Database.Pieces_trans.Count; i++)
+                for (int i = 0; i < Database.Pieces.Count; i++)
                 {
-                    if (Database.Pieces_trans[i].Item2 == slotKey)
+                    if (Database.Pieces[i].StatKey == slotKey)
                     {
-                        res.piece = Database.Pieces_trans[i];
+                        res.piece = Database.Pieces[i];
                         break;
                     }
                 }
@@ -161,19 +161,19 @@ namespace AdeptiScanner_GI
                 string mainStatKey = GOODArtifact["mainStatKey"].ToObject<string>();
                 int levelKey = GOODArtifact["level"].ToObject<int>();
 
-                for (int i = 0; i < rarityDb.MainStats_trans.Count; i++)
+                for (int i = 0; i < rarityDb.MainStats.Count; i++)
                 {
-                    if (rarityDb.MainStats_trans[i].Item2 == mainStatKey && rarityDb.MainStats_trans[i].Item4 == levelKey)
+                    if (rarityDb.MainStats[i].StatKey == mainStatKey && rarityDb.MainStats[i].Level == levelKey)
                     {
-                        res.main = rarityDb.MainStats_trans[i];
+                        res.main = rarityDb.MainStats[i];
                         break;
                     }
                 }
-                for (int i = 0; i < Database.Levels_trans.Count; i++)
+                for (int i = 0; i < Database.ArtifactLevels.Count; i++)
                 {
-                    if (Database.Levels_trans[i].Item2 == levelKey)
+                    if (Database.ArtifactLevels[i].Key == levelKey)
                     {
-                        res.level = Database.Levels_trans[i];
+                        res.level = Database.ArtifactLevels[i];
                         break;
                     }
                 }
@@ -182,11 +182,11 @@ namespace AdeptiScanner_GI
             {
                 string locationKey = GOODArtifact["location"].ToObject<string>();
 
-                for (int i = 0; i < Database.Characters_trans.Count; i++)
+                for (int i = 0; i < Database.Characters.Count; i++)
                 {
-                    if (Database.Characters_trans[i].Item2 == locationKey)
+                    if (Database.Characters[i].Key == locationKey)
                     {
-                        res.character = Database.Characters_trans[i];
+                        res.character = Database.Characters[i];
                         break;
                     }
                 }
@@ -198,18 +198,18 @@ namespace AdeptiScanner_GI
             if (GOODArtifact.ContainsKey("substats"))
             {
                 JArray substats = GOODArtifact["substats"].ToObject<JArray>();
-                res.subs = new List<Tuple<string, string, double>>();
+                res.subs = new List<ArtifactSubStatData>();
                 foreach (JObject sub in substats)
                 {
                     if (sub.ContainsKey("key") && sub.ContainsKey("value") )
                     {
                         string statKey = sub["key"].ToObject<string>();
                         double statVal = sub["value"].ToObject<double>();
-                        for (int i = 0; i < rarityDb.Substats_trans.Count; i++)
+                        for (int i = 0; i < rarityDb.Substats.Count; i++)
                         {
-                            if (rarityDb.Substats_trans[i].Item2 == statKey && rarityDb.Substats_trans[i].Item3 - statVal < 0.099)
+                            if (rarityDb.Substats[i].StatKey == statKey && rarityDb.Substats[i].StatValue - statVal < 0.099)
                             {
-                                res.subs.Add(rarityDb.Substats_trans[i]);
+                                res.subs.Add(rarityDb.Substats[i]);
                                 break;
                             }
                         }
@@ -217,8 +217,15 @@ namespace AdeptiScanner_GI
                 }
             }
 
-
-            return res;
+            if (Database.artifactInvalid(res.rarity, res))
+            {
+                ScannerForm.INSTANCE.AppendStatusText("Failed to parse artifact: " + GOODArtifact.ToString(Newtonsoft.Json.Formatting.None) + Environment.NewLine, false);
+                return null;
+            } 
+            else
+            {
+                return res;
+            }
         }
 
         public static JObject listToGOODArtifacts(List<Artifact> items, int minLevel, int maxLevel, int minRarity, int maxRarity, bool exportAllEquipped, bool exportEquipStatus)
@@ -227,8 +234,22 @@ namespace AdeptiScanner_GI
             JArray artifactJArr = new JArray();
             foreach (Artifact item in items)
             {
-                if ( (exportAllEquipped && item.character != null) || (item.level.Item2 >= minLevel && item.level.Item2 <= maxLevel && item.rarity >= minRarity && item.rarity <= maxRarity) )
-                    artifactJArr.Add(item.toGOODArtifact(exportEquipStatus));
+                bool add = false;
+                if (exportAllEquipped && item.character != null)
+                {
+                    add = true;
+                }
+                    
+                if (item.level.HasValue && item.level.Value.Key >= minLevel && item.level.Value.Key <= maxLevel
+                    && item.rarity >= minRarity && item.rarity <= maxRarity)
+                {
+                    add = true;
+                }
+
+                if (add)
+                { 
+                    artifactJArr.Add(item.toGOODArtifact(exportEquipStatus)); 
+                }
             }
             result.Add("artifacts", artifactJArr);
             return result;

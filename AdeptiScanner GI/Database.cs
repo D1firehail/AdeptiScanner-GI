@@ -8,6 +8,59 @@ using System.Windows.Forms;
 
 namespace AdeptiScanner_GI
 {
+    #region IParsable stuff
+    public interface IParsableData
+    {
+        string GetPlainText();
+    }
+
+    public readonly record struct SimpleParsable(string Text) : IParsableData
+    {
+        public string GetPlainText() => Text;
+    }
+
+    public readonly record struct PieceData(string Text, string StatKey) : IParsableData
+    {
+        public string GetPlainText() => Text;
+    }
+
+    public readonly record struct CharacterNameData(string Text, string Key) : IParsableData
+    {
+        public string GetPlainText() => Text;
+    }
+
+    public readonly record struct ArtifactLevelData(string Text, int Key) : IParsableData
+    {
+        public string GetPlainText() => Text;
+    }
+
+    public readonly record struct ArtifactMainStatData(string Text, string StatKey, double StatValue, int Level) : IParsableData
+    {
+        public string GetPlainText() => Text;
+    }
+
+    public readonly record struct ArtifactSubStatData(string Text, string StatKey, double StatValue) : IParsableData
+    {
+        public string GetPlainText() => Text;
+    }
+
+    public readonly record struct ArtifactSetData(string Text, string Key) : IParsableData
+    {
+        public string GetPlainText() => Text;
+    }
+
+    public readonly record struct WeaponNameData(string Key, int Rarity) : IParsableData
+    {
+        public string GetPlainText() => Key; // weapons currently only parse the GOOD name and assumes it's close enough to the english name
+    }
+
+    public readonly record struct WeaponLevelAndAscensionData(string BaseAtk, int Level, int Ascension) : IParsableData
+    {
+        public string GetPlainText() => BaseAtk;
+    }
+
+    #endregion
+
     class Database
     {
         private static System.Globalization.CultureInfo culture = new System.Globalization.CultureInfo("en-GB", false);
@@ -16,29 +69,21 @@ namespace AdeptiScanner_GI
         public static string programVersion = "2.1.0";
         public static string dataVersion = "X.XX";
         //These get filled on startup by other file
-        public static List<string> Pieces = new List<string>();
-        public static List<Tuple<string, string>> Pieces_trans = new List<Tuple<string, string>>();
-        public static List<string> Characters = new List<string>();
-        public static List<Tuple<string, string>> Characters_trans = new List<Tuple<string, string>>();
-        public static List<string> Levels = new List<string>();
-        public static List<Tuple<string, int>> Levels_trans = new List<Tuple<string, int>>();
+        public static List<PieceData> Pieces = new List<PieceData>();
+        public static List<CharacterNameData> Characters = new List<CharacterNameData>();
+        public static List<ArtifactLevelData> ArtifactLevels = new List<ArtifactLevelData>();
         public static Database[] rarityData = new Database[5];
-        public static List<string> WeaponNames = new List<string>();
-        public static List<Tuple<string, int>> WeaponNames_trans = new List<Tuple<string, int>>();
-        public static Dictionary<string, List<string>> WeaponLevels = new Dictionary<string, List<string>>();
-        public static Dictionary<string, List<Tuple<string, int, int>>> WeaponLevels_trans = new Dictionary<string, List<Tuple<string, int, int>>>();
+        public static List<WeaponNameData> WeaponNames = new List<WeaponNameData>();
+        public static Dictionary<WeaponNameData, List<WeaponLevelAndAscensionData>> WeaponLevels = new Dictionary<WeaponNameData, List<WeaponLevelAndAscensionData>>();
 
         public static Dictionary<int, string> CharacterNames = new Dictionary<int, string>();
         public static Dictionary<string, string> SkillTypes = new Dictionary<string, string>();
 
 
 
-        public List<string> MainStats = new List<string>();
-        public List<Tuple<string, string, double, int>> MainStats_trans = new List<Tuple<string, string, double, int>>();
-        public List<string> Substats = new List<string>();
-        public List<Tuple<string, string, double>> Substats_trans = new List<Tuple<string, string, double>>();
-        public List<string> Sets = new List<string>();
-        public List<Tuple<string, string>> Sets_trans = new List<Tuple<string, string>>();
+        public List<ArtifactMainStatData> MainStats = new List<ArtifactMainStatData>();
+        public List<ArtifactSubStatData> Substats = new List<ArtifactSubStatData>();
+        public List<ArtifactSetData> Sets = new List<ArtifactSetData>();
 
         public Database()
         {
@@ -109,19 +154,19 @@ namespace AdeptiScanner_GI
         /// <param name="validText">List of words to match against</param>
         /// <param name="dist">Levenshtein distance to closest match</param>
         /// <returns>Closest matching word</returns>
-        public static string FindClosestMatch(string rawText, List<string> validText, out int index, out int dist)
+        public static string FindClosestMatch<T>(string rawText, List<T> validText, out T? result, out int dist) where T : struct, IParsableData
         {
             string lowest = "ERROR";
             dist = 9999;
-            index = 0;
+            result = null;
 
             for (int i = 0; i < validText.Count; i++)
             {
-                string validWord = validText[i];
+                string validWord = validText[i].GetPlainText();
                 int val = LevenshteinDistance(validWord, rawText);
                 if (val < dist)
                 {
-                    index = i;
+                    result = validText[i];
                     dist = val;
                     lowest = validWord;
                 }
@@ -149,8 +194,7 @@ namespace AdeptiScanner_GI
                             text = statName + statValue.ToString("N1", culture);
                             text = text.Replace("%", "") + "%";
                         }
-                        MainStats.Add(text);
-                        MainStats_trans.Add(Tuple.Create(text, statKey, statValue, i));
+                        MainStats.Add( new ArtifactMainStatData(text, statKey, statValue, i));
                         //Console.WriteLine(text + " ---- " + statValue);
                     }
                 }
@@ -203,10 +247,7 @@ namespace AdeptiScanner_GI
                         {
                             value = Math.Round(value, 0);
                         }
-                        Substats.Add(text);
-                        Substats_trans.Add(Tuple.Create(text, statKey, value));
-                        //if (!text.Contains(value.ToString(culture)))
-                        //    Console.WriteLine(Substats_trans[Substats_trans.Count-1]);
+                        Substats.Add( new ArtifactSubStatData(text, statKey, value));
                     }
                 }
             }
@@ -221,15 +262,7 @@ namespace AdeptiScanner_GI
                     string statName = statNameTup.Key;
                     string statKey = statNameTup.Value.ToObject<string>();
                     string text = statName + "";
-                    Sets.Add(text);
-                    Sets_trans.Add(Tuple.Create(text, statKey));
-                    for (int i = 0; i < 6; i++)
-                    {
-                        text = statName + ":(" + i + ")";
-                        Sets.Add(text);
-                        Sets_trans.Add(Tuple.Create(text, statKey));
-                        //Console.WriteLine(text);
-                    }
+                    Sets.Add(new ArtifactSetData(text, statKey));
                 }
             }
         }
@@ -243,8 +276,7 @@ namespace AdeptiScanner_GI
                     string statName = statNameTup.Key;
                     string statKey = statNameTup.Value.ToObject<string>();
                     string text = "Equipped: " + statName;
-                    Characters.Add(text);
-                    Characters_trans.Add(Tuple.Create(text, statKey));
+                    Characters.Add(new CharacterNameData(text, statKey));
                     //Console.WriteLine(text);
                 }
             }
@@ -259,8 +291,7 @@ namespace AdeptiScanner_GI
                     string statName = statNameTup.Key;
                     string statKey = statNameTup.Value.ToObject<string>();
                     string text = statName;
-                    Pieces.Add(text);
-                    Pieces_trans.Add(Tuple.Create(text, statKey));
+                    Pieces.Add(new PieceData(text, statKey));
                     //Console.WriteLine(text);
                 }
             }
@@ -288,23 +319,20 @@ namespace AdeptiScanner_GI
             {
                 string name = weapon["key"].ToObject<string>();
                 int rarity = weapon["rarity"].ToObject<int>();
-                WeaponNames.Add(name);
-                WeaponNames_trans.Add(Tuple.Create(name, rarity));
+                WeaponNameData nameData = new WeaponNameData(name, rarity);
+                WeaponNames.Add(nameData);
 
                 List<JObject> stats = weapon["stats"].ToObject<List<JObject>>();
-                List<string> levels = new List<string>();
-                List<Tuple<string, int, int>> levels_trans = new List<Tuple<string, int, int>>();
+                List<WeaponLevelAndAscensionData> levelsAndAscensions = new List<WeaponLevelAndAscensionData>();
 
                 foreach (var statPoint in stats)
                 {
                     string baseAtk = statPoint["baseAtk"].ToObject<string>();
                     int level = statPoint["level"].ToObject<int>();
                     int ascension = statPoint["ascension"].ToObject<int>();
-                    levels.Add(baseAtk);
-                    levels_trans.Add(Tuple.Create(baseAtk, level, ascension));
+                    levelsAndAscensions.Add( new WeaponLevelAndAscensionData(baseAtk, level, ascension) );
                 }
-                WeaponLevels[name] = levels;
-                WeaponLevels_trans[name] = levels_trans;
+                WeaponLevels[nameData] = levelsAndAscensions;
             }
         }
 
@@ -394,21 +422,18 @@ namespace AdeptiScanner_GI
             {
                 string text = "+" + i;
                 int statValue = i;
-                Levels.Add(text);
-                Levels_trans.Add(Tuple.Create(text, statValue));
+                ArtifactLevels.Add(new ArtifactLevelData(text, statValue));
             }
         }
 
         public static void SetCharacterName(string displayName, string GOODName)
         {
-            for (int i = 0; i < Characters_trans.Count; i++)
+            for (int i = 0; i < Characters.Count; i++)
             {
-                if ( Characters_trans[i].Item2 == GOODName)
+                if (Characters[i].Key == GOODName)
                 {
-                    Characters_trans.RemoveAt(i);
-                    Characters_trans.Insert(i, Tuple.Create("Equipped: " + displayName, GOODName));
                     Characters.RemoveAt(i);
-                    Characters.Insert(i, "Equipped: " + displayName);
+                    Characters.Insert(i, new CharacterNameData("Equipped: " + displayName, GOODName));
                     break;
                 }
             }
@@ -417,18 +442,18 @@ namespace AdeptiScanner_GI
         public static bool artifactInvalid(int rarity, Artifact item)
         {
             return rarity < 0 || rarity > 5 || item.piece == null || item.main == null || item.level == null || item.subs == null || item.set == null
-                || (rarity == 1 && (item.level.Item2 > 4 || item.subs.Count > 1)) 
-                || (rarity == 2 && (item.level.Item2 > 4 || item.subs.Count > 2)) 
-                || (rarity == 3 && (item.level.Item2 > 12 || item.subs.Count > 4 || item.subs.Count < 1))
-                || (rarity == 4 && (item.level.Item2 > 16 || item.subs.Count > 4 || item.subs.Count < 2)) 
-                || (rarity == 5 && (item.level.Item2 > 20 || item.subs.Count > 4 || item.subs.Count < 3));
+                || (rarity == 1 && (item.level.Value.Key > 4 || item.subs.Count > 1)) 
+                || (rarity == 2 && (item.level.Value.Key > 4 || item.subs.Count > 2)) 
+                || (rarity == 3 && (item.level.Value.Key > 12 || item.subs.Count > 4 || item.subs.Count < 1))
+                || (rarity == 4 && (item.level.Value.Key > 16 || item.subs.Count > 4 || item.subs.Count < 2)) 
+                || (rarity == 5 && (item.level.Value.Key > 20 || item.subs.Count > 4 || item.subs.Count < 3));
         }
 
         public static bool weaponInvalid(Weapon item)
         {
-            return item.level == null || item.name == null || item.level.Item2 > 90 
-                || (item.name.Item2 < 3 && item.level.Item2 > 70) 
-                || (item.name.Item2 >= 3 && item.refinement == null);
+            return item.level == null || item.name == null || item.level.Value.Level > 90 
+                || (item.name.Value.Rarity < 3 && item.level.Value.Level > 70) 
+                || (item.name.Value.Rarity >= 3 && item.refinement == null);
         }
     }
 

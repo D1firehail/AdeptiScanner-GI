@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 
 namespace AdeptiScanner_GI
 {
@@ -35,19 +27,19 @@ namespace AdeptiScanner_GI
         {
             
             if (item.level != null)
-                text_Level.Text = item.level.Item1;
+                text_Level.Text = item.level.Value.Text;
             else
                 text_Level.Text = "";
 
             text_locked.Text = item.locked.ToString();
 
             if (item.piece != null)
-                text_Type.Text = item.piece.Item1;
+                text_Type.Text = item.piece.Value.Text;
             else
                 text_Type.Text = "";
 
             if (item.main != null)
-                text_statMain.Text = item.main.Item1;
+                text_statMain.Text = item.main.Value.Text;
             else
                 text_statMain.Text = "";
 
@@ -59,29 +51,29 @@ namespace AdeptiScanner_GI
             {
                 if (item.subs.Count > 0)
                 {
-                    text_statSub1.Text = item.subs[0].Item1;
+                    text_statSub1.Text = item.subs[0].Text;
                 }
                 if (item.subs.Count > 1)
                 {
-                    text_statSub2.Text = item.subs[1].Item1;
+                    text_statSub2.Text = item.subs[1].Text;
                 }
                 if (item.subs.Count > 2)
                 {
-                    text_statSub3.Text = item.subs[2].Item1;
+                    text_statSub3.Text = item.subs[2].Text;
                 }
                 if (item.subs.Count > 3)
                 {
-                    text_statSub4.Text = item.subs[3].Item1;
+                    text_statSub4.Text = item.subs[3].Text;
                 }
             }
 
             if (item.set != null)
-                text_Set.Text = item.set.Item1;
+                text_Set.Text = item.set.Value.Text;
             else
                 text_Set.Text = "";
 
             if (item.character != null)
-                text_character.Text = item.character.Item1;
+                text_character.Text = item.character.Value.Text;
             else
                 text_character.Text = "";
         }

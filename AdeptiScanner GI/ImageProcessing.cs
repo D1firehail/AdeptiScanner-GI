@@ -842,7 +842,7 @@ namespace AdeptiScanner_GI
         /// <param name="rawText">Raw result from OCR process (appended to <paramref name="prevRaw"/>)</param>
         /// <param name="prevRaw">String to append in front of raw OCR result before searching for match</param>
         /// <returns>Closest matching word</returns>
-        public static string OCRRow(Bitmap img, int start, int stop, List<string> validText, out int index, out int dist, out string rawText, string prevRaw, bool saveImages, TesseractEngine tessEngine)
+        public static string OCRRow<T>(Bitmap img, int start, int stop, List<T> validText, out T? result, out int dist, out string rawText, string prevRaw, bool saveImages, TesseractEngine tessEngine) where T: struct, IParsableData
         {
 
             //tessEngine.SetVariable("tessedit_char_whitelist", @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ9876543210+%,:() ");
@@ -878,10 +878,16 @@ namespace AdeptiScanner_GI
             text = Regex.Replace(text, @"\s+", "");
             rawText = text;
 
-            string bestMatch = Database.FindClosestMatch(text, validText, out index, out dist);
+            string bestMatch = Database.FindClosestMatch(text, validText, out result, out dist);
             //Console.WriteLine("\nGot (" + dist + ") \"" + bestMatch + "\" from \"" + text + "\"");
 
             return bestMatch;
+        }
+
+        public static string OCRRowSimple(Bitmap img, int start, int stop, out string rawText, string prevRaw, bool saveImages, TesseractEngine tessEngine)
+        {
+            var dummy = new List<SimpleParsable>();
+            return OCRRow(img, start, stop, dummy, out _, out _, out rawText, prevRaw, saveImages, tessEngine);
         }
 
         /// <summary>
@@ -919,10 +925,10 @@ namespace AdeptiScanner_GI
                 i++;
             for (; i < textRows.Count && textRows[i].Item2 > typeMainArea.Top; i++)
             {
-                string result = OCRRow(img, textRows[i].Item1, textRows[i].Item2, Database.Pieces, out int resultIndex, out int dist, out string rawText, "", saveImages, tessEngine);
-                if (dist < 3)
+                string result = OCRRow(img, textRows[i].Item1, textRows[i].Item2, Database.Pieces, out PieceData? bestMatch, out int dist, out string rawText, "", saveImages, tessEngine);
+                if (bestMatch.HasValue && dist < 3)
                 {
-                    foundArtifact.piece = Database.Pieces_trans[resultIndex];
+                    foundArtifact.piece = bestMatch.Value;
                     i++;
                     break;
                 }
@@ -934,11 +940,11 @@ namespace AdeptiScanner_GI
                 i++;
             for (; i < textRows.Count && textRows[i].Item2 > typeMainArea.Top; i++)
             {
-                string result = OCRRow(img, textRows[i].Item1, textRows[i].Item2, Database.rarityData[rarity-1].MainStats, out int resultIndex, out int dist, out string rawText, prevRaw, saveImages, tessEngine);
+                string result = OCRRow(img, textRows[i].Item1, textRows[i].Item2, Database.rarityData[rarity-1].MainStats, out ArtifactMainStatData? bestMatch, out int dist, out string rawText, prevRaw, saveImages, tessEngine);
                 
-                if (dist < rawText.Length - 2 && rawText.Length - 2 >= Regex.Replace(rawText, @"[0-9]", "").Length)
+                if (bestMatch.HasValue && dist < rawText.Length - 2 && rawText.Length - 2 >= Regex.Replace(rawText, @"[0-9]", "").Length)
                 {
-                    foundArtifact.main = Database.rarityData[rarity-1].MainStats_trans[resultIndex];
+                    foundArtifact.main = bestMatch.Value;
                     i++;
                     break;
                 }
@@ -950,26 +956,26 @@ namespace AdeptiScanner_GI
                 i++;
             for (; i < textRows.Count && textRows[i].Item2 > levelArea.Top; i++)
             {
-                string result = OCRRow(img, textRows[i].Item1, textRows[i].Item2, Database.Levels, out int resultIndex, out int dist, out string rawText, "", saveImages, tessEngine);
-                if (rawText.Length != 0)
+                string result = OCRRow(img, textRows[i].Item1, textRows[i].Item2, Database.ArtifactLevels, out ArtifactLevelData? bestMatch, out int dist, out string rawText, "", saveImages, tessEngine);
+                if (bestMatch.HasValue && rawText.Length != 0)
                 {
-                    foundArtifact.level = Database.Levels_trans[resultIndex];
+                    foundArtifact.level = bestMatch.Value;
                     i++;
                     break;
                 }
             }
 
             //Substats
-            foundArtifact.subs = new List<Tuple<string, string, double>>();
+            foundArtifact.subs = new List<ArtifactSubStatData>();
             int substat = 0;
             while (i < textRows.Count && textRows[i].Item2 <= subArea.Top)
                 i++;
             for (; i < textRows.Count && textRows[i].Item2 > subArea.Top; i++)
             {
-                string result = OCRRow(img, textRows[i].Item1, textRows[i].Item2, Database.rarityData[rarity-1].Substats, out int resultIndex, out int dist, out string rawText, "", saveImages, tessEngine);
-                if (dist < 3)
+                string result = OCRRow(img, textRows[i].Item1, textRows[i].Item2, Database.rarityData[rarity-1].Substats, out ArtifactSubStatData? bestMatch, out int dist, out string rawText, "", saveImages, tessEngine);
+                if (bestMatch.HasValue &&dist < 3)
                 {
-                    foundArtifact.subs.Add(Database.rarityData[rarity-1].Substats_trans[resultIndex]);
+                    foundArtifact.subs.Add(bestMatch.Value);
                     if (substat > 2)
                     {
                         i++;
@@ -990,10 +996,10 @@ namespace AdeptiScanner_GI
                 i++;
             for (; i < textRows.Count && textRows[i].Item2 > setArea.Top; i++)
             {
-                string result = OCRRow(img, textRows[i].Item1, textRows[i].Item2, Database.rarityData[rarity-1].Sets, out int resultIndex, out int dist, out string rawText, prevRaw, saveImages, tessEngine);
-                if (dist < 5)
+                string result = OCRRow(img, textRows[i].Item1, textRows[i].Item2, Database.rarityData[rarity-1].Sets, out ArtifactSetData? bestMatch, out int dist, out string rawText, prevRaw, saveImages, tessEngine);
+                if (bestMatch.HasValue && dist < 5)
                 {
-                    foundArtifact.set = Database.rarityData[rarity-1].Sets_trans[resultIndex];
+                    foundArtifact.set = bestMatch.Value;
                     break;
                 }
                 else
@@ -1007,10 +1013,10 @@ namespace AdeptiScanner_GI
             //Character
             for (i = textRows.Count - 1; i > Math.Max(0, textRows.Count - 6) && textRows[i].Item1 > charArea.Top - 10  ; i--)
             {
-                string result = OCRRow(img, textRows[i].Item1, textRows[i].Item2, Database.Characters, out int resultIndex, out int dist, out string rawText, "", saveImages, tessEngine);
-                if (dist < 5)
+                string result = OCRRow(img, textRows[i].Item1, textRows[i].Item2, Database.Characters, out CharacterNameData? bestMatch, out int dist, out string rawText, "", saveImages, tessEngine);
+                if (bestMatch.HasValue && dist < 5)
                 {
-                    foundArtifact.character = Database.Characters_trans[resultIndex];
+                    foundArtifact.character = bestMatch.Value;
                     break;
                 }
             }
@@ -1044,10 +1050,10 @@ namespace AdeptiScanner_GI
                 i++;
             for (; i < textRows.Count && textRows[i].Item2 > nameArea.Top; i++)
             {
-                string result = OCRRow(img, textRows[i].Item1, textRows[i].Item2, Database.WeaponNames, out int resultIndex, out int dist, out string rawText, "", saveImages, tessEngine);
-                if (dist < 3)
+                string result = OCRRow(img, textRows[i].Item1, textRows[i].Item2, Database.WeaponNames, out WeaponNameData? bestMatch, out int dist, out string rawText, "", saveImages, tessEngine);
+                if (bestMatch.HasValue && dist < 3)
                 {
-                    foundWeapon.name = Database.WeaponNames_trans[resultIndex];
+                    foundWeapon.name = bestMatch.Value;
                     i++;
                     break;
                 }
@@ -1055,16 +1061,16 @@ namespace AdeptiScanner_GI
 
             if (foundWeapon.name != null)
             {
-                string name = foundWeapon.name.Item1;
+                WeaponNameData name = foundWeapon.name.Value;
                 //Level (base attack)
                 while (i < textRows.Count && textRows[i].Item2 <= statArea.Top)
                     i++;
                 for (; i < textRows.Count && textRows[i].Item2 > statArea.Top; i++)
                 {
-                    string result = OCRRow(img, textRows[i].Item1, textRows[i].Item2, Database.WeaponLevels[name], out int resultIndex, out int dist, out string rawText, "", saveImages, tessEngine);
-                    if (dist == 0)
+                    string result = OCRRow(img, textRows[i].Item1, textRows[i].Item2, Database.WeaponLevels[name], out WeaponLevelAndAscensionData? bestMatch, out int dist, out string rawText, "", saveImages, tessEngine);
+                    if (bestMatch.HasValue && dist == 0)
                     {
-                        foundWeapon.level = Database.WeaponLevels_trans[name][resultIndex];
+                        foundWeapon.level = bestMatch.Value;
                         i++;
                         break;
                     }
@@ -1081,7 +1087,7 @@ namespace AdeptiScanner_GI
             {
                 if (refinementArea.Equals(Rectangle.Empty))
                     break;
-                string result = OCRRow(img, textRows[i].Item1, textRows[i].Item2, new List<string>(), out int resultIndex, out int dist, out string rawText, "", saveImages, tessEngine);
+                string result = OCRRowSimple(img, textRows[i].Item1, textRows[i].Item2, out string rawText, "", saveImages, tessEngine);
                 if (rawText.Length != 0)
                 {
                     string lastNum = rawText.Substring(rawText.Length - 1);
@@ -1095,10 +1101,10 @@ namespace AdeptiScanner_GI
             //Character
             for (i = textRows.Count - 1; i > Math.Max(0, textRows.Count - 6) && textRows[i].Item1 > charArea.Top - 10; i--)
             {
-                string result = OCRRow(img, textRows[i].Item1, textRows[i].Item2, Database.Characters, out int resultIndex, out int dist, out string rawText, "", saveImages, tessEngine);
-                if (dist < 5)
+                string result = OCRRow(img, textRows[i].Item1, textRows[i].Item2, Database.Characters, out CharacterNameData? bestMatch, out int dist, out string rawText, "", saveImages, tessEngine);
+                if (bestMatch.HasValue && dist < 5)
                 {
-                    foundWeapon.character = Database.Characters_trans[resultIndex];
+                    foundWeapon.character = bestMatch.Value;
                     break;
                 }
             }
