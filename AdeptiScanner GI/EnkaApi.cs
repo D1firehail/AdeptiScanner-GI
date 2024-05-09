@@ -27,6 +27,17 @@ namespace AdeptiScanner_GI
             return characters;
         }
 
+        public static TimeSpan GetRemainingCooldown()
+        {
+            TimeSpan remainingWait = cooldownEnd - DateTime.Now;
+            if (remainingWait <= TimeSpan.Zero)
+            {
+                // if it's over, no point in specifying by how much. Better to just avoid negative numbers 
+                return TimeSpan.Zero;
+            }
+            return remainingWait;
+        }
+
         public static void RequestUid(string uid)
         {
             lock (EnkaRequestLock)
