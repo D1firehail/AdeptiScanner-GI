@@ -552,7 +552,7 @@ namespace AdeptiScanner_GI
             Marshal.Copy(imgData.Scan0, imgBytes, 0, numBytes);
             int PixelSize = 4; //ARGB, reverse order
             //some variables to keep track of which part of the image we are in
-            int section = 0; //0 = top part, 1 = artifact level part, 2 = substats, 3 = set, 4 = character
+            int section = 0; //0 = top part, 1 = artifact level part, 2 = substats, 3 = set, 4 = after set, before character, 5 =character
             int sectionStart = 0;
             int sectionEnd = 0;
             int rightEdge = 0;
@@ -566,7 +566,7 @@ namespace AdeptiScanner_GI
                 if (
                     (section == 0 && (x < width * 0.55 && imgBytes[i] > 140 && imgBytes[i + 1] > 140 && imgBytes[i + 2] > 140)) //look for white-ish text, skip right edge (artifact image)
                     || (section == 1 && x < width * 0.55 && ((imgBytes[i] > 225 && imgBytes[i + 1] > 225 && imgBytes[i + 2] > 225) || (imgBytes[y_below] > 225 && imgBytes[y_below + 1] > 225 && imgBytes[y_below + 2] > 225))) //look for bright white text, skip right edge
-                    || ((section == 2 || section == 4) && (imgBytes[i] < 150 && imgBytes[i + 1] < 150 && imgBytes[i + 2] < 150)) //look for black
+                    || ((section == 2 || section == 5) && (imgBytes[i] < 150 && imgBytes[i + 1] < 150 && imgBytes[i + 2] < 150)) //look for black
                     || (section == 3 && (imgBytes[i] < 130 && imgBytes[i + 1] > 160 && imgBytes[i + 2] < 130)) //look for green
                     )
                 {
@@ -605,6 +605,10 @@ namespace AdeptiScanner_GI
                         setArea = new Rectangle(setArea.X, setArea.Y, setArea.Width, y - setArea.Y);
                         charArea = new Rectangle(0, y, width, height - y);
                         section = 4;
+                    } else if (section == 4 && imgBytes[i] is > 180 and < 200 && imgBytes[i + 1] > 220 && imgBytes[i + 2] > 240)
+                    {
+                        // if section 4, look for beginning of character label
+                        section = 5;
                     }
                     //Make White
                     imgBytes[i] = 255;
