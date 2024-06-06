@@ -320,7 +320,9 @@ namespace AdeptiScanner_GI
 
         private void runOCRThread(int threadIndex, bool weaponMode)
         {
-            Task.Run((() =>
+            Task.Run(RunOCRThreadInternal);
+
+            async Task RunOCRThreadInternal()
             {
                 threadRunning[threadIndex] = true;
                 bool saveImages = false;
@@ -371,12 +373,11 @@ namespace AdeptiScanner_GI
                     }
                     else
                     {
-                        System.Threading.Thread.Sleep(1000);
+                        await Task.Delay(1000);
                     }
                 }
                 threadRunning[threadIndex] = false;
-
-            }));
+            }
         }
 
         private void artifactAuto(bool saveImages, int clickSleepWait = 100, int scrollSleepWait = 1500, int scrollTestWait = 100, int recheckSleepWait = 300)
@@ -393,7 +394,9 @@ namespace AdeptiScanner_GI
                 runOCRThread(i, false);
             }
 
-            Task.Run((() =>
+            Task.Run(ArtifactAutoInternal);
+
+            void ArtifactAutoInternal()
             {
                 Stopwatch runtime = new Stopwatch();
                 runtime.Start();
@@ -645,7 +648,7 @@ namespace AdeptiScanner_GI
                 GameVisibilityHandler.bringScannerToFront();
                 AppendStatusText("Time elapsed: " + runtime.ElapsedMilliseconds + "ms" + Environment.NewLine, true);
                 autoRunning = false;
-            }));
+            }
         }
 
         private void weaponAuto(bool saveImages, int clickSleepWait = 100, int scrollSleepWait = 1500, int scrollTestWait = 100, int recheckSleepWait = 300)
@@ -662,7 +665,9 @@ namespace AdeptiScanner_GI
                 runOCRThread(i, true);
             }
 
-            Task.Run((() =>
+            Task.Run(WeaponAutoInternal);
+
+            void WeaponAutoInternal()
             {
                 Stopwatch runtime = new Stopwatch();
                 runtime.Start();
@@ -907,7 +912,7 @@ namespace AdeptiScanner_GI
                 GameVisibilityHandler.bringScannerToFront();
                 AppendStatusText("Time elapsed: " + runtime.ElapsedMilliseconds + "ms" + Environment.NewLine, true);
                 autoRunning = false;
-            }));
+            }
         }
 
         enum CaptureDebugMode
