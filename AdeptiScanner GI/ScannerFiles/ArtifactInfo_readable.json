@@ -1,5 +1,5 @@
 {
-	"DataVersion": "4.6",
+	"DataVersion": "4.7",
 	"Pieces": [
 		{ "name": { "Flower of Life": "flower" } },
 		{ "name": { "Plume of Death": "plume" } },
@@ -635,6 +635,7 @@
 		{ "name": { "Chevreuse": "Chevreuse" } },
 		{ "name": { "Chiori": "Chiori" } },
 		{ "name": { "Chongyun": "Chongyun" } },
+		{ "name": { "Clorinde": "Clorinde" } },
 		{ "name": { "Collei": "Collei" } },
 		{ "name": { "Cyno": "Cyno" } },
 		{ "name": { "Dehya": "Dehya" } },
@@ -680,8 +681,10 @@
 		{ "name": { "Rosaria": "Rosaria" } },
 		{ "name": { "Sangonomiya Kokomi": "SangonomiyaKokomi" } },
 		{ "name": { "Sayu": "Sayu" } },
+		{ "name": { "Sethos": "Sethos" } },
 		{ "name": { "Shikanoin Heizou": "ShikanoinHeizou" } },
 		{ "name": { "Shenhe": "Shenhe" } },
+		{ "name": { "Sigewinne": "Sigewinne" } },
 		{ "name": { "Sucrose": "Sucrose" } },
 		{ "name": { "Tartaglia": "Tartaglia" } },
 		{ "name": { "Thoma": "Thoma" } },
@@ -787,7 +790,10 @@
 				"10000092": "Gaming",
 				"10000093": "Xianyun",
 				"10000094": "Chiori",
-				"10000096": "Arlecchino"
+				"10000096": "Arlecchino",
+				"10000095": "Sigewinne",
+				"10000097": "Sethos",
+				"10000098": "Clorinde"
 
 			}
 		},
@@ -1073,12 +1079,22 @@
 				"10945": "burst",
 				"10961": "auto",
 				"10962": "skill",
-				"10965": "burst"
+				"10965": "burst",
+				"10951": "auto",
+				"10952": "skill",
+				"10955": "burst",
+				"10971": "auto",
+				"10972": "skill",
+				"10975": "burst",
+				"10981": "auto",
+				"10982": "skill",
+				"10985": "burst"
 			}
 		}
 	],
 	"Weapons": [
 		{
+			"name": "Alley Hunter",
 			"key": "AlleyHunter",
 			"rarity": 4,
 			"stats": [
@@ -1565,6 +1581,7 @@
 			]
 		},
 		{
+			"name": "Amos' Bow",
 			"key": "AmosBow",
 			"rarity": 5,
 			"stats": [
@@ -2051,6 +2068,7 @@
 			]
 		},
 		{
+			"name": "Aqua Simulacra",
 			"key": "AquaSimulacra",
 			"rarity": 5,
 			"stats": [
@@ -2537,6 +2555,7 @@
 			]
 		},
 		{
+			"name": "Blackcliff Warbow",
 			"key": "BlackcliffWarbow",
 			"rarity": 4,
 			"stats": [
@@ -3023,6 +3042,7 @@
 			]
 		},
 		{
+			"name": "Compound Bow",
 			"key": "CompoundBow",
 			"rarity": 4,
 			"stats": [
@@ -3509,6 +3529,7 @@
 			]
 		},
 		{
+			"name": "Elegy for the End",
 			"key": "ElegyForTheEnd",
 			"rarity": 5,
 			"stats": [
@@ -3995,6 +4016,7 @@
 			]
 		},
 		{
+			"name": "End of the Line",
 			"key": "EndOfTheLine",
 			"rarity": 4,
 			"stats": [
@@ -4481,6 +4503,7 @@
 			]
 		},
 		{
+			"name": "Fading Twilight",
 			"key": "FadingTwilight",
 			"rarity": 4,
 			"stats": [
@@ -4967,6 +4990,7 @@
 			]
 		},
 		{
+			"name": "Favonius Warbow",
 			"key": "FavoniusWarbow",
 			"rarity": 4,
 			"stats": [
@@ -5453,6 +5477,7 @@
 			]
 		},
 		{
+			"name": "Hamayumi",
 			"key": "Hamayumi",
 			"rarity": 4,
 			"stats": [
@@ -5939,6 +5964,7 @@
 			]
 		},
 		{
+			"name": "Hunter's Bow",
 			"key": "HuntersBow",
 			"rarity": 1,
 			"stats": [
@@ -6425,6 +6451,7 @@
 			]
 		},
 		{
+			"name": "Hunter's Path",
 			"key": "HuntersPath",
 			"rarity": 5,
 			"stats": [
@@ -6911,6 +6938,7 @@
 			]
 		},
 		{
+			"name": "Ibis Piercer",
 			"key": "IbisPiercer",
 			"rarity": 4,
 			"stats": [
@@ -7397,6 +7425,7 @@
 			]
 		},
 		{
+			"name": "King's Squire",
 			"key": "KingsSquire",
 			"rarity": 4,
 			"stats": [
@@ -7883,6 +7912,7 @@
 			]
 		},
 		{
+			"name": "Messenger",
 			"key": "Messenger",
 			"rarity": 3,
 			"stats": [
@@ -8369,6 +8399,7 @@
 			]
 		},
 		{
+			"name": "Mitternachts Waltz",
 			"key": "MitternachtsWaltz",
 			"rarity": 4,
 			"stats": [
@@ -8855,6 +8886,7 @@
 			]
 		},
 		{
+			"name": "Mouun's Moon",
 			"key": "MouunsMoon",
 			"rarity": 4,
 			"stats": [
@@ -9341,6 +9373,7 @@
 			]
 		},
 		{
+			"name": "Polar Star",
 			"key": "PolarStar",
 			"rarity": 5,
 			"stats": [
@@ -9827,6 +9860,7 @@
 			]
 		},
 		{
+			"name": "Predator",
 			"key": "Predator",
 			"rarity": 4,
 			"stats": [
@@ -10313,6 +10347,7 @@
 			]
 		},
 		{
+			"name": "Prototype Crescent",
 			"key": "PrototypeCrescent",
 			"rarity": 4,
 			"stats": [
@@ -10799,6 +10834,7 @@
 			]
 		},
 		{
+			"name": "Range Gauge",
 			"key": "RangeGauge",
 			"rarity": 4,
 			"stats": [
@@ -11285,6 +11321,7 @@
 			]
 		},
 		{
+			"name": "Raven Bow",
 			"key": "RavenBow",
 			"rarity": 3,
 			"stats": [
@@ -11771,6 +11808,7 @@
 			]
 		},
 		{
+			"name": "Recurve Bow",
 			"key": "RecurveBow",
 			"rarity": 3,
 			"stats": [
@@ -12257,6 +12295,7 @@
 			]
 		},
 		{
+			"name": "Royal Bow",
 			"key": "RoyalBow",
 			"rarity": 4,
 			"stats": [
@@ -12743,6 +12782,7 @@
 			]
 		},
 		{
+			"name": "Rust",
 			"key": "Rust",
 			"rarity": 4,
 			"stats": [
@@ -13229,6 +13269,7 @@
 			]
 		},
 		{
+			"name": "Sacrificial Bow",
 			"key": "SacrificialBow",
 			"rarity": 4,
 			"stats": [
@@ -13715,6 +13756,7 @@
 			]
 		},
 		{
+			"name": "Scion of the Blazing Sun",
 			"key": "ScionOfTheBlazingSun",
 			"rarity": 4,
 			"stats": [
@@ -14201,6 +14243,7 @@
 			]
 		},
 		{
+			"name": "Seasoned Hunter's Bow",
 			"key": "SeasonedHuntersBow",
 			"rarity": 2,
 			"stats": [
@@ -14687,6 +14730,7 @@
 			]
 		},
 		{
+			"name": "Sharpshooter's Oath",
 			"key": "SharpshootersOath",
 			"rarity": 3,
 			"stats": [
@@ -15173,6 +15217,7 @@
 			]
 		},
 		{
+			"name": "Skyward Harp",
 			"key": "SkywardHarp",
 			"rarity": 5,
 			"stats": [
@@ -15659,6 +15704,7 @@
 			]
 		},
 		{
+			"name": "Slingshot",
 			"key": "Slingshot",
 			"rarity": 3,
 			"stats": [
@@ -16145,6 +16191,7 @@
 			]
 		},
 		{
+			"name": "Song of Stillness",
 			"key": "SongOfStillness",
 			"rarity": 4,
 			"stats": [
@@ -16631,6 +16678,7 @@
 			]
 		},
 		{
+			"name": "The First Great Magic",
 			"key": "TheFirstGreatMagic",
 			"rarity": 5,
 			"stats": [
@@ -17117,6 +17165,7 @@
 			]
 		},
 		{
+			"name": "The Stringless",
 			"key": "TheStringless",
 			"rarity": 4,
 			"stats": [
@@ -17603,6 +17652,7 @@
 			]
 		},
 		{
+			"name": "The Viridescent Hunt",
 			"key": "TheViridescentHunt",
 			"rarity": 4,
 			"stats": [
@@ -18089,6 +18139,7 @@
 			]
 		},
 		{
+			"name": "Thundering Pulse",
 			"key": "ThunderingPulse",
 			"rarity": 5,
 			"stats": [
@@ -18575,6 +18626,7 @@
 			]
 		},
 		{
+			"name": "Windblume Ode",
 			"key": "WindblumeOde",
 			"rarity": 4,
 			"stats": [
@@ -19061,6 +19113,7 @@
 			]
 		},
 		{
+			"name": "Apprentice's Notes",
 			"key": "ApprenticesNotes",
 			"rarity": 1,
 			"stats": [
@@ -19547,6 +19600,7 @@
 			]
 		},
 		{
+			"name": "A Thousand Floating Dreams",
 			"key": "AThousandFloatingDreams",
 			"rarity": 5,
 			"stats": [
@@ -20033,6 +20087,7 @@
 			]
 		},
 		{
+			"name": "Ballad of the Boundless Blue",
 			"key": "BalladOfTheBoundlessBlue",
 			"rarity": 4,
 			"stats": [
@@ -20519,6 +20574,7 @@
 			]
 		},
 		{
+			"name": "Blackcliff Agate",
 			"key": "BlackcliffAgate",
 			"rarity": 4,
 			"stats": [
@@ -21005,6 +21061,7 @@
 			]
 		},
 		{
+			"name": "Cashflow Supervision",
 			"key": "CashflowSupervision",
 			"rarity": 5,
 			"stats": [
@@ -21491,6 +21548,7 @@
 			]
 		},
 		{
+			"name": "Crane's Echoing Call",
 			"key": "CranesEchoingCall",
 			"rarity": 5,
 			"stats": [
@@ -21977,6 +22035,7 @@
 			]
 		},
 		{
+			"name": "Dodoco Tales",
 			"key": "DodocoTales",
 			"rarity": 4,
 			"stats": [
@@ -22463,6 +22522,7 @@
 			]
 		},
 		{
+			"name": "Emerald Orb",
 			"key": "EmeraldOrb",
 			"rarity": 3,
 			"stats": [
@@ -22949,6 +23009,7 @@
 			]
 		},
 		{
+			"name": "Everlasting Moonglow",
 			"key": "EverlastingMoonglow",
 			"rarity": 5,
 			"stats": [
@@ -23435,6 +23496,7 @@
 			]
 		},
 		{
+			"name": "Eye of Perception",
 			"key": "EyeOfPerception",
 			"rarity": 4,
 			"stats": [
@@ -23921,6 +23983,7 @@
 			]
 		},
 		{
+			"name": "Favonius Codex",
 			"key": "FavoniusCodex",
 			"rarity": 4,
 			"stats": [
@@ -24407,6 +24470,7 @@
 			]
 		},
 		{
+			"name": "Flowing Purity",
 			"key": "FlowingPurity",
 			"rarity": 4,
 			"stats": [
@@ -24893,6 +24957,7 @@
 			]
 		},
 		{
+			"name": "Frostbearer",
 			"key": "Frostbearer",
 			"rarity": 4,
 			"stats": [
@@ -25379,6 +25444,7 @@
 			]
 		},
 		{
+			"name": "Fruit of Fulfillment",
 			"key": "FruitOfFulfillment",
 			"rarity": 4,
 			"stats": [
@@ -25865,6 +25931,7 @@
 			]
 		},
 		{
+			"name": "Hakushin Ring",
 			"key": "HakushinRing",
 			"rarity": 4,
 			"stats": [
@@ -26351,6 +26418,7 @@
 			]
 		},
 		{
+			"name": "Jadefall's Splendor",
 			"key": "JadefallsSplendor",
 			"rarity": 5,
 			"stats": [
@@ -26837,6 +26905,7 @@
 			]
 		},
 		{
+			"name": "Kagura's Verity",
 			"key": "KagurasVerity",
 			"rarity": 5,
 			"stats": [
@@ -27323,6 +27392,7 @@
 			]
 		},
 		{
+			"name": "Lost Prayer to the Sacred Winds",
 			"key": "LostPrayerToTheSacredWinds",
 			"rarity": 5,
 			"stats": [
@@ -27809,6 +27879,7 @@
 			]
 		},
 		{
+			"name": "Magic Guide",
 			"key": "MagicGuide",
 			"rarity": 3,
 			"stats": [
@@ -28295,6 +28366,7 @@
 			]
 		},
 		{
+			"name": "Mappa Mare",
 			"key": "MappaMare",
 			"rarity": 4,
 			"stats": [
@@ -28781,6 +28853,7 @@
 			]
 		},
 		{
+			"name": "Memory of Dust",
 			"key": "MemoryOfDust",
 			"rarity": 5,
 			"stats": [
@@ -29267,6 +29340,7 @@
 			]
 		},
 		{
+			"name": "Oathsworn Eye",
 			"key": "OathswornEye",
 			"rarity": 4,
 			"stats": [
@@ -29753,6 +29827,7 @@
 			]
 		},
 		{
+			"name": "Otherworldly Story",
 			"key": "OtherworldlyStory",
 			"rarity": 3,
 			"stats": [
@@ -30239,6 +30314,7 @@
 			]
 		},
 		{
+			"name": "Pocket Grimoire",
 			"key": "PocketGrimoire",
 			"rarity": 2,
 			"stats": [
@@ -30725,6 +30801,7 @@
 			]
 		},
 		{
+			"name": "Prototype Amber",
 			"key": "PrototypeAmber",
 			"rarity": 4,
 			"stats": [
@@ -31211,492 +31288,7 @@
 			]
 		},
 		{
-			"key": "QuantumCatalyst",
-			"rarity": 5,
-			"stats": [
-				{
-					"level": 1,
-					"baseAtk": "46",
-					"ascension": 0
-				},
-				{
-					"level": 2,
-					"baseAtk": "50",
-					"ascension": 0
-				},
-				{
-					"level": 3,
-					"baseAtk": "54",
-					"ascension": 0
-				},
-				{
-					"level": 4,
-					"baseAtk": "58",
-					"ascension": 0
-				},
-				{
-					"level": 5,
-					"baseAtk": "62",
-					"ascension": 0
-				},
-				{
-					"level": 6,
-					"baseAtk": "66",
-					"ascension": 0
-				},
-				{
-					"level": 7,
-					"baseAtk": "70",
-					"ascension": 0
-				},
-				{
-					"level": 8,
-					"baseAtk": "74",
-					"ascension": 0
-				},
-				{
-					"level": 9,
-					"baseAtk": "78",
-					"ascension": 0
-				},
-				{
-					"level": 10,
-					"baseAtk": "82",
-					"ascension": 0
-				},
-				{
-					"level": 11,
-					"baseAtk": "86",
-					"ascension": 0
-				},
-				{
-					"level": 12,
-					"baseAtk": "90",
-					"ascension": 0
-				},
-				{
-					"level": 13,
-					"baseAtk": "94",
-					"ascension": 0
-				},
-				{
-					"level": 14,
-					"baseAtk": "98",
-					"ascension": 0
-				},
-				{
-					"level": 15,
-					"baseAtk": "102",
-					"ascension": 0
-				},
-				{
-					"level": 16,
-					"baseAtk": "106",
-					"ascension": 0
-				},
-				{
-					"level": 17,
-					"baseAtk": "110",
-					"ascension": 0
-				},
-				{
-					"level": 18,
-					"baseAtk": "114",
-					"ascension": 0
-				},
-				{
-					"level": 19,
-					"baseAtk": "118",
-					"ascension": 0
-				},
-				{
-					"level": 20,
-					"baseAtk": "153",
-					"ascension": 1
-				},
-				{
-					"level": 20,
-					"baseAtk": "122",
-					"ascension": 0
-				},
-				{
-					"level": 21,
-					"baseAtk": "157",
-					"ascension": 1
-				},
-				{
-					"level": 22,
-					"baseAtk": "161",
-					"ascension": 1
-				},
-				{
-					"level": 23,
-					"baseAtk": "165",
-					"ascension": 1
-				},
-				{
-					"level": 24,
-					"baseAtk": "169",
-					"ascension": 1
-				},
-				{
-					"level": 25,
-					"baseAtk": "173",
-					"ascension": 1
-				},
-				{
-					"level": 26,
-					"baseAtk": "177",
-					"ascension": 1
-				},
-				{
-					"level": 27,
-					"baseAtk": "181",
-					"ascension": 1
-				},
-				{
-					"level": 28,
-					"baseAtk": "185",
-					"ascension": 1
-				},
-				{
-					"level": 29,
-					"baseAtk": "190",
-					"ascension": 1
-				},
-				{
-					"level": 30,
-					"baseAtk": "194",
-					"ascension": 1
-				},
-				{
-					"level": 31,
-					"baseAtk": "198",
-					"ascension": 1
-				},
-				{
-					"level": 32,
-					"baseAtk": "202",
-					"ascension": 1
-				},
-				{
-					"level": 33,
-					"baseAtk": "206",
-					"ascension": 1
-				},
-				{
-					"level": 34,
-					"baseAtk": "210",
-					"ascension": 1
-				},
-				{
-					"level": 35,
-					"baseAtk": "214",
-					"ascension": 1
-				},
-				{
-					"level": 36,
-					"baseAtk": "219",
-					"ascension": 1
-				},
-				{
-					"level": 37,
-					"baseAtk": "223",
-					"ascension": 1
-				},
-				{
-					"level": 38,
-					"baseAtk": "227",
-					"ascension": 1
-				},
-				{
-					"level": 39,
-					"baseAtk": "231",
-					"ascension": 1
-				},
-				{
-					"level": 40,
-					"baseAtk": "266",
-					"ascension": 2
-				},
-				{
-					"level": 40,
-					"baseAtk": "235",
-					"ascension": 1
-				},
-				{
-					"level": 41,
-					"baseAtk": "270",
-					"ascension": 2
-				},
-				{
-					"level": 42,
-					"baseAtk": "275",
-					"ascension": 2
-				},
-				{
-					"level": 43,
-					"baseAtk": "279",
-					"ascension": 2
-				},
-				{
-					"level": 44,
-					"baseAtk": "283",
-					"ascension": 2
-				},
-				{
-					"level": 45,
-					"baseAtk": "287",
-					"ascension": 2
-				},
-				{
-					"level": 46,
-					"baseAtk": "292",
-					"ascension": 2
-				},
-				{
-					"level": 47,
-					"baseAtk": "296",
-					"ascension": 2
-				},
-				{
-					"level": 48,
-					"baseAtk": "300",
-					"ascension": 2
-				},
-				{
-					"level": 49,
-					"baseAtk": "304",
-					"ascension": 2
-				},
-				{
-					"level": 50,
-					"baseAtk": "340",
-					"ascension": 3
-				},
-				{
-					"level": 50,
-					"baseAtk": "308",
-					"ascension": 2
-				},
-				{
-					"level": 51,
-					"baseAtk": "344",
-					"ascension": 3
-				},
-				{
-					"level": 52,
-					"baseAtk": "348",
-					"ascension": 3
-				},
-				{
-					"level": 53,
-					"baseAtk": "352",
-					"ascension": 3
-				},
-				{
-					"level": 54,
-					"baseAtk": "357",
-					"ascension": 3
-				},
-				{
-					"level": 55,
-					"baseAtk": "361",
-					"ascension": 3
-				},
-				{
-					"level": 56,
-					"baseAtk": "365",
-					"ascension": 3
-				},
-				{
-					"level": 57,
-					"baseAtk": "370",
-					"ascension": 3
-				},
-				{
-					"level": 58,
-					"baseAtk": "374",
-					"ascension": 3
-				},
-				{
-					"level": 59,
-					"baseAtk": "378",
-					"ascension": 3
-				},
-				{
-					"level": 60,
-					"baseAtk": "414",
-					"ascension": 4
-				},
-				{
-					"level": 60,
-					"baseAtk": "382",
-					"ascension": 3
-				},
-				{
-					"level": 61,
-					"baseAtk": "418",
-					"ascension": 4
-				},
-				{
-					"level": 62,
-					"baseAtk": "422",
-					"ascension": 4
-				},
-				{
-					"level": 63,
-					"baseAtk": "427",
-					"ascension": 4
-				},
-				{
-					"level": 64,
-					"baseAtk": "431",
-					"ascension": 4
-				},
-				{
-					"level": 65,
-					"baseAtk": "435",
-					"ascension": 4
-				},
-				{
-					"level": 66,
-					"baseAtk": "440",
-					"ascension": 4
-				},
-				{
-					"level": 67,
-					"baseAtk": "444",
-					"ascension": 4
-				},
-				{
-					"level": 68,
-					"baseAtk": "448",
-					"ascension": 4
-				},
-				{
-					"level": 69,
-					"baseAtk": "453",
-					"ascension": 4
-				},
-				{
-					"level": 70,
-					"baseAtk": "488",
-					"ascension": 5
-				},
-				{
-					"level": 70,
-					"baseAtk": "457",
-					"ascension": 4
-				},
-				{
-					"level": 71,
-					"baseAtk": "492",
-					"ascension": 5
-				},
-				{
-					"level": 72,
-					"baseAtk": "497",
-					"ascension": 5
-				},
-				{
-					"level": 73,
-					"baseAtk": "501",
-					"ascension": 5
-				},
-				{
-					"level": 74,
-					"baseAtk": "506",
-					"ascension": 5
-				},
-				{
-					"level": 75,
-					"baseAtk": "510",
-					"ascension": 5
-				},
-				{
-					"level": 76,
-					"baseAtk": "515",
-					"ascension": 5
-				},
-				{
-					"level": 77,
-					"baseAtk": "519",
-					"ascension": 5
-				},
-				{
-					"level": 78,
-					"baseAtk": "523",
-					"ascension": 5
-				},
-				{
-					"level": 79,
-					"baseAtk": "528",
-					"ascension": 5
-				},
-				{
-					"level": 80,
-					"baseAtk": "563",
-					"ascension": 6
-				},
-				{
-					"level": 80,
-					"baseAtk": "532",
-					"ascension": 5
-				},
-				{
-					"level": 81,
-					"baseAtk": "568",
-					"ascension": 6
-				},
-				{
-					"level": 82,
-					"baseAtk": "572",
-					"ascension": 6
-				},
-				{
-					"level": 83,
-					"baseAtk": "577",
-					"ascension": 6
-				},
-				{
-					"level": 84,
-					"baseAtk": "581",
-					"ascension": 6
-				},
-				{
-					"level": 85,
-					"baseAtk": "586",
-					"ascension": 6
-				},
-				{
-					"level": 86,
-					"baseAtk": "590",
-					"ascension": 6
-				},
-				{
-					"level": 87,
-					"baseAtk": "595",
-					"ascension": 6
-				},
-				{
-					"level": 88,
-					"baseAtk": "599",
-					"ascension": 6
-				},
-				{
-					"level": 89,
-					"baseAtk": "604",
-					"ascension": 6
-				},
-				{
-					"level": 90,
-					"baseAtk": "608",
-					"ascension": 6
-				}
-			]
-		},
-		{
+			"name": "Royal Grimoire",
 			"key": "RoyalGrimoire",
 			"rarity": 4,
 			"stats": [
@@ -32183,6 +31775,7 @@
 			]
 		},
 		{
+			"name": "Sacrificial Fragments",
 			"key": "SacrificialFragments",
 			"rarity": 4,
 			"stats": [
@@ -32669,6 +32262,7 @@
 			]
 		},
 		{
+			"name": "Sacrificial Jade",
 			"key": "SacrificialJade",
 			"rarity": 4,
 			"stats": [
@@ -33155,6 +32749,7 @@
 			]
 		},
 		{
+			"name": "Skyward Atlas",
 			"key": "SkywardAtlas",
 			"rarity": 5,
 			"stats": [
@@ -33641,6 +33236,7 @@
 			]
 		},
 		{
+			"name": "Solar Pearl",
 			"key": "SolarPearl",
 			"rarity": 4,
 			"stats": [
@@ -34127,6 +33723,7 @@
 			]
 		},
 		{
+			"name": "The Widsith",
 			"key": "TheWidsith",
 			"rarity": 4,
 			"stats": [
@@ -34613,6 +34210,7 @@
 			]
 		},
 		{
+			"name": "Thrilling Tales of Dragon Slayers",
 			"key": "ThrillingTalesOfDragonSlayers",
 			"rarity": 3,
 			"stats": [
@@ -35099,6 +34697,7 @@
 			]
 		},
 		{
+			"name": "Tome of the Eternal Flow",
 			"key": "TomeOfTheEternalFlow",
 			"rarity": 5,
 			"stats": [
@@ -35585,6 +35184,7 @@
 			]
 		},
 		{
+			"name": "Tulaytullah's Remembrance",
 			"key": "TulaytullahsRemembrance",
 			"rarity": 5,
 			"stats": [
@@ -36071,6 +35671,7 @@
 			]
 		},
 		{
+			"name": "Twin Nephrite",
 			"key": "TwinNephrite",
 			"rarity": 3,
 			"stats": [
@@ -36557,6 +36158,7 @@
 			]
 		},
 		{
+			"name": "Wandering Evenstar",
 			"key": "WanderingEvenstar",
 			"rarity": 4,
 			"stats": [
@@ -37043,6 +36645,7 @@
 			]
 		},
 		{
+			"name": "Wine and Song",
 			"key": "WineAndSong",
 			"rarity": 4,
 			"stats": [
@@ -37529,6 +37132,7 @@
 			]
 		},
 		{
+			"name": "Akuoumaru",
 			"key": "Akuoumaru",
 			"rarity": 4,
 			"stats": [
@@ -38015,6 +37619,7 @@
 			]
 		},
 		{
+			"name": "Beacon of the Reed Sea",
 			"key": "BeaconOfTheReedSea",
 			"rarity": 5,
 			"stats": [
@@ -38501,6 +38106,7 @@
 			]
 		},
 		{
+			"name": "Blackcliff Slasher",
 			"key": "BlackcliffSlasher",
 			"rarity": 4,
 			"stats": [
@@ -38987,6 +38593,7 @@
 			]
 		},
 		{
+			"name": "Bloodtainted Greatsword",
 			"key": "BloodtaintedGreatsword",
 			"rarity": 3,
 			"stats": [
@@ -39473,6 +39080,7 @@
 			]
 		},
 		{
+			"name": "Debate Club",
 			"key": "DebateClub",
 			"rarity": 3,
 			"stats": [
@@ -39959,6 +39567,7 @@
 			]
 		},
 		{
+			"name": "Favonius Greatsword",
 			"key": "FavoniusGreatsword",
 			"rarity": 4,
 			"stats": [
@@ -40445,6 +40054,7 @@
 			]
 		},
 		{
+			"name": "Ferrous Shadow",
 			"key": "FerrousShadow",
 			"rarity": 3,
 			"stats": [
@@ -40931,6 +40541,7 @@
 			]
 		},
 		{
+			"name": "Forest Regalia",
 			"key": "ForestRegalia",
 			"rarity": 4,
 			"stats": [
@@ -41417,6 +41028,7 @@
 			]
 		},
 		{
+			"name": "Katsuragikiri Nagamasa",
 			"key": "KatsuragikiriNagamasa",
 			"rarity": 4,
 			"stats": [
@@ -41903,6 +41515,7 @@
 			]
 		},
 		{
+			"name": "Lithic Blade",
 			"key": "LithicBlade",
 			"rarity": 4,
 			"stats": [
@@ -42389,6 +42002,7 @@
 			]
 		},
 		{
+			"name": "Luxurious Sea-Lord",
 			"key": "LuxuriousSeaLord",
 			"rarity": 4,
 			"stats": [
@@ -42875,6 +42489,7 @@
 			]
 		},
 		{
+			"name": "Mailed Flower",
 			"key": "MailedFlower",
 			"rarity": 4,
 			"stats": [
@@ -43361,6 +42976,7 @@
 			]
 		},
 		{
+			"name": "Makhaira Aquamarine",
 			"key": "MakhairaAquamarine",
 			"rarity": 4,
 			"stats": [
@@ -43847,6 +43463,7 @@
 			]
 		},
 		{
+			"name": "Old Merc's Pal",
 			"key": "OldMercsPal",
 			"rarity": 2,
 			"stats": [
@@ -44333,6 +43950,7 @@
 			]
 		},
 		{
+			"name": "Portable Power Saw",
 			"key": "PortablePowerSaw",
 			"rarity": 4,
 			"stats": [
@@ -44819,6 +44437,7 @@
 			]
 		},
 		{
+			"name": "Prototype Archaic",
 			"key": "PrototypeArchaic",
 			"rarity": 4,
 			"stats": [
@@ -45305,6 +44924,7 @@
 			]
 		},
 		{
+			"name": "Rainslasher",
 			"key": "Rainslasher",
 			"rarity": 4,
 			"stats": [
@@ -45791,6 +45411,7 @@
 			]
 		},
 		{
+			"name": "Redhorn Stonethresher",
 			"key": "RedhornStonethresher",
 			"rarity": 5,
 			"stats": [
@@ -46277,6 +45898,7 @@
 			]
 		},
 		{
+			"name": "Royal Greatsword",
 			"key": "RoyalGreatsword",
 			"rarity": 4,
 			"stats": [
@@ -46763,6 +46385,7 @@
 			]
 		},
 		{
+			"name": "Sacrificial Greatsword",
 			"key": "SacrificialGreatsword",
 			"rarity": 4,
 			"stats": [
@@ -47249,6 +46872,7 @@
 			]
 		},
 		{
+			"name": "Serpent Spine",
 			"key": "SerpentSpine",
 			"rarity": 4,
 			"stats": [
@@ -47735,6 +47359,7 @@
 			]
 		},
 		{
+			"name": "Skyrider Greatsword",
 			"key": "SkyriderGreatsword",
 			"rarity": 3,
 			"stats": [
@@ -48221,6 +47846,7 @@
 			]
 		},
 		{
+			"name": "Skyward Pride",
 			"key": "SkywardPride",
 			"rarity": 5,
 			"stats": [
@@ -48707,6 +48333,7 @@
 			]
 		},
 		{
+			"name": "Snow-Tombed Starsilver",
 			"key": "SnowTombedStarsilver",
 			"rarity": 4,
 			"stats": [
@@ -49193,6 +48820,7 @@
 			]
 		},
 		{
+			"name": "Song of Broken Pines",
 			"key": "SongOfBrokenPines",
 			"rarity": 5,
 			"stats": [
@@ -49679,6 +49307,7 @@
 			]
 		},
 		{
+			"name": "Talking Stick",
 			"key": "TalkingStick",
 			"rarity": 4,
 			"stats": [
@@ -50165,6 +49794,7 @@
 			]
 		},
 		{
+			"name": "The Bell",
 			"key": "TheBell",
 			"rarity": 4,
 			"stats": [
@@ -50651,6 +50281,7 @@
 			]
 		},
 		{
+			"name": "The Unforged",
 			"key": "TheUnforged",
 			"rarity": 5,
 			"stats": [
@@ -51137,6 +50768,7 @@
 			]
 		},
 		{
+			"name": "Tidal Shadow",
 			"key": "TidalShadow",
 			"rarity": 4,
 			"stats": [
@@ -51623,6 +51255,7 @@
 			]
 		},
 		{
+			"name": "\"Ultimate Overlord's Mega Magic Sword\"",
 			"key": "UltimateOverlordsMegaMagicSword",
 			"rarity": 4,
 			"stats": [
@@ -52109,6 +51742,7 @@
 			]
 		},
 		{
+			"name": "Verdict",
 			"key": "Verdict",
 			"rarity": 5,
 			"stats": [
@@ -52595,6 +52229,7 @@
 			]
 		},
 		{
+			"name": "Waster Greatsword",
 			"key": "WasterGreatsword",
 			"rarity": 1,
 			"stats": [
@@ -53081,6 +52716,7 @@
 			]
 		},
 		{
+			"name": "Whiteblind",
 			"key": "Whiteblind",
 			"rarity": 4,
 			"stats": [
@@ -53567,6 +53203,7 @@
 			]
 		},
 		{
+			"name": "White Iron Greatsword",
 			"key": "WhiteIronGreatsword",
 			"rarity": 3,
 			"stats": [
@@ -54053,6 +53690,7 @@
 			]
 		},
 		{
+			"name": "Wolf's Gravestone",
 			"key": "WolfsGravestone",
 			"rarity": 5,
 			"stats": [
@@ -54539,6 +54177,7 @@
 			]
 		},
 		{
+			"name": "Ballad of the Fjords",
 			"key": "BalladOfTheFjords",
 			"rarity": 4,
 			"stats": [
@@ -55025,6 +54664,7 @@
 			]
 		},
 		{
+			"name": "Beginner's Protector",
 			"key": "BeginnersProtector",
 			"rarity": 1,
 			"stats": [
@@ -55511,6 +55151,7 @@
 			]
 		},
 		{
+			"name": "Blackcliff Pole",
 			"key": "BlackcliffPole",
 			"rarity": 4,
 			"stats": [
@@ -55997,6 +55638,7 @@
 			]
 		},
 		{
+			"name": "Black Tassel",
 			"key": "BlackTassel",
 			"rarity": 3,
 			"stats": [
@@ -56483,6 +56125,7 @@
 			]
 		},
 		{
+			"name": "Calamity Queller",
 			"key": "CalamityQueller",
 			"rarity": 5,
 			"stats": [
@@ -56969,6 +56612,7 @@
 			]
 		},
 		{
+			"name": "Crescent Pike",
 			"key": "CrescentPike",
 			"rarity": 4,
 			"stats": [
@@ -57455,6 +57099,7 @@
 			]
 		},
 		{
+			"name": "Crimson Moon's Semblance",
 			"key": "CrimsonMoonsSemblance",
 			"rarity": 5,
 			"stats": [
@@ -57941,6 +57586,7 @@
 			]
 		},
 		{
+			"name": "Deathmatch",
 			"key": "Deathmatch",
 			"rarity": 4,
 			"stats": [
@@ -58427,6 +58073,7 @@
 			]
 		},
 		{
+			"name": "Dialogues of the Desert Sages",
 			"key": "DialoguesOfTheDesertSages",
 			"rarity": 4,
 			"stats": [
@@ -58913,6 +58560,7 @@
 			]
 		},
 		{
+			"name": "Dragon's Bane",
 			"key": "DragonsBane",
 			"rarity": 4,
 			"stats": [
@@ -59399,6 +59047,7 @@
 			]
 		},
 		{
+			"name": "Dragonspine Spear",
 			"key": "DragonspineSpear",
 			"rarity": 4,
 			"stats": [
@@ -59885,6 +59534,7 @@
 			]
 		},
 		{
+			"name": "Engulfing Lightning",
 			"key": "EngulfingLightning",
 			"rarity": 5,
 			"stats": [
@@ -60371,6 +60021,7 @@
 			]
 		},
 		{
+			"name": "Favonius Lance",
 			"key": "FavoniusLance",
 			"rarity": 4,
 			"stats": [
@@ -60857,6 +60508,7 @@
 			]
 		},
 		{
+			"name": "Halberd",
 			"key": "Halberd",
 			"rarity": 3,
 			"stats": [
@@ -61343,6 +60995,7 @@
 			]
 		},
 		{
+			"name": "Iron Point",
 			"key": "IronPoint",
 			"rarity": 2,
 			"stats": [
@@ -61829,6 +61482,7 @@
 			]
 		},
 		{
+			"name": "Kitain Cross Spear",
 			"key": "KitainCrossSpear",
 			"rarity": 4,
 			"stats": [
@@ -62315,6 +61969,7 @@
 			]
 		},
 		{
+			"name": "Lithic Spear",
 			"key": "LithicSpear",
 			"rarity": 4,
 			"stats": [
@@ -62801,6 +62456,7 @@
 			]
 		},
 		{
+			"name": "Missive Windspear",
 			"key": "MissiveWindspear",
 			"rarity": 4,
 			"stats": [
@@ -63287,6 +62943,7 @@
 			]
 		},
 		{
+			"name": "Moonpiercer",
 			"key": "Moonpiercer",
 			"rarity": 4,
 			"stats": [
@@ -63773,6 +63430,7 @@
 			]
 		},
 		{
+			"name": "Primordial Jade Winged-Spear",
 			"key": "PrimordialJadeWingedSpear",
 			"rarity": 5,
 			"stats": [
@@ -64259,6 +63917,7 @@
 			]
 		},
 		{
+			"name": "Prospector's Drill",
 			"key": "ProspectorsDrill",
 			"rarity": 4,
 			"stats": [
@@ -64745,6 +64404,7 @@
 			]
 		},
 		{
+			"name": "Prototype Starglitter",
 			"key": "PrototypeStarglitter",
 			"rarity": 4,
 			"stats": [
@@ -65231,6 +64891,7 @@
 			]
 		},
 		{
+			"name": "Rightful Reward",
 			"key": "RightfulReward",
 			"rarity": 4,
 			"stats": [
@@ -65717,6 +65378,7 @@
 			]
 		},
 		{
+			"name": "Royal Spear",
 			"key": "RoyalSpear",
 			"rarity": 4,
 			"stats": [
@@ -66203,6 +65865,7 @@
 			]
 		},
 		{
+			"name": "Skyward Spine",
 			"key": "SkywardSpine",
 			"rarity": 5,
 			"stats": [
@@ -66689,6 +66352,7 @@
 			]
 		},
 		{
+			"name": "Staff of Homa",
 			"key": "StaffOfHoma",
 			"rarity": 5,
 			"stats": [
@@ -67175,6 +66839,7 @@
 			]
 		},
 		{
+			"name": "Staff of the Scarlet Sands",
 			"key": "StaffOfTheScarletSands",
 			"rarity": 5,
 			"stats": [
@@ -67661,6 +67326,7 @@
 			]
 		},
 		{
+			"name": "\"The Catch\"",
 			"key": "TheCatch",
 			"rarity": 4,
 			"stats": [
@@ -68147,6 +67813,7 @@
 			]
 		},
 		{
+			"name": "Vortex Vanquisher",
 			"key": "VortexVanquisher",
 			"rarity": 5,
 			"stats": [
@@ -68633,6 +68300,7 @@
 			]
 		},
 		{
+			"name": "Wavebreaker's Fin",
 			"key": "WavebreakersFin",
 			"rarity": 4,
 			"stats": [
@@ -69119,6 +68787,7 @@
 			]
 		},
 		{
+			"name": "White Tassel",
 			"key": "WhiteTassel",
 			"rarity": 3,
 			"stats": [
@@ -69605,6 +69274,7 @@
 			]
 		},
 		{
+			"name": "Amenoma Kageuchi",
 			"key": "AmenomaKageuchi",
 			"rarity": 4,
 			"stats": [
@@ -70091,6 +69761,7 @@
 			]
 		},
 		{
+			"name": "Aquila Favonia",
 			"key": "AquilaFavonia",
 			"rarity": 5,
 			"stats": [
@@ -70577,6 +70248,7 @@
 			]
 		},
 		{
+			"name": "Blackcliff Longsword",
 			"key": "BlackcliffLongsword",
 			"rarity": 4,
 			"stats": [
@@ -71063,6 +70735,7 @@
 			]
 		},
 		{
+			"name": "Cinnabar Spindle",
 			"key": "CinnabarSpindle",
 			"rarity": 4,
 			"stats": [
@@ -71549,6 +71222,7 @@
 			]
 		},
 		{
+			"name": "Cool Steel",
 			"key": "CoolSteel",
 			"rarity": 3,
 			"stats": [
@@ -72035,6 +71709,7 @@
 			]
 		},
 		{
+			"name": "Dark Iron Sword",
 			"key": "DarkIronSword",
 			"rarity": 3,
 			"stats": [
@@ -72521,6 +72196,7 @@
 			]
 		},
 		{
+			"name": "Dull Blade",
 			"key": "DullBlade",
 			"rarity": 1,
 			"stats": [
@@ -73007,6 +72683,7 @@
 			]
 		},
 		{
+			"name": "Favonius Sword",
 			"key": "FavoniusSword",
 			"rarity": 4,
 			"stats": [
@@ -73493,6 +73170,7 @@
 			]
 		},
 		{
+			"name": "Festering Desire",
 			"key": "FesteringDesire",
 			"rarity": 4,
 			"stats": [
@@ -73979,6 +73657,7 @@
 			]
 		},
 		{
+			"name": "Fillet Blade",
 			"key": "FilletBlade",
 			"rarity": 3,
 			"stats": [
@@ -74465,6 +74144,7 @@
 			]
 		},
 		{
+			"name": "Finale of the Deep",
 			"key": "FinaleOfTheDeep",
 			"rarity": 4,
 			"stats": [
@@ -74951,6 +74631,7 @@
 			]
 		},
 		{
+			"name": "Fleuve Cendre Ferryman",
 			"key": "FleuveCendreFerryman",
 			"rarity": 4,
 			"stats": [
@@ -75437,6 +75118,7 @@
 			]
 		},
 		{
+			"name": "Freedom-Sworn",
 			"key": "FreedomSworn",
 			"rarity": 5,
 			"stats": [
@@ -75923,6 +75605,7 @@
 			]
 		},
 		{
+			"name": "Haran Geppaku Futsu",
 			"key": "HaranGeppakuFutsu",
 			"rarity": 5,
 			"stats": [
@@ -76409,6 +76092,7 @@
 			]
 		},
 		{
+			"name": "Harbinger of Dawn",
 			"key": "HarbingerOfDawn",
 			"rarity": 3,
 			"stats": [
@@ -76895,6 +76579,7 @@
 			]
 		},
 		{
+			"name": "Iron Sting",
 			"key": "IronSting",
 			"rarity": 4,
 			"stats": [
@@ -77381,6 +77066,7 @@
 			]
 		},
 		{
+			"name": "Kagotsurube Isshin",
 			"key": "KagotsurubeIsshin",
 			"rarity": 4,
 			"stats": [
@@ -77867,6 +77553,7 @@
 			]
 		},
 		{
+			"name": "Key of Khaj-Nisut",
 			"key": "KeyOfKhajNisut",
 			"rarity": 5,
 			"stats": [
@@ -78353,6 +78040,7 @@
 			]
 		},
 		{
+			"name": "Light of Foliar Incision",
 			"key": "LightOfFoliarIncision",
 			"rarity": 5,
 			"stats": [
@@ -78839,6 +78527,7 @@
 			]
 		},
 		{
+			"name": "Lion's Roar",
 			"key": "LionsRoar",
 			"rarity": 4,
 			"stats": [
@@ -79325,6 +79014,7 @@
 			]
 		},
 		{
+			"name": "Mistsplitter Reforged",
 			"key": "MistsplitterReforged",
 			"rarity": 5,
 			"stats": [
@@ -79811,6 +79501,7 @@
 			]
 		},
 		{
+			"name": "Primordial Jade Cutter",
 			"key": "PrimordialJadeCutter",
 			"rarity": 5,
 			"stats": [
@@ -80297,6 +79988,7 @@
 			]
 		},
 		{
+			"name": "Prototype Rancour",
 			"key": "PrototypeRancour",
 			"rarity": 4,
 			"stats": [
@@ -80783,6 +80475,7 @@
 			]
 		},
 		{
+			"name": "Royal Longsword",
 			"key": "RoyalLongsword",
 			"rarity": 4,
 			"stats": [
@@ -81269,6 +80962,7 @@
 			]
 		},
 		{
+			"name": "Sacrificial Sword",
 			"key": "SacrificialSword",
 			"rarity": 4,
 			"stats": [
@@ -81755,6 +81449,7 @@
 			]
 		},
 		{
+			"name": "Sapwood Blade",
 			"key": "SapwoodBlade",
 			"rarity": 4,
 			"stats": [
@@ -82241,6 +81936,7 @@
 			]
 		},
 		{
+			"name": "Silver Sword",
 			"key": "SilverSword",
 			"rarity": 2,
 			"stats": [
@@ -82727,6 +82423,7 @@
 			]
 		},
 		{
+			"name": "Skyrider Sword",
 			"key": "SkyriderSword",
 			"rarity": 3,
 			"stats": [
@@ -83213,6 +82910,7 @@
 			]
 		},
 		{
+			"name": "Skyward Blade",
 			"key": "SkywardBlade",
 			"rarity": 5,
 			"stats": [
@@ -83699,6 +83397,7 @@
 			]
 		},
 		{
+			"name": "Splendor of Tranquil Waters",
 			"key": "SplendorOfTranquilWaters",
 			"rarity": 5,
 			"stats": [
@@ -84185,6 +83884,7 @@
 			]
 		},
 		{
+			"name": "Summit Shaper",
 			"key": "SummitShaper",
 			"rarity": 5,
 			"stats": [
@@ -84671,6 +84371,7 @@
 			]
 		},
 		{
+			"name": "Sword of Descension",
 			"key": "SwordOfDescension",
 			"rarity": 4,
 			"stats": [
@@ -85157,6 +84858,7 @@
 			]
 		},
 		{
+			"name": "Sword of Narzissenkreuz",
 			"key": "SwordOfNarzissenKreuz",
 			"rarity": 4,
 			"stats": [
@@ -85643,6 +85345,7 @@
 			]
 		},
 		{
+			"name": "The Alley Flash",
 			"key": "TheAlleyFlash",
 			"rarity": 4,
 			"stats": [
@@ -86129,6 +85832,7 @@
 			]
 		},
 		{
+			"name": "The Black Sword",
 			"key": "TheBlackSword",
 			"rarity": 4,
 			"stats": [
@@ -86615,6 +86319,7 @@
 			]
 		},
 		{
+			"name": "The Dockhand's Assistant",
 			"key": "TheDockhandsAssistant",
 			"rarity": 4,
 			"stats": [
@@ -87101,6 +86806,7 @@
 			]
 		},
 		{
+			"name": "The Flute",
 			"key": "TheFlute",
 			"rarity": 4,
 			"stats": [
@@ -87587,6 +87293,7 @@
 			]
 		},
 		{
+			"name": "Toukabou Shigure",
 			"key": "ToukabouShigure",
 			"rarity": 4,
 			"stats": [
@@ -88073,6 +87780,7 @@
 			]
 		},
 		{
+			"name": "Traveler's Handy Sword",
 			"key": "TravelersHandySword",
 			"rarity": 3,
 			"stats": [
@@ -88559,6 +88267,7 @@
 			]
 		},
 		{
+			"name": "Uraku Misugiri",
 			"key": "UrakuMisugiri",
 			"rarity": 5,
 			"stats": [
@@ -89045,6 +88754,7 @@
 			]
 		},
 		{
+			"name": "Wolf-Fang",
 			"key": "WolfFang",
 			"rarity": 4,
 			"stats": [
@@ -89531,6 +89241,7 @@
 			]
 		},
 		{
+			"name": "Xiphos' Moonlight",
 			"key": "XiphosMoonlight",
 			"rarity": 4,
 			"stats": [

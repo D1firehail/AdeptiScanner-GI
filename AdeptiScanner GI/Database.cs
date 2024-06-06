@@ -49,9 +49,9 @@ namespace AdeptiScanner_GI
         public string GetPlainText() => Text;
     }
 
-    public readonly record struct WeaponNameData(string Key, int Rarity) : IParsableData
+    public readonly record struct WeaponNameData(string Text, string Key, int Rarity) : IParsableData
     {
-        public string GetPlainText() => Key; // weapons currently only parse the GOOD name and assumes it's close enough to the english name
+        public string GetPlainText() => Text; // weapons currently only parse the GOOD name and assumes it's close enough to the english name
     }
 
     public readonly record struct WeaponLevelAndAscensionData(string BaseAtk, int Level, int Ascension) : IParsableData
@@ -66,7 +66,7 @@ namespace AdeptiScanner_GI
         private static System.Globalization.CultureInfo culture = new System.Globalization.CultureInfo("en-GB", false);
         public static string appDir = Path.Join(Application.StartupPath, "ScannerFiles");
         public static string appdataPath = Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "AdeptiScanner");
-        public static string programVersion = "2.1.0";
+        public static string programVersion = "2.2.0";
         public static string dataVersion = "X.XX";
         //These get filled on startup by other file
         public static List<PieceData> Pieces = new List<PieceData>();
@@ -317,9 +317,10 @@ namespace AdeptiScanner_GI
         {
             foreach (JObject weapon in weapons)
             {
-                string name = weapon["key"].ToObject<string>();
+                string name = weapon["name"].ToObject<string>();
+                string key = weapon["key"].ToObject<string>();
                 int rarity = weapon["rarity"].ToObject<int>();
-                WeaponNameData nameData = new WeaponNameData(name, rarity);
+                WeaponNameData nameData = new WeaponNameData(name, key, rarity);
                 WeaponNames.Add(nameData);
 
                 List<JObject> stats = weapon["stats"].ToObject<List<JObject>>();

@@ -11,19 +11,20 @@ namespace WeaponDataParser // Note: actual namespace depends on the project name
         {
             Console.WriteLine("Starting weapon parser");
             string basePath = @"C:\Users\Daniel\source\repos\D1firehail\AdeptiScanner-GI\AdeptiScanner GI\Weapons";//Environment.CurrentDirectory;
+            string namePath = @"C:\Users\Daniel\source\repos\D1firehail\AdeptiScanner-GI\AdeptiScanner GI\en";
             Dictionary<string, List<double>> curveDict = GetGrowthCurves(Path.Combine(basePath, "expCurve.json"));
 
             JArray weapons = new JArray();
             Console.WriteLine("Parsing Bow");
-            AddWeapons(weapons, Path.Combine(basePath, "Bow"), curveDict);
+            AddWeapons(weapons, Path.Combine(basePath, "Bow"), namePath, curveDict);
             Console.WriteLine("Parsing Catalyst");
-            AddWeapons(weapons, Path.Combine(basePath, "Catalyst"), curveDict);
+            AddWeapons(weapons, Path.Combine(basePath, "Catalyst"), namePath, curveDict);
             Console.WriteLine("Parsing Claymore");
-            AddWeapons(weapons, Path.Combine(basePath, "Claymore"), curveDict);
+            AddWeapons(weapons, Path.Combine(basePath, "Claymore"), namePath, curveDict);
             Console.WriteLine("Parsing Polearm");
-            AddWeapons(weapons, Path.Combine(basePath, "Polearm"), curveDict);
+            AddWeapons(weapons, Path.Combine(basePath, "Polearm"), namePath, curveDict);
             Console.WriteLine("Parsing Sword");
-            AddWeapons(weapons, Path.Combine(basePath, "Sword"), curveDict);
+            AddWeapons(weapons, Path.Combine(basePath, "Sword"), namePath, curveDict);
 
             Console.WriteLine("Saving");
             File.WriteAllText(Path.Combine(basePath, "weapons.json"), weapons.ToString(Formatting.Indented));
@@ -64,12 +65,36 @@ namespace WeaponDataParser // Note: actual namespace depends on the project name
             }
         }
 
-        static void AddWeapons(JArray weapons, string categoryPath, Dictionary<string, List<double>> curveDict)
+        static void AddWeapons(JArray weapons, string categoryPath, string namePath, Dictionary<string, List<double>> curveDict)
         {
             string[] items = Directory.GetDirectories(categoryPath);
             foreach (string itemPath in items)
             {
                 string key = itemPath.Split(Path.DirectorySeparatorChar).Last();
+                if (key.Equals("QuantumCatalyst", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    continue; // GO april fools weapon
+                }
+                string name = key;
+                string nameFilePath = Path.Combine(namePath, "weapon_"+key+"_gen.json");
+                try
+                {
+                    var json = JsonConvert.DeserializeObject<JObject>(File.ReadAllText(nameFilePath));
+                    if (json != null)
+                    {
+                        name = json.GetValue("name").ToObject<string>();
+                    }
+                    else
+                    {
+                        throw new InvalidOperationException("Weapon locale JSON " + key + " returned null");
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Failed to get Weapon locale JSON " + nameFilePath + Environment.NewLine + e.Message);
+                    Environment.Exit(1);
+                }
+
                 string dataPath = Path.Combine(itemPath, "data.json");
                 JObject unparsed = new JObject();
                 try
@@ -159,6 +184,7 @@ namespace WeaponDataParser // Note: actual namespace depends on the project name
 
                 JObject wep = new JObject
                 {
+                    {"name", name },
                     { "key", key },
                     { "rarity", rarity },
                     { "stats", statLevelCombo }

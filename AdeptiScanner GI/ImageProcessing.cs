@@ -1052,15 +1052,18 @@ namespace AdeptiScanner_GI
             //Name
             while (i < textRows.Count && textRows[i].Item2 <= nameArea.Top)
                 i++;
+
+            var prevRaw = string.Empty;
             for (; i < textRows.Count && textRows[i].Item2 > nameArea.Top; i++)
             {
-                string result = OCRRow(img, textRows[i].Item1, textRows[i].Item2, Database.WeaponNames, out WeaponNameData? bestMatch, out int dist, out string rawText, "", saveImages, tessEngine);
+                string result = OCRRow(img, textRows[i].Item1, textRows[i].Item2, Database.WeaponNames, out WeaponNameData? bestMatch, out int dist, out string rawText, prevRaw, saveImages, tessEngine);
                 if (bestMatch.HasValue && dist < 3)
                 {
                     foundWeapon.name = bestMatch.Value;
                     i++;
                     break;
                 }
+                prevRaw = rawText;
             }
 
             if (foundWeapon.name != null)
