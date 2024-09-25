@@ -17,9 +17,6 @@
     <Compile Update="EnkaTab.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Update="ArtifactDetails.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
     <Compile Update="ExportSettings.cs">
       <SubType>UserControl</SubType>
     </Compile>

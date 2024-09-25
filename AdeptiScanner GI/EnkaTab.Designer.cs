@@ -40,11 +40,11 @@
             // label_Title
             // 
             label_Title.AutoSize = true;
-            label_Title.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point);
+            label_Title.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Pixel);
             label_Title.Location = new System.Drawing.Point(4, 10);
             label_Title.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             label_Title.Name = "label_Title";
-            label_Title.Size = new System.Drawing.Size(251, 20);
+            label_Title.Size = new System.Drawing.Size(243, 21);
             label_Title.TabIndex = 13;
             label_Title.Text = "Fetch characters via enka.network";
             // 
@@ -92,11 +92,10 @@
             // label_remainingChars
             // 
             label_remainingChars.AutoSize = true;
-            label_remainingChars.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             label_remainingChars.Location = new System.Drawing.Point(5, 89);
             label_remainingChars.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             label_remainingChars.Name = "label_remainingChars";
-            label_remainingChars.Size = new System.Drawing.Size(182, 13);
+            label_remainingChars.Size = new System.Drawing.Size(203, 15);
             label_remainingChars.TabIndex = 18;
             label_remainingChars.Text = "Missing characters known from scan:";
             // 
@@ -112,8 +111,7 @@
             // 
             // EnkaTab
             // 
-            AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             Controls.Add(label_cooldown);
             Controls.Add(label_remainingChars);
             Controls.Add(text_remainingCharacters);
@@ -121,6 +119,7 @@
             Controls.Add(label_uid);
             Controls.Add(text_UID);
             Controls.Add(label_Title);
+            Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
             Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             Name = "EnkaTab";
             Size = new System.Drawing.Size(407, 263);

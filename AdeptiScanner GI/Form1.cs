@@ -72,12 +72,6 @@ namespace AdeptiScanner_GI
         internal string uid = "";
         internal bool exportEquipStatus = true;
 
-        enum panelChoices
-        {
-            ExportFilters,
-            ArtifactDetails
-        };
-
         private static InputSimulator sim = new InputSimulator();
 
         public ScannerForm()
@@ -99,8 +93,8 @@ namespace AdeptiScanner_GI
             loadSettings();
             InitializeComponent();
             finalizeLoadSettings();
-            label_dataversion.Text = "Data Version: " + Database.dataVersion;
-            label_appversion.Text = "Program Version: " + Database.programVersion;
+            label_dataversion.Text = "Data: V" + Database.dataVersion;
+            label_appversion.Text = "Program: V" + Database.programVersion;
             label_admin.Text = "Admin: " + IsAdministrator();
             this.Text = "AdeptiScanner_GI V" + Database.programVersion;
             FormClosing += eventFormClosing;
@@ -299,16 +293,11 @@ namespace AdeptiScanner_GI
         private void resetTextBoxes()
         {
             text_full.Text = "";
-            artifactDetails1.ResetText();
         }
 
         private void displayInventoryItem(object item)
         {
             text_full.Text = item.ToString();
-            if (item is Artifact arti)
-            {
-                artifactDetails1.DisplayArtifact(arti);
-            }
         }
 
         //https://stackoverflow.com/questions/11660184/c-sharp-check-if-run-as-administrator

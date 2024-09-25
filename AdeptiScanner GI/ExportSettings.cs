@@ -18,53 +18,53 @@ namespace AdeptiScanner_GI
             InitializeComponent();
             if (ScannerForm.INSTANCE != null)
             {
-                trackBar_minlevel.Value = ScannerForm.INSTANCE.minLevel;
-                label_minlevelnumber.Text = "" + trackBar_minlevel.Value;
-                trackBar_maxlevel.Value = ScannerForm.INSTANCE.maxLevel;
-                label_maxlevelnumber.Text = "" + trackBar_maxlevel.Value;
-                trackBar_minrarity.Value = ScannerForm.INSTANCE.minRarity;
-                label_minraritynumber.Text = "" + trackBar_minrarity.Value;
-                trackBar_maxrarity.Value = ScannerForm.INSTANCE.maxRarity;
-                label_maxraritynumber.Text = "" + trackBar_maxrarity.Value;
+                dpiIgnoringSlider_minlevel.Value = ScannerForm.INSTANCE.minLevel;
+                label_minlevelnumber.Text = "" + dpiIgnoringSlider_minlevel.Value;
+                dpiIgnoringSlider_maxlevel.Value = ScannerForm.INSTANCE.maxLevel;
+                label_maxlevelnumber.Text = "" + dpiIgnoringSlider_maxlevel.Value;
+                dpiIgnoringSlider_minrarity.Value = ScannerForm.INSTANCE.minRarity;
+                label_minraritynumber.Text = "" + dpiIgnoringSlider_minrarity.Value;
+                dpiIgnoringSlider_maxrarity.Value = ScannerForm.INSTANCE.maxRarity;
+                label_maxraritynumber.Text = "" + dpiIgnoringSlider_maxrarity.Value;
                 checkBox_exportEquipped.Checked = ScannerForm.INSTANCE.exportAllEquipped;
                 checkbox_exportTemplate.Checked = ScannerForm.INSTANCE.useTemplate;
                 checkBox_exportEquipStatus.Checked = ScannerForm.INSTANCE.exportEquipStatus;
             }
         }
 
-        private void trackBar_minlevel_Scroll(object sender, EventArgs e)
+        private void dpiIgnoringSlider_minlevel_Scroll(object sender, EventArgs e)
         {
-            label_minlevelnumber.Text = "" + trackBar_minlevel.Value;
+            label_minlevelnumber.Text = "" + dpiIgnoringSlider_minlevel.Value;
             if (ScannerForm.INSTANCE != null)
             {
-                ScannerForm.INSTANCE.minLevel = trackBar_minlevel.Value;
+                ScannerForm.INSTANCE.minLevel = dpiIgnoringSlider_minlevel.Value;
             }
         }
 
-        private void trackBar_maxlevel_Scroll(object sender, EventArgs e)
+        private void dpiIgnoringSlider_maxlevel_Scroll(object sender, EventArgs e)
         {
-            label_maxlevelnumber.Text = "" + trackBar_maxlevel.Value;
+            label_maxlevelnumber.Text = "" + dpiIgnoringSlider_maxlevel.Value;
             if (ScannerForm.INSTANCE != null)
             {
-                ScannerForm.INSTANCE.maxLevel = trackBar_maxlevel.Value;
+                ScannerForm.INSTANCE.maxLevel = dpiIgnoringSlider_maxlevel.Value;
             }
         }
 
-        private void trackBar_minrarity_Scroll(object sender, EventArgs e)
+        private void dpiIgnoringSlider_minrarity_Scroll(object sender, EventArgs e)
         {
-            label_minraritynumber.Text = "" + trackBar_minrarity.Value;
+            label_minraritynumber.Text = "" + dpiIgnoringSlider_minrarity.Value;
             if (ScannerForm.INSTANCE != null)
             {
-                ScannerForm.INSTANCE.minRarity = trackBar_minrarity.Value;
+                ScannerForm.INSTANCE.minRarity = dpiIgnoringSlider_minrarity.Value;
             }
         }
 
-        private void trackBar_maxrarity_Scroll(object sender, EventArgs e)
+        private void dpiIgnoringSlider_maxrarity_Scroll(object sender, EventArgs e)
         {
-            label_maxraritynumber.Text = "" + trackBar_maxrarity.Value;
+            label_maxraritynumber.Text = "" + dpiIgnoringSlider_maxrarity.Value;
             if (ScannerForm.INSTANCE != null)
             {
-                ScannerForm.INSTANCE.maxRarity = trackBar_maxrarity.Value;
+                ScannerForm.INSTANCE.maxRarity = dpiIgnoringSlider_maxrarity.Value;
             }
         }
 
