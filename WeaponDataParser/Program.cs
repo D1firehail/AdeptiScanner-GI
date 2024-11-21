@@ -1,7 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System;
-using System.IO;
+using System.Reflection;
 
 namespace WeaponDataParser // Note: actual namespace depends on the project name.
 {
@@ -10,25 +9,112 @@ namespace WeaponDataParser // Note: actual namespace depends on the project name
         static void Main(string[] args)
         {
             Console.WriteLine("Starting weapon parser");
-            string basePath = @"C:\Users\Daniel\source\repos\D1firehail\AdeptiScanner-GI\AdeptiScanner GI\Weapons";//Environment.CurrentDirectory;
-            string namePath = @"C:\Users\Daniel\source\repos\D1firehail\AdeptiScanner-GI\AdeptiScanner GI\en";
-            Dictionary<string, List<double>> curveDict = GetGrowthCurves(Path.Combine(basePath, "expCurve.json"));
+
+            GetRepoPaths(out string genshinOptimizerRepoPath, out string adeptiScannerRepoPath);
+
+            string weaponPath = Path.Combine(genshinOptimizerRepoPath, @"libs\gi\stats\Data\Weapons");
+            string translationPath = Path.Combine(genshinOptimizerRepoPath, @"libs\gi\dm-localization\assets\locales\en");
+
+            string scannerFilesPath = Path.Combine(adeptiScannerRepoPath, @"AdeptiScanner GI\ScannerFiles");
+            Dictionary<string, List<double>> curveDict = GetGrowthCurves(Path.Combine(weaponPath, "expCurve.json"));
+
 
             JArray weapons = new JArray();
             Console.WriteLine("Parsing Bow");
-            AddWeapons(weapons, Path.Combine(basePath, "Bow"), namePath, curveDict);
+            AddWeapons(weapons, Path.Combine(weaponPath, "Bow"), translationPath, curveDict);
             Console.WriteLine("Parsing Catalyst");
-            AddWeapons(weapons, Path.Combine(basePath, "Catalyst"), namePath, curveDict);
+            AddWeapons(weapons, Path.Combine(weaponPath, "Catalyst"), translationPath, curveDict);
             Console.WriteLine("Parsing Claymore");
-            AddWeapons(weapons, Path.Combine(basePath, "Claymore"), namePath, curveDict);
+            AddWeapons(weapons, Path.Combine(weaponPath, "Claymore"), translationPath, curveDict);
             Console.WriteLine("Parsing Polearm");
-            AddWeapons(weapons, Path.Combine(basePath, "Polearm"), namePath, curveDict);
+            AddWeapons(weapons, Path.Combine(weaponPath, "Polearm"), translationPath, curveDict);
             Console.WriteLine("Parsing Sword");
-            AddWeapons(weapons, Path.Combine(basePath, "Sword"), namePath, curveDict);
+            AddWeapons(weapons, Path.Combine(weaponPath, "Sword"), translationPath, curveDict);
 
-            Console.WriteLine("Saving");
-            File.WriteAllText(Path.Combine(basePath, "weapons.json"), weapons.ToString(Formatting.Indented));
-            File.WriteAllText(Path.Combine(basePath, "weapons_min.json"), weapons.ToString(Formatting.None));
+            Console.WriteLine("Weapon parsing done");
+
+            UpdateArtifactInfo(scannerFilesPath, weapons);
+        }
+
+        static void GetRepoPaths(out string genshinOptimizerPath, out string adeptiScannerPath)
+        {
+            string executionPath = Assembly.GetExecutingAssembly().Location;
+
+            var resourcePathsFile = Path.Combine(Path.GetDirectoryName(executionPath)!, @"ResourcePaths.json");
+
+            if (!File.Exists(resourcePathsFile))
+            {
+                Console.WriteLine("Missing ResourcePaths.json next to executable. Did you forget to copy and rename the example?");
+                Environment.Exit(1);
+            }
+
+            JObject? resourcePaths = JsonConvert.DeserializeObject<JObject>(File.ReadAllText(resourcePathsFile));
+
+            if (resourcePaths is null)
+            {
+                Console.WriteLine("ResourcePaths.json deserialize failure");
+                Environment.Exit(1);
+            }
+
+
+
+            genshinOptimizerPath = resourcePaths.GetValue("Genshin Optimizer")?.ToObject<string>() ?? throw new JsonException("ResourcePaths.json was missing Genshin Optimizer path");
+            adeptiScannerPath = resourcePaths.GetValue("AdeptiScanner")?.ToObject<string>() ?? throw new JsonException("ResourcePaths.json was missing AdeptiScanner path"); ;
+        
+            Console.WriteLine("Located repo paths" + Environment.NewLine
+                            + "Genshin Optimizer: " + genshinOptimizerPath + Environment.NewLine
+                            + "AdeptiScanner: " + adeptiScannerPath);
+        }
+
+
+        static void UpdateArtifactInfo(string scannerFilesPath, JArray weapons)
+        {
+
+            string artifactInfoFilePath = Path.Combine(scannerFilesPath, "ArtifactInfo.json");
+            string artifactInfoReadableFilePath = Path.Combine(scannerFilesPath, "ArtifactInfo_readable.json");
+
+            string artifactInfoFileBackupPath = artifactInfoFilePath + ".bak";
+            string artifactInfoReadableFileBackupPath = artifactInfoReadableFilePath + ".bak";
+
+            if (File.Exists(artifactInfoFileBackupPath)
+                || File.Exists(artifactInfoReadableFileBackupPath))
+            {
+                Console.WriteLine("Did not save to ArtifactInfo: Backup already exists");
+                Environment.Exit(1);
+            }
+
+            if (!File.Exists(artifactInfoReadableFilePath))
+            {
+                Console.WriteLine("Did not save to ArtifactInfo: readable version doesn't exist");
+                Environment.Exit(1);
+            }
+
+            File.Copy(artifactInfoReadableFilePath, artifactInfoReadableFileBackupPath);
+
+            if (File.Exists(artifactInfoFilePath))
+            {
+                File.Copy(artifactInfoFilePath, artifactInfoFileBackupPath);
+            }
+
+            JObject? artifactInfo = JsonConvert.DeserializeObject<JObject>(File.ReadAllText(artifactInfoReadableFilePath));
+            if (artifactInfo is null)
+            {
+                Console.WriteLine("Did not save to ArtifactInfo: Failed to parse");
+                Environment.Exit(1);
+            }
+
+            artifactInfo.Remove("Weapons");
+            artifactInfo.Add("Weapons", weapons);
+
+            File.WriteAllText(artifactInfoReadableFilePath, artifactInfo.ToString(Formatting.Indented));
+            File.WriteAllText(artifactInfoFilePath, artifactInfo.ToString(Formatting.None));
+
+
+            Console.WriteLine("Successfully updated ArtifactInfo");
+            File.Delete(artifactInfoFileBackupPath);
+            File.Delete(artifactInfoReadableFileBackupPath);
+            Console.WriteLine("Deleted backup of ArtifactInfo");
+
         }
 
         static Dictionary<string, List<double>> GetGrowthCurves(string path)

@@ -362,5 +362,4 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 
-/AdeptiScanner GI/Weapons
-/AdeptiScanner GI/en
+/WeaponDataParser/ResourcePaths.json
