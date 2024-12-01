@@ -1180,7 +1180,7 @@ namespace AdeptiScanner_GI
                         || (pixel[0] is > 220 and < 230 && pixel[1] is > 80 and < 90 && pixel[2] is > 155 and < 165);
                 case GameColor.BackgroundGridLabel:
                     return (pixel[0] > 200 && pixel[1] > 200 && pixel[2] > 200)
-                        || (pixel[0] is > 65 and < 110 && pixel[1] is > 65 and < 110 && pixel[2] is > 65 and < 110);
+                        || (pixel[0] is > 65 and < 110 && pixel[1] is > 65 and < 110 && pixel[2] is > 65 and < 110 && pixel[3] is > 65 and < 100);
 
                 case GameColor.WhiteWindowHeader:
                     return pixel[0] > 220 && pixel[1] > 220 && pixel[2] > 220;
