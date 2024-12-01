@@ -47,10 +47,10 @@ namespace AdeptiScanner_GI
                 int y = (i / PixelSize - x) / width;
                 int y_low = Math.Min(y + 10, height - 1);
                 int i_low = (y_low * width + x) * PixelSize;
-                if ((imgBytes[i] < 60 && imgBytes[i + 1] > 100 && imgBytes[i + 2] > 170) //look for yellow (artifact background + stars
-                    && ((imgBytes[i_low] > 200 && imgBytes[i_low + 1] > 200 && imgBytes[i_low + 2] > 200) //with white-ish or black-ish line underneath
-                    || (imgBytes[i_low] > 65 && imgBytes[i_low] < 110 && imgBytes[i_low + 1] > 65 && imgBytes[i_low + 1] < 110 && imgBytes[i_low + 2] > 65 && imgBytes[i_low + 2] < 110))
-                    )
+                var pixel = imgBytes.AsSpan(i, 4);
+                var pixelBelow = imgBytes.AsSpan(i_low, 4);
+                if (PixelIsColor(pixel, GameColor.StarYellow) //look for yellow (stars + background)
+                    && PixelIsColor(pixelBelow, GameColor.BackgroundGridLabel)) // white white-ish or black-ish below
                 {
                     if (saveImages)
                     {
@@ -79,8 +79,8 @@ namespace AdeptiScanner_GI
                         margin = 3;
                         for (int left_i = (y_low * width + left) * PixelSize; left_i > y_low * width * PixelSize; left_i-= PixelSize)
                         {
-                            if ((imgBytes[left_i] > 200 && imgBytes[left_i + 1] > 200 && imgBytes[left_i + 2] > 200 && imgBytes[left_i + 3] > 200) //white-ish or black-ish line underneath
-                                || (imgBytes[left_i] > 65 && imgBytes[left_i] < 110 && imgBytes[left_i + 1] > 65 && imgBytes[left_i + 1] < 110 && imgBytes[left_i + 2] > 65 && imgBytes[left_i + 2] < 110 && imgBytes[left_i + 3] > 65 && imgBytes[left_i + 3] < 100))
+                            var leftPixel = imgBytes.AsSpan(left_i, 4);
+                            if (PixelIsColor(leftPixel, GameColor.BackgroundGridLabel)) // white white-ish or black-ish line underneath
                             {
                                 margin = 3;
                             } else
@@ -102,8 +102,8 @@ namespace AdeptiScanner_GI
                         margin = 3;
                         for (int right_i = (y_low * width + right) * PixelSize; right_i < (y_low + 1) * width * PixelSize; right_i += PixelSize)
                         {
-                            if ((imgBytes[right_i] > 200 && imgBytes[right_i + 1] > 200 && imgBytes[right_i + 2] > 200 && imgBytes[right_i + 3] > 200) //white-ish or black-ish line underneath
-                                || (imgBytes[right_i] > 65 && imgBytes[right_i] < 110 && imgBytes[right_i + 1] > 65 && imgBytes[right_i + 1] < 110 && imgBytes[right_i + 2] > 65 && imgBytes[right_i + 2] < 110 && imgBytes[right_i + 3] > 65 && imgBytes[right_i + 3] < 100))
+                            var rightPixel = imgBytes.AsSpan(right_i, 4);
+                            if (PixelIsColor(rightPixel, GameColor.BackgroundGridLabel)) // white white-ish or black-ish line underneath
                             {
                                 margin = 3;
                             }
@@ -292,8 +292,8 @@ namespace AdeptiScanner_GI
             for (int i = 0; i < numBytes; i += PixelSize)
             {
                 int x = (i / PixelSize) % gameArea.Width;
-                if ((imgBytes[i] > 40 && imgBytes[i] < 60 && imgBytes[i + 1] > 90 && imgBytes[i + 1] < 110 && imgBytes[i + 2] > 180 && imgBytes[i + 2] < 200) 
-                    || (imgBytes[i] > 220 && imgBytes[i] < 230 && imgBytes[i + 1] > 80 && imgBytes[i + 1] < 90 && imgBytes[i + 2] > 155 && imgBytes[i + 2] < 165)) //look for artifact name background colour
+                var pixel = imgBytes.AsSpan(i, 4);
+                if (PixelIsColor(pixel, GameColor.BackgroundArtifactName)) //look for artifact name background colour
                 {
                     cols[x]++;
                 }
@@ -327,8 +327,8 @@ namespace AdeptiScanner_GI
             for (int y = top; y < gameArea.Height - 1; y++)
             {
                 int i = (y * gameArea.Width + (leftmost * 3 + rightmost) / 4) * PixelSize;
-                if ((imgBytes[i] > 40 && imgBytes[i] < 60 && imgBytes[i + 1] > 90 && imgBytes[i + 1] < 110 && imgBytes[i + 2] > 180 && imgBytes[i + 2] < 200)
-                    || (imgBytes[i] > 220 && imgBytes[i] < 230 && imgBytes[i + 1] > 80 && imgBytes[i + 1] < 90 && imgBytes[i + 2] > 155 && imgBytes[i + 2] < 165)) //look for artifact name background colour
+                var pixel = imgBytes.AsSpan(i, 4);
+                if (PixelIsColor(pixel, GameColor.BackgroundArtifactName)) //look for artifact name background colour
                 {
                     top = y;
                     break;
@@ -339,7 +339,8 @@ namespace AdeptiScanner_GI
             for (int y = height; y > top; y--)
             {
                 int i = (y * gameArea.Width + (leftmost*3 + rightmost )/4) * PixelSize;
-                if ((imgBytes[i] > 180 && imgBytes[i + 1] > 210 && imgBytes[i + 2] > 210)) //look for white-ish text background
+                var pixel = imgBytes.AsSpan(i, 4);
+                if (PixelIsColor(pixel, GameColor.BackgroundCharacterArea) || PixelIsColor(pixel, GameColor.BackgroundWhiteIsh)) //look for white-ish text background
                 {
                     height = y - top;
                     break;
@@ -744,27 +745,27 @@ namespace AdeptiScanner_GI
                 int i_pos = 0;
                 int i_neg = 0;
                 int index = (y * fullWidth + x) * PixelSize;
-                Color pixel = Color.FromArgb(imgBytes[index + 3], imgBytes[index + 2], imgBytes[index + 1], imgBytes[index]);
+                var pixel = imgBytes.AsSpan(index, 4);
 
                 //explore white area right
-                while (x + i_pos < fullWidth * 0.99 && pixel.R > 220 && pixel.G > 220 && pixel.B > 220)
+                while (x + i_pos < fullWidth * 0.99 && PixelIsColor(pixel, GameColor.WhiteWindowHeader))
                 {
                     i_pos++;
                     index = (y * fullWidth + x + i_pos) * PixelSize;
-                    pixel = Color.FromArgb(imgBytes[index + 3], imgBytes[index + 2], imgBytes[index + 1], imgBytes[index]);
+                    pixel = imgBytes.AsSpan(index, 4);
                 }
 
                 if (i_pos == 0)
                     continue;
 
                 index = (y * fullWidth + x) * PixelSize;
-                pixel = Color.FromArgb(imgBytes[index + 3], imgBytes[index + 2], imgBytes[index + 1], imgBytes[index]);
+                pixel = imgBytes.AsSpan(index, 4);
                 //explore white area left
-                while (x - i_neg > fullWidth * 0.01 && pixel.R > 220 && pixel.G > 220 && pixel.B > 220)
+                while (x - i_neg > fullWidth * 0.01 && PixelIsColor(pixel, GameColor.WhiteWindowHeader))
                 {
                     i_neg++;
                     index = (y * fullWidth + x - i_neg) * PixelSize;
-                    pixel = Color.FromArgb(imgBytes[index + 3], imgBytes[index + 2], imgBytes[index + 1], imgBytes[index]);
+                    pixel = imgBytes.AsSpan(index, 4);
                 }
 
                 //check if feasible game window size
@@ -785,8 +786,8 @@ namespace AdeptiScanner_GI
                     for (int i = 0; i < width * 0.3; i++)
                     {
                         index = ((y + height) * fullWidth + left + i) * PixelSize;
-                        pixel = Color.FromArgb(imgBytes[index + 3], imgBytes[index + 2], imgBytes[index + 1], imgBytes[index]);
-                        if (pixel.R > 230 && pixel.G > 220 && pixel.B > 210)
+                        pixel = imgBytes.AsSpan(index, 4);
+                        if (PixelIsColor(pixel, GameColor.BackgroundWhiteIsh))
                         {
                             row++;
                             currStreak++;
@@ -1139,6 +1140,11 @@ namespace AdeptiScanner_GI
 
             BackgroundCharacterArea, // character label background
             BackgroundWhiteIsh, // background of area with substats, description etc
+            BackgroundArtifactName, // background for artifact name, 5 star or 4 star
+            BackgroundGridLabel, // label with white background and black text below items in inventory
+
+            WhiteWindowHeader, // White windows window header
+
             StarYellow, // rarity star
             LockRed, // lock icon
 
@@ -1167,13 +1173,22 @@ namespace AdeptiScanner_GI
 
                 case GameColor.BackgroundCharacterArea:
                     return pixel[0] is > 180 and < 200 && pixel[1] > 220 && pixel[2] > 240;
+                case GameColor.BackgroundWhiteIsh:
+                    return pixel[0] is > 200 and < 240 && pixel[1] is > 200 and < 240 && pixel[2] is > 200 and < 240;
+                case GameColor.BackgroundArtifactName:
+                    return (pixel[0] is > 40 and < 60 && pixel[1] is > 90 and < 110 && pixel[2] is > 180 and < 200)
+                        || (pixel[0] is > 220 and < 230 && pixel[1] is > 80 and < 90 && pixel[2] is > 155 and < 165);
+                case GameColor.BackgroundGridLabel:
+                    return (pixel[0] > 200 && pixel[1] > 200 && pixel[2] > 200)
+                        || (pixel[0] is > 65 and < 110 && pixel[1] is > 65 and < 110 && pixel[2] is > 65 and < 110);
+
+                case GameColor.WhiteWindowHeader:
+                    return pixel[0] > 220 && pixel[1] > 220 && pixel[2] > 220;
+
                 case GameColor.StarYellow:
                     return pixel[0] < 60 && pixel[1] > 190 && pixel[2] > 240;
                 case GameColor.LockRed:
                     return pixel[0] < 150 && pixel[1] > 120 && pixel[2] > 200;
-                case GameColor.BackgroundWhiteIsh:
-                    return pixel[0] is > 200 and < 240 && pixel[1] is > 200 and < 240 && pixel[2] is > 200 and < 240;
-
             }
             
             throw new NotImplementedException("No filter defined for GameColor " + color);
