@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -389,11 +390,13 @@ namespace AdeptiScanner_GI
                 int x = (i / PixelSize) % width;
                 int y = (i / PixelSize - x) / width;
                 int y_below = Math.Min(((y + 1) * width + x) * PixelSize, numBytes - PixelSize - 1);
+                var pixel = imgBytes.AsSpan(i, 4);
+                var pixelBelow = imgBytes.AsSpan(y_below, 4);
                 if (
-                    (section == 0 && (x < width && imgBytes[i] > 140 && imgBytes[i + 1] > 140 && imgBytes[i + 2] > 140)) //look for white-ish text
-                    || (section == 1 && x < width * 0.55 && ((imgBytes[i] > 225 && imgBytes[i + 1] > 225 && imgBytes[i + 2] > 225) || (imgBytes[y_below] > 225 && imgBytes[y_below + 1] > 225 && imgBytes[y_below + 2] > 225))) //look for bright white text, skip right edge
-                    || (section == 3 && (imgBytes[i] > 100 && imgBytes[i] < 160 && imgBytes[i + 1] > 160 && imgBytes[i + 2] > 200 && imgBytes[i + 2] < 230)) //look for "Gold"
-                    || ((section == 4) && (imgBytes[i] < 150 && imgBytes[i + 1] < 150 && imgBytes[i + 2] < 150)) //look for black
+                    (section == 0 && x < width && PixelIsColor(pixel, GameColor.TextWhiteIsh)) //look for white-ish text
+                    || (section == 1 && x < width * 0.55 && (PixelIsColor(pixel, GameColor.TextBrightWhite) || (PixelIsColor(pixelBelow, GameColor.TextBrightWhite)))) //look for bright white text, skip right edge
+                    || (section == 3 && PixelIsColor(pixel, GameColor.TextGold)) //look for "Gold"
+                    || ((section == 4) && x > width * 0.15 && PixelIsColor(pixel, GameColor.TextBlackIsh)) // look for black, skip left edge (character head)
                     )
                 {
                     //Make Black
@@ -442,12 +445,12 @@ namespace AdeptiScanner_GI
                 }
                 else
                 {
-                    if (section == 2 && imgBytes[i] < 150 && imgBytes[i + 1] > 120 && imgBytes[i + 2] > 200)
+                    if (section == 2 && PixelIsColor(pixel, GameColor.LockRed))
                     {
                         //if section 2, look for red lock
                         locked = true;
                     }
-                    else if (section == 2 && (imgBytes[i] > 100 && imgBytes[i] < 160 && imgBytes[i + 1] > 160 && imgBytes[i + 2] > 200 && imgBytes[i + 2] < 230))
+                    else if (section == 2 && PixelIsColor(pixel, GameColor.TextGold))
                     {
                         //if section 2, look for "Gold" text
                         sectionStart = Math.Max(0, y - 3);
@@ -461,7 +464,7 @@ namespace AdeptiScanner_GI
                         imgBytes[i + 3] = 255;
                         continue;
                     }
-                    else if (section == 3 && (imgBytes[i + 2] > 250 && imgBytes[i] > 170 && imgBytes[i + 1] > 220))
+                    else if (section == 3 && PixelIsColor(pixel, GameColor.BackgroundCharacterArea))
                     {
                         // if section 3, look for yellow-white-ish for character area
                         refineArea = new Rectangle(0, sectionStart, width, sectionEnd - sectionStart);
@@ -481,7 +484,8 @@ namespace AdeptiScanner_GI
                     {
                         //check if coming row is white-ish, if so move to section 2
                         int tmp = (y * width + (int)(width * 0.05)) * PixelSize;
-                        if ((imgBytes[tmp] > 200 && imgBytes[tmp + 1] > 200 && imgBytes[tmp + 2] > 200) && (imgBytes[tmp] < 240 && imgBytes[tmp + 1] < 240 && imgBytes[tmp + 2] < 240))
+                        var tmpPixel = imgBytes.AsSpan(tmp, 4);
+                        if (PixelIsColor(tmpPixel, GameColor.BackgroundWhiteIsh))
                         {
                             //Make White
                             imgBytes[i] = 255;
@@ -552,7 +556,7 @@ namespace AdeptiScanner_GI
             Marshal.Copy(imgData.Scan0, imgBytes, 0, numBytes);
             int PixelSize = 4; //ARGB, reverse order
             //some variables to keep track of which part of the image we are in
-            int section = 0; //0 = top part, 1 = artifact level part, 2 = substats, 3 = set, 4 = after set, before character, 5 =character
+            int section = 0; //0 = top part, 1 = artifact level part, 2 = substats, 3 = set, 4 = character
             int sectionStart = 0;
             int sectionEnd = 0;
             int rightEdge = 0;
@@ -563,11 +567,14 @@ namespace AdeptiScanner_GI
                 int x = (i / PixelSize) % width;
                 int y = (i / PixelSize - x) / width;
                 int y_below = Math.Min(((y + 1) * width + x) * PixelSize, numBytes - PixelSize - 1);
+                var pixel = imgBytes.AsSpan(i, 4);
+                var pixelBelow = imgBytes.AsSpan(y_below, 4);
                 if (
-                    (section == 0 && (x < width * 0.55 && imgBytes[i] > 140 && imgBytes[i + 1] > 140 && imgBytes[i + 2] > 140)) //look for white-ish text, skip right edge (artifact image)
-                    || (section == 1 && x < width * 0.55 && ((imgBytes[i] > 225 && imgBytes[i + 1] > 225 && imgBytes[i + 2] > 225) || (imgBytes[y_below] > 225 && imgBytes[y_below + 1] > 225 && imgBytes[y_below + 2] > 225))) //look for bright white text, skip right edge
-                    || ((section == 2 || section == 5) && (imgBytes[i] < 150 && imgBytes[i + 1] < 150 && imgBytes[i + 2] < 150)) //look for black
-                    || (section == 3 && (imgBytes[i] < 130 && imgBytes[i + 1] > 160 && imgBytes[i + 2] < 130)) //look for green
+                    (section == 0 && x < width * 0.55 && PixelIsColor(pixel, GameColor.TextWhiteIsh)) //look for white-ish text, skip right edge (artifact image)
+                    || (section == 1 && x < width * 0.55 && (PixelIsColor(pixel, GameColor.TextBrightWhite) || PixelIsColor(pixelBelow, GameColor.TextBrightWhite))) //look for bright white text, skip right edge
+                    || (section == 2 && PixelIsColor(pixel, GameColor.TextBlackIsh)) //look for black
+                    || (section == 3 && PixelIsColor(pixel, GameColor.TextGreen)) //look for green
+                    || (section == 4 && x > width * 0.15 && PixelIsColor(pixel, GameColor.TextBlackIsh)) // look for black, skip left edge (character head)
                     )
                 {
                     //Make Black
@@ -583,33 +590,35 @@ namespace AdeptiScanner_GI
                 }
                 else
                 {
-                    if (section == 0 && line_rarity >= 0 && x < width/2 && (imgBytes[i] < 60 && imgBytes[i + 1] > 190 && imgBytes[i + 2] > 240) 
-                        && !(imgBytes[i + PixelSize] < 60 && imgBytes[i + PixelSize + 1] > 190 && imgBytes[i + PixelSize + 2] > 240)) 
+                    if (section == 0 && line_rarity >= 0 && x < width/2) 
                     {
+
                         //if section 0, look for yellow with non-yellow before
-                        line_rarity++;
+                        var nextPixel = imgBytes.AsSpan(i + PixelSize, 4);
+                        if (PixelIsColor(pixel, GameColor.StarYellow) && !PixelIsColor(nextPixel, GameColor.StarYellow))
+                        {
+                            line_rarity++;
+                        }
                     }
 
-                    if ( section == 1 && imgBytes[i] < 150 && imgBytes[i + 1] > 120 && imgBytes[i + 2] > 200)
+                    if ( section == 1 && PixelIsColor(pixel, GameColor.LockRed))
                     {
                         //if section 1, look for red lock
                         locked = true;
-                    } else if (section == 2 && (imgBytes[i] < 120 && imgBytes[i + 1] > 160 && imgBytes[i + 2] < 120))
+                    } else if (section == 2 && PixelIsColor(pixel, GameColor.TextGreen))
                     {
                         //if section 2, look for green text
                         subArea = new Rectangle(0, levelArea.Bottom, levelArea.Width, y - levelArea.Bottom);
                         setArea = new Rectangle(0, subArea.Bottom, width, height - subArea.Bottom);
                         section = 3;
-                    } else if (section == 3 && imgBytes[i + 2] > 250 && imgBytes[i] > 170 && imgBytes[i + 1] > 220)
+                    } else if (section == 3 && PixelIsColor(pixel, GameColor.BackgroundCharacterArea))
                     {
+                        // if section 3, look for beginning of character label
                         setArea = new Rectangle(setArea.X, setArea.Y, setArea.Width, y - setArea.Y);
                         charArea = new Rectangle(0, y, width, height - y);
                         section = 4;
-                    } else if (section == 4 && imgBytes[i] is > 180 and < 200 && imgBytes[i + 1] > 220 && imgBytes[i + 2] > 240)
-                    {
-                        // if section 4, look for beginning of character label
-                        section = 5;
                     }
+
                     //Make White
                     imgBytes[i] = 255;
                     imgBytes[i + 1] = 255;
@@ -637,7 +646,8 @@ namespace AdeptiScanner_GI
                     {
                         //check if coming row is white-ish, if so move to section 1
                         int tmp = (y * width + (int)(width * 0.05)) * PixelSize;
-                        if ((imgBytes[tmp] > 200 && imgBytes[tmp + 1] > 200 && imgBytes[tmp + 2] > 200) && (imgBytes[tmp] < 240 && imgBytes[tmp + 1] < 240 && imgBytes[tmp + 2] < 240))
+                        var tmpPixel = imgBytes.AsSpan(tmp, 4);
+                        if (PixelIsColor(tmpPixel, GameColor.BackgroundWhiteIsh))
                         {
                             //Make White
                             imgBytes[i] = 255;
@@ -1117,6 +1127,56 @@ namespace AdeptiScanner_GI
             }
 
             return foundWeapon;
+        }
+
+        private enum GameColor
+        {
+            TextWhiteIsh, // artifact area background color
+            TextBrightWhite, // used for artifact level
+            TextBlackIsh, // substats, equipped status
+            TextGreen, // set text
+            TextGold, // weapon refinement text
+
+            BackgroundCharacterArea, // character label background
+            BackgroundWhiteIsh, // background of area with substats, description etc
+            StarYellow, // rarity star
+            LockRed, // lock icon
+
+        }
+
+        /// <summary>
+        /// Check pixel against a defined color profile
+        /// </summary>
+        /// <param name="pixel">span of size 4, containing the BGRA color bytes of a pixel</param>
+        /// <param name="color"></param>
+        /// <returns></returns>
+        private static bool PixelIsColor(Span<byte> pixel, GameColor color)
+        {
+            switch (color)
+            {
+                case GameColor.TextWhiteIsh:
+                    return pixel[0] > 140 && pixel[1] > 140 && pixel[2] > 140;
+                case GameColor.TextBrightWhite:
+                    return pixel[0] > 225 && pixel[1] > 225 && pixel[2] > 225;
+                case GameColor.TextBlackIsh:
+                    return pixel[0] < 150 && pixel[1] < 150 && pixel[2] < 150;
+                case GameColor.TextGreen:
+                    return (pixel[0] < 130 && pixel[1] > 160 && pixel[2] < 130);
+                case GameColor.TextGold:
+                    return (pixel[0] is > 100 and < 160 && pixel[1] > 160 && pixel[2] is > 200 and < 230);
+
+                case GameColor.BackgroundCharacterArea:
+                    return pixel[0] is > 180 and < 200 && pixel[1] > 220 && pixel[2] > 240;
+                case GameColor.StarYellow:
+                    return pixel[0] < 60 && pixel[1] > 190 && pixel[2] > 240;
+                case GameColor.LockRed:
+                    return pixel[0] < 150 && pixel[1] > 120 && pixel[2] > 200;
+                case GameColor.BackgroundWhiteIsh:
+                    return pixel[0] is > 200 and < 240 && pixel[1] is > 200 and < 240 && pixel[2] is > 200 and < 240;
+
+            }
+            
+            throw new NotImplementedException("No filter defined for GameColor " + color);
         }
     }
 }
