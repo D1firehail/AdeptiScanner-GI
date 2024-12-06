@@ -1,5 +1,5 @@
 {
-  "DataVersion": "5.2b",
+  "DataVersion": "5.2c",
   "Pieces": [
     {
       "name": {
@@ -203,7 +203,7 @@
           {
             "name": {
               "Pyro DMG Bonus%": "pyro_dmg_",
-              "Eletro DMG Bonus%": "electro_dmg_",
+              "Electro DMG Bonus%": "electro_dmg_",
               "Cryo DMG Bonus%": "cryo_dmg_",
               "Hydro DMG Bonus%": "hydro_dmg_",
               "Anemo DMG Bonus%": "anemo_dmg_",
@@ -727,7 +727,7 @@
               "HP%": "hp_",
               "ATK%": "atk_",
               "Pyro DMG Bonus%": "pyro_dmg_",
-              "Eletro DMG Bonus%": "electro_dmg_",
+              "Electro DMG Bonus%": "electro_dmg_",
               "Cryo DMG Bonus%": "cryo_dmg_",
               "Hydro DMG Bonus%": "hydro_dmg_",
               "Anemo DMG Bonus%": "anemo_dmg_",
@@ -1304,7 +1304,7 @@
               "HP%": "hp_",
               "ATK%": "atk_",
               "Pyro DMG Bonus%": "pyro_dmg_",
-              "Eletro DMG Bonus%": "electro_dmg_",
+              "Electro DMG Bonus%": "electro_dmg_",
               "Cryo DMG Bonus%": "cryo_dmg_",
               "Hydro DMG Bonus%": "hydro_dmg_",
               "Anemo DMG Bonus%": "anemo_dmg_",
@@ -1674,7 +1674,7 @@
               "HP%": "hp_",
               "ATK%": "atk_",
               "Pyro DMG Bonus%": "pyro_dmg_",
-              "Eletro DMG Bonus%": "electro_dmg_",
+              "Electro DMG Bonus%": "electro_dmg_",
               "Cryo DMG Bonus%": "cryo_dmg_",
               "Hydro DMG Bonus%": "hydro_dmg_",
               "Anemo DMG Bonus%": "anemo_dmg_",
@@ -1908,7 +1908,7 @@
               "HP%": "hp_",
               "ATK%": "atk_",
               "Pyro DMG Bonus%": "pyro_dmg_",
-              "Eletro DMG Bonus%": "electro_dmg_",
+              "Electro DMG Bonus%": "electro_dmg_",
               "Cryo DMG Bonus%": "cryo_dmg_",
               "Hydro DMG Bonus%": "hydro_dmg_",
               "Anemo DMG Bonus%": "anemo_dmg_",
