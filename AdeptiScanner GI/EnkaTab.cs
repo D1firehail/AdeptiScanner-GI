@@ -72,7 +72,7 @@ namespace AdeptiScanner_GI
 
             //filter out names that are already fetched
             List<CharacterNameData> unfetchedNames = names.Where(name => !characters.Any(c => c.key.Equals(name.Key))).ToList();
-
+            unfetchedNames.Sort((a, b) => a.Key.CompareTo(b.Key));
             string missingChars = string.Empty;
             foreach (CharacterNameData name in unfetchedNames)
             {

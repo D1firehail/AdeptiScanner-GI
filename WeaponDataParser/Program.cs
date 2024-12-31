@@ -10,10 +10,13 @@ namespace WeaponDataParser // Note: actual namespace depends on the project name
         {
             Console.WriteLine("Starting weapon parser");
 
-            GetRepoPaths(out string genshinOptimizerRepoPath, out string adeptiScannerRepoPath);
+            GetRepoPaths(out string genshinOptimizerRepoPath, out string adeptiScannerRepoPath, out string enkaPath);
 
             string weaponPath = Path.Combine(genshinOptimizerRepoPath, @"libs\gi\stats\Data\Weapons");
             string translationPath = Path.Combine(genshinOptimizerRepoPath, @"libs\gi\dm-localization\assets\locales\en");
+
+            string enkaCharPath = Path.Combine(enkaPath, @"store\characters.json");
+            string enkaLocPath = Path.Combine(enkaPath, @"store\loc.json");
 
             string scannerFilesPath = Path.Combine(adeptiScannerRepoPath, @"AdeptiScanner GI\ScannerFiles");
             Dictionary<string, List<double>> curveDict = GetGrowthCurves(Path.Combine(weaponPath, "expCurve.json"));
@@ -33,10 +36,14 @@ namespace WeaponDataParser // Note: actual namespace depends on the project name
 
             Console.WriteLine("Weapon parsing done");
 
-            UpdateArtifactInfo(scannerFilesPath, weapons);
+            Console.WriteLine("Parsing enka character and skill mapping");
+            var enkaData = AddEnkaChars(enkaCharPath, enkaLocPath);
+            Console.WriteLine("Enka parsing done");
+
+            UpdateArtifactInfo(scannerFilesPath, weapons, enkaData);
         }
 
-        static void GetRepoPaths(out string genshinOptimizerPath, out string adeptiScannerPath)
+        static void GetRepoPaths(out string genshinOptimizerPath, out string adeptiScannerPath, out string enkaPath)
         {
             string executionPath = Assembly.GetExecutingAssembly().Location;
 
@@ -59,15 +66,18 @@ namespace WeaponDataParser // Note: actual namespace depends on the project name
 
 
             genshinOptimizerPath = resourcePaths.GetValue("Genshin Optimizer")?.ToObject<string>() ?? throw new JsonException("ResourcePaths.json was missing Genshin Optimizer path");
-            adeptiScannerPath = resourcePaths.GetValue("AdeptiScanner")?.ToObject<string>() ?? throw new JsonException("ResourcePaths.json was missing AdeptiScanner path"); ;
-        
+            adeptiScannerPath = resourcePaths.GetValue("AdeptiScanner")?.ToObject<string>() ?? throw new JsonException("ResourcePaths.json was missing AdeptiScanner path");
+            enkaPath = resourcePaths.GetValue("Enka API Docs")?.ToObject<string>() ?? throw new JsonException("ResourcePaths.json was missing Enka docs path");
+
+
             Console.WriteLine("Located repo paths" + Environment.NewLine
                             + "Genshin Optimizer: " + genshinOptimizerPath + Environment.NewLine
-                            + "AdeptiScanner: " + adeptiScannerPath);
+                            + "AdeptiScanner: " + adeptiScannerPath + Environment.NewLine
+                            + "Enka API Docs: " + enkaPath);
         }
 
 
-        static void UpdateArtifactInfo(string scannerFilesPath, JArray weapons)
+        static void UpdateArtifactInfo(string scannerFilesPath, JArray weapons, JArray enkaData)
         {
 
             string artifactInfoFilePath = Path.Combine(scannerFilesPath, "ArtifactInfo.json");
@@ -103,6 +113,9 @@ namespace WeaponDataParser // Note: actual namespace depends on the project name
                 Environment.Exit(1);
             }
 
+            artifactInfo.Remove("Enka");
+            artifactInfo.Add("Enka", enkaData);
+
             artifactInfo.Remove("Weapons");
             artifactInfo.Add("Weapons", weapons);
 
@@ -115,6 +128,59 @@ namespace WeaponDataParser // Note: actual namespace depends on the project name
             File.Delete(artifactInfoReadableFileBackupPath);
             Console.WriteLine("Deleted backup of ArtifactInfo");
 
+        }
+        private static JArray AddEnkaChars(string enkaCharPath, string enkaLocPath)
+        {
+            var charJson = JsonConvert.DeserializeObject<JObject>(File.ReadAllText(enkaCharPath)) ?? throw new FileNotFoundException("enka char file missing or parsing failure");
+            var locJson = JsonConvert.DeserializeObject<JObject>(File.ReadAllText(enkaLocPath)) ?? throw new FileNotFoundException("enka loc file missing or parsing failure");
+
+            var enJson = locJson["en"].ToObject<JObject>();
+
+            var nameData = new JObject();
+            var skillData = new JObject();
+
+            foreach (var currChar in charJson)
+            {
+                var val = currChar.Value.ToObject<JObject>();
+                var nameKey = val["NameTextMapHash"].ToString();
+                var name = enJson[nameKey].ToString();
+
+                if (name.Contains("("))
+                {
+                    continue;
+                }
+
+                if (!currChar.Key.Contains("-"))
+                {
+                    var nameGOOD = name.Replace(" ", string.Empty);
+
+                    nameData.Add(currChar.Key, nameGOOD);
+                }
+
+                var skills = val["SkillOrder"].ToObject<JArray>();
+
+                skillData.TryAdd(skills[0].ToString(), "auto");
+                skillData.TryAdd(skills[1].ToString(), "skill");
+                skillData.TryAdd(skills[2].ToString(), "burst");
+
+            }
+
+            JArray enkaData = new JArray();
+
+            var nameResult = new JObject
+            {
+                { "name", "charNames" },
+                { "data", nameData }
+            };
+            enkaData.Add(nameResult);
+
+            var skillResult = new JObject
+            {
+                { "name", "skillTypes" },
+                { "data", skillData }
+            };
+            enkaData.Add(skillResult);
+            return enkaData;
         }
 
         static Dictionary<string, List<double>> GetGrowthCurves(string path)
