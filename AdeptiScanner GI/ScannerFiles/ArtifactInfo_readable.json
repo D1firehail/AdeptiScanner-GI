@@ -1,5 +1,5 @@
 {
-  "DataVersion": "5.2c",
+  "DataVersion": "5.3",
   "Pieces": [
     {
       "name": {
@@ -2184,6 +2184,11 @@
     },
     {
       "name": {
+        "Citlali": "Citlali"
+      }
+    },
+    {
+      "name": {
         "Clorinde": "Clorinde"
       }
     },
@@ -2334,6 +2339,11 @@
     },
     {
       "name": {
+        "Lan Yan": "LanYan"
+      }
+    },
+    {
+      "name": {
         "Layla": "Layla"
       }
     },
@@ -2350,6 +2360,11 @@
     {
       "name": {
         "Lyney": "Lyney"
+      }
+    },
+    {
+      "name": {
+        "Mavuika": "Mavuika"
       }
     },
     {
@@ -2653,7 +2668,10 @@
         "10000102": "Mualani",
         "10000103": "Xilonen",
         "10000104": "Chasca",
-        "10000105": "Ororon"
+        "10000105": "Ororon",
+        "10000106": "Mavuika",
+        "10000107": "Citlali",
+        "10000108": "LanYan"
       }
     },
     {
@@ -2933,6 +2951,18 @@
         "30501": "auto",
         "30502": "skill",
         "30505": "burst",
+        "11061": "auto",
+        "11062": "skill",
+        "11065": "burst",
+        "11071": "auto",
+        "11072": "skill",
+        "11075": "burst",
+        "11081": "auto",
+        "11082": "skill",
+        "11085": "burst",
+        "100541": "auto",
+        "10097": "skill",
+        "10098": "burst",
         "100542": "auto",
         "10087": "skill",
         "10088": "burst",
@@ -2947,6 +2977,7 @@
         "10118": "burst",
         "100540": "auto",
         "100550": "auto",
+        "100551": "auto",
         "100552": "auto",
         "100555": "auto",
         "100556": "auto",
@@ -38994,6 +39025,493 @@
       ]
     },
     {
+      "name": "Starcaller's Watch",
+      "key": "StarcallersWatch",
+      "rarity": 5,
+      "stats": [
+        {
+          "level": 1,
+          "baseAtk": "44",
+          "ascension": 0
+        },
+        {
+          "level": 2,
+          "baseAtk": "48",
+          "ascension": 0
+        },
+        {
+          "level": 3,
+          "baseAtk": "51",
+          "ascension": 0
+        },
+        {
+          "level": 4,
+          "baseAtk": "55",
+          "ascension": 0
+        },
+        {
+          "level": 5,
+          "baseAtk": "58",
+          "ascension": 0
+        },
+        {
+          "level": 6,
+          "baseAtk": "62",
+          "ascension": 0
+        },
+        {
+          "level": 7,
+          "baseAtk": "65",
+          "ascension": 0
+        },
+        {
+          "level": 8,
+          "baseAtk": "69",
+          "ascension": 0
+        },
+        {
+          "level": 9,
+          "baseAtk": "72",
+          "ascension": 0
+        },
+        {
+          "level": 10,
+          "baseAtk": "76",
+          "ascension": 0
+        },
+        {
+          "level": 11,
+          "baseAtk": "79",
+          "ascension": 0
+        },
+        {
+          "level": 12,
+          "baseAtk": "83",
+          "ascension": 0
+        },
+        {
+          "level": 13,
+          "baseAtk": "86",
+          "ascension": 0
+        },
+        {
+          "level": 14,
+          "baseAtk": "90",
+          "ascension": 0
+        },
+        {
+          "level": 15,
+          "baseAtk": "93",
+          "ascension": 0
+        },
+        {
+          "level": 16,
+          "baseAtk": "96",
+          "ascension": 0
+        },
+        {
+          "level": 17,
+          "baseAtk": "100",
+          "ascension": 0
+        },
+        {
+          "level": 18,
+          "baseAtk": "103",
+          "ascension": 0
+        },
+        {
+          "level": 19,
+          "baseAtk": "107",
+          "ascension": 0
+        },
+        {
+          "level": 20,
+          "baseAtk": "141",
+          "ascension": 1
+        },
+        {
+          "level": 20,
+          "baseAtk": "110",
+          "ascension": 0
+        },
+        {
+          "level": 21,
+          "baseAtk": "145",
+          "ascension": 1
+        },
+        {
+          "level": 22,
+          "baseAtk": "148",
+          "ascension": 1
+        },
+        {
+          "level": 23,
+          "baseAtk": "152",
+          "ascension": 1
+        },
+        {
+          "level": 24,
+          "baseAtk": "155",
+          "ascension": 1
+        },
+        {
+          "level": 25,
+          "baseAtk": "158",
+          "ascension": 1
+        },
+        {
+          "level": 26,
+          "baseAtk": "162",
+          "ascension": 1
+        },
+        {
+          "level": 27,
+          "baseAtk": "165",
+          "ascension": 1
+        },
+        {
+          "level": 28,
+          "baseAtk": "169",
+          "ascension": 1
+        },
+        {
+          "level": 29,
+          "baseAtk": "172",
+          "ascension": 1
+        },
+        {
+          "level": 30,
+          "baseAtk": "176",
+          "ascension": 1
+        },
+        {
+          "level": 31,
+          "baseAtk": "179",
+          "ascension": 1
+        },
+        {
+          "level": 32,
+          "baseAtk": "182",
+          "ascension": 1
+        },
+        {
+          "level": 33,
+          "baseAtk": "186",
+          "ascension": 1
+        },
+        {
+          "level": 34,
+          "baseAtk": "189",
+          "ascension": 1
+        },
+        {
+          "level": 35,
+          "baseAtk": "193",
+          "ascension": 1
+        },
+        {
+          "level": 36,
+          "baseAtk": "196",
+          "ascension": 1
+        },
+        {
+          "level": 37,
+          "baseAtk": "199",
+          "ascension": 1
+        },
+        {
+          "level": 38,
+          "baseAtk": "203",
+          "ascension": 1
+        },
+        {
+          "level": 39,
+          "baseAtk": "206",
+          "ascension": 1
+        },
+        {
+          "level": 40,
+          "baseAtk": "241",
+          "ascension": 2
+        },
+        {
+          "level": 40,
+          "baseAtk": "210",
+          "ascension": 1
+        },
+        {
+          "level": 41,
+          "baseAtk": "244",
+          "ascension": 2
+        },
+        {
+          "level": 42,
+          "baseAtk": "248",
+          "ascension": 2
+        },
+        {
+          "level": 43,
+          "baseAtk": "251",
+          "ascension": 2
+        },
+        {
+          "level": 44,
+          "baseAtk": "255",
+          "ascension": 2
+        },
+        {
+          "level": 45,
+          "baseAtk": "258",
+          "ascension": 2
+        },
+        {
+          "level": 46,
+          "baseAtk": "262",
+          "ascension": 2
+        },
+        {
+          "level": 47,
+          "baseAtk": "265",
+          "ascension": 2
+        },
+        {
+          "level": 48,
+          "baseAtk": "268",
+          "ascension": 2
+        },
+        {
+          "level": 49,
+          "baseAtk": "272",
+          "ascension": 2
+        },
+        {
+          "level": 50,
+          "baseAtk": "307",
+          "ascension": 3
+        },
+        {
+          "level": 50,
+          "baseAtk": "275",
+          "ascension": 2
+        },
+        {
+          "level": 51,
+          "baseAtk": "310",
+          "ascension": 3
+        },
+        {
+          "level": 52,
+          "baseAtk": "314",
+          "ascension": 3
+        },
+        {
+          "level": 53,
+          "baseAtk": "317",
+          "ascension": 3
+        },
+        {
+          "level": 54,
+          "baseAtk": "321",
+          "ascension": 3
+        },
+        {
+          "level": 55,
+          "baseAtk": "324",
+          "ascension": 3
+        },
+        {
+          "level": 56,
+          "baseAtk": "327",
+          "ascension": 3
+        },
+        {
+          "level": 57,
+          "baseAtk": "331",
+          "ascension": 3
+        },
+        {
+          "level": 58,
+          "baseAtk": "334",
+          "ascension": 3
+        },
+        {
+          "level": 59,
+          "baseAtk": "338",
+          "ascension": 3
+        },
+        {
+          "level": 60,
+          "baseAtk": "373",
+          "ascension": 4
+        },
+        {
+          "level": 60,
+          "baseAtk": "341",
+          "ascension": 3
+        },
+        {
+          "level": 61,
+          "baseAtk": "376",
+          "ascension": 4
+        },
+        {
+          "level": 62,
+          "baseAtk": "380",
+          "ascension": 4
+        },
+        {
+          "level": 63,
+          "baseAtk": "383",
+          "ascension": 4
+        },
+        {
+          "level": 64,
+          "baseAtk": "387",
+          "ascension": 4
+        },
+        {
+          "level": 65,
+          "baseAtk": "390",
+          "ascension": 4
+        },
+        {
+          "level": 66,
+          "baseAtk": "394",
+          "ascension": 4
+        },
+        {
+          "level": 67,
+          "baseAtk": "397",
+          "ascension": 4
+        },
+        {
+          "level": 68,
+          "baseAtk": "401",
+          "ascension": 4
+        },
+        {
+          "level": 69,
+          "baseAtk": "404",
+          "ascension": 4
+        },
+        {
+          "level": 70,
+          "baseAtk": "439",
+          "ascension": 5
+        },
+        {
+          "level": 70,
+          "baseAtk": "408",
+          "ascension": 4
+        },
+        {
+          "level": 71,
+          "baseAtk": "442",
+          "ascension": 5
+        },
+        {
+          "level": 72,
+          "baseAtk": "446",
+          "ascension": 5
+        },
+        {
+          "level": 73,
+          "baseAtk": "450",
+          "ascension": 5
+        },
+        {
+          "level": 74,
+          "baseAtk": "453",
+          "ascension": 5
+        },
+        {
+          "level": 75,
+          "baseAtk": "457",
+          "ascension": 5
+        },
+        {
+          "level": 76,
+          "baseAtk": "460",
+          "ascension": 5
+        },
+        {
+          "level": 77,
+          "baseAtk": "464",
+          "ascension": 5
+        },
+        {
+          "level": 78,
+          "baseAtk": "467",
+          "ascension": 5
+        },
+        {
+          "level": 79,
+          "baseAtk": "471",
+          "ascension": 5
+        },
+        {
+          "level": 80,
+          "baseAtk": "506",
+          "ascension": 6
+        },
+        {
+          "level": 80,
+          "baseAtk": "475",
+          "ascension": 5
+        },
+        {
+          "level": 81,
+          "baseAtk": "509",
+          "ascension": 6
+        },
+        {
+          "level": 82,
+          "baseAtk": "513",
+          "ascension": 6
+        },
+        {
+          "level": 83,
+          "baseAtk": "516",
+          "ascension": 6
+        },
+        {
+          "level": 84,
+          "baseAtk": "520",
+          "ascension": 6
+        },
+        {
+          "level": 85,
+          "baseAtk": "524",
+          "ascension": 6
+        },
+        {
+          "level": 86,
+          "baseAtk": "527",
+          "ascension": 6
+        },
+        {
+          "level": 87,
+          "baseAtk": "531",
+          "ascension": 6
+        },
+        {
+          "level": 88,
+          "baseAtk": "535",
+          "ascension": 6
+        },
+        {
+          "level": 89,
+          "baseAtk": "538",
+          "ascension": 6
+        },
+        {
+          "level": 90,
+          "baseAtk": "542",
+          "ascension": 6
+        }
+      ]
+    },
+    {
       "name": "Surf's Up",
       "key": "SurfsUp",
       "rarity": 5,
@@ -43859,6 +44377,493 @@
         {
           "level": 90,
           "baseAtk": "510",
+          "ascension": 6
+        }
+      ]
+    },
+    {
+      "name": "A Thousand Blazing Suns",
+      "key": "AThousandBlazingSuns",
+      "rarity": 5,
+      "stats": [
+        {
+          "level": 1,
+          "baseAtk": "49",
+          "ascension": 0
+        },
+        {
+          "level": 2,
+          "baseAtk": "54",
+          "ascension": 0
+        },
+        {
+          "level": 3,
+          "baseAtk": "59",
+          "ascension": 0
+        },
+        {
+          "level": 4,
+          "baseAtk": "63",
+          "ascension": 0
+        },
+        {
+          "level": 5,
+          "baseAtk": "68",
+          "ascension": 0
+        },
+        {
+          "level": 6,
+          "baseAtk": "73",
+          "ascension": 0
+        },
+        {
+          "level": 7,
+          "baseAtk": "78",
+          "ascension": 0
+        },
+        {
+          "level": 8,
+          "baseAtk": "83",
+          "ascension": 0
+        },
+        {
+          "level": 9,
+          "baseAtk": "88",
+          "ascension": 0
+        },
+        {
+          "level": 10,
+          "baseAtk": "93",
+          "ascension": 0
+        },
+        {
+          "level": 11,
+          "baseAtk": "98",
+          "ascension": 0
+        },
+        {
+          "level": 12,
+          "baseAtk": "103",
+          "ascension": 0
+        },
+        {
+          "level": 13,
+          "baseAtk": "108",
+          "ascension": 0
+        },
+        {
+          "level": 14,
+          "baseAtk": "114",
+          "ascension": 0
+        },
+        {
+          "level": 15,
+          "baseAtk": "119",
+          "ascension": 0
+        },
+        {
+          "level": 16,
+          "baseAtk": "124",
+          "ascension": 0
+        },
+        {
+          "level": 17,
+          "baseAtk": "129",
+          "ascension": 0
+        },
+        {
+          "level": 18,
+          "baseAtk": "134",
+          "ascension": 0
+        },
+        {
+          "level": 19,
+          "baseAtk": "140",
+          "ascension": 0
+        },
+        {
+          "level": 20,
+          "baseAtk": "176",
+          "ascension": 1
+        },
+        {
+          "level": 20,
+          "baseAtk": "145",
+          "ascension": 0
+        },
+        {
+          "level": 21,
+          "baseAtk": "181",
+          "ascension": 1
+        },
+        {
+          "level": 22,
+          "baseAtk": "187",
+          "ascension": 1
+        },
+        {
+          "level": 23,
+          "baseAtk": "192",
+          "ascension": 1
+        },
+        {
+          "level": 24,
+          "baseAtk": "197",
+          "ascension": 1
+        },
+        {
+          "level": 25,
+          "baseAtk": "203",
+          "ascension": 1
+        },
+        {
+          "level": 26,
+          "baseAtk": "208",
+          "ascension": 1
+        },
+        {
+          "level": 27,
+          "baseAtk": "214",
+          "ascension": 1
+        },
+        {
+          "level": 28,
+          "baseAtk": "219",
+          "ascension": 1
+        },
+        {
+          "level": 29,
+          "baseAtk": "225",
+          "ascension": 1
+        },
+        {
+          "level": 30,
+          "baseAtk": "230",
+          "ascension": 1
+        },
+        {
+          "level": 31,
+          "baseAtk": "236",
+          "ascension": 1
+        },
+        {
+          "level": 32,
+          "baseAtk": "241",
+          "ascension": 1
+        },
+        {
+          "level": 33,
+          "baseAtk": "247",
+          "ascension": 1
+        },
+        {
+          "level": 34,
+          "baseAtk": "252",
+          "ascension": 1
+        },
+        {
+          "level": 35,
+          "baseAtk": "258",
+          "ascension": 1
+        },
+        {
+          "level": 36,
+          "baseAtk": "263",
+          "ascension": 1
+        },
+        {
+          "level": 37,
+          "baseAtk": "269",
+          "ascension": 1
+        },
+        {
+          "level": 38,
+          "baseAtk": "275",
+          "ascension": 1
+        },
+        {
+          "level": 39,
+          "baseAtk": "280",
+          "ascension": 1
+        },
+        {
+          "level": 40,
+          "baseAtk": "317",
+          "ascension": 2
+        },
+        {
+          "level": 40,
+          "baseAtk": "286",
+          "ascension": 1
+        },
+        {
+          "level": 41,
+          "baseAtk": "323",
+          "ascension": 2
+        },
+        {
+          "level": 42,
+          "baseAtk": "328",
+          "ascension": 2
+        },
+        {
+          "level": 43,
+          "baseAtk": "334",
+          "ascension": 2
+        },
+        {
+          "level": 44,
+          "baseAtk": "340",
+          "ascension": 2
+        },
+        {
+          "level": 45,
+          "baseAtk": "346",
+          "ascension": 2
+        },
+        {
+          "level": 46,
+          "baseAtk": "351",
+          "ascension": 2
+        },
+        {
+          "level": 47,
+          "baseAtk": "357",
+          "ascension": 2
+        },
+        {
+          "level": 48,
+          "baseAtk": "363",
+          "ascension": 2
+        },
+        {
+          "level": 49,
+          "baseAtk": "369",
+          "ascension": 2
+        },
+        {
+          "level": 50,
+          "baseAtk": "406",
+          "ascension": 3
+        },
+        {
+          "level": 50,
+          "baseAtk": "374",
+          "ascension": 2
+        },
+        {
+          "level": 51,
+          "baseAtk": "411",
+          "ascension": 3
+        },
+        {
+          "level": 52,
+          "baseAtk": "417",
+          "ascension": 3
+        },
+        {
+          "level": 53,
+          "baseAtk": "423",
+          "ascension": 3
+        },
+        {
+          "level": 54,
+          "baseAtk": "429",
+          "ascension": 3
+        },
+        {
+          "level": 55,
+          "baseAtk": "435",
+          "ascension": 3
+        },
+        {
+          "level": 56,
+          "baseAtk": "441",
+          "ascension": 3
+        },
+        {
+          "level": 57,
+          "baseAtk": "447",
+          "ascension": 3
+        },
+        {
+          "level": 58,
+          "baseAtk": "453",
+          "ascension": 3
+        },
+        {
+          "level": 59,
+          "baseAtk": "458",
+          "ascension": 3
+        },
+        {
+          "level": 60,
+          "baseAtk": "495",
+          "ascension": 4
+        },
+        {
+          "level": 60,
+          "baseAtk": "464",
+          "ascension": 3
+        },
+        {
+          "level": 61,
+          "baseAtk": "501",
+          "ascension": 4
+        },
+        {
+          "level": 62,
+          "baseAtk": "507",
+          "ascension": 4
+        },
+        {
+          "level": 63,
+          "baseAtk": "513",
+          "ascension": 4
+        },
+        {
+          "level": 64,
+          "baseAtk": "519",
+          "ascension": 4
+        },
+        {
+          "level": 65,
+          "baseAtk": "525",
+          "ascension": 4
+        },
+        {
+          "level": 66,
+          "baseAtk": "531",
+          "ascension": 4
+        },
+        {
+          "level": 67,
+          "baseAtk": "537",
+          "ascension": 4
+        },
+        {
+          "level": 68,
+          "baseAtk": "543",
+          "ascension": 4
+        },
+        {
+          "level": 69,
+          "baseAtk": "549",
+          "ascension": 4
+        },
+        {
+          "level": 70,
+          "baseAtk": "586",
+          "ascension": 5
+        },
+        {
+          "level": 70,
+          "baseAtk": "555",
+          "ascension": 4
+        },
+        {
+          "level": 71,
+          "baseAtk": "593",
+          "ascension": 5
+        },
+        {
+          "level": 72,
+          "baseAtk": "599",
+          "ascension": 5
+        },
+        {
+          "level": 73,
+          "baseAtk": "605",
+          "ascension": 5
+        },
+        {
+          "level": 74,
+          "baseAtk": "611",
+          "ascension": 5
+        },
+        {
+          "level": 75,
+          "baseAtk": "617",
+          "ascension": 5
+        },
+        {
+          "level": 76,
+          "baseAtk": "623",
+          "ascension": 5
+        },
+        {
+          "level": 77,
+          "baseAtk": "629",
+          "ascension": 5
+        },
+        {
+          "level": 78,
+          "baseAtk": "635",
+          "ascension": 5
+        },
+        {
+          "level": 79,
+          "baseAtk": "641",
+          "ascension": 5
+        },
+        {
+          "level": 80,
+          "baseAtk": "679",
+          "ascension": 6
+        },
+        {
+          "level": 80,
+          "baseAtk": "648",
+          "ascension": 5
+        },
+        {
+          "level": 81,
+          "baseAtk": "685",
+          "ascension": 6
+        },
+        {
+          "level": 82,
+          "baseAtk": "691",
+          "ascension": 6
+        },
+        {
+          "level": 83,
+          "baseAtk": "697",
+          "ascension": 6
+        },
+        {
+          "level": 84,
+          "baseAtk": "703",
+          "ascension": 6
+        },
+        {
+          "level": 85,
+          "baseAtk": "709",
+          "ascension": 6
+        },
+        {
+          "level": 86,
+          "baseAtk": "716",
+          "ascension": 6
+        },
+        {
+          "level": 87,
+          "baseAtk": "722",
+          "ascension": 6
+        },
+        {
+          "level": 88,
+          "baseAtk": "728",
+          "ascension": 6
+        },
+        {
+          "level": 89,
+          "baseAtk": "734",
+          "ascension": 6
+        },
+        {
+          "level": 90,
+          "baseAtk": "741",
           "ascension": 6
         }
       ]
