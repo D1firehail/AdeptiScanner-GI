@@ -1,5 +1,5 @@
 {
-  "DataVersion": "5.4",
+  "DataVersion": "5.5",
   "Pieces": [
     {
       "name": {
@@ -667,6 +667,16 @@
             "name": {
               "Scroll of the Hero of Cinder City": "ScrollOfTheHeroOfCinderCity"
             }
+          },
+          {
+            "name": {
+              "Long Night's Oath": "LongNightsOath"
+            }
+          },
+          {
+            "name": {
+              "Finale of the Deep Galleries": "FinaleOfTheDeepGalleries"
+            }
           }
         ]
       }
@@ -1251,6 +1261,16 @@
           {
             "name": {
               "Scroll of the Hero of Cinder City": "ScrollOfTheHeroOfCinderCity"
+            }
+          },
+          {
+            "name": {
+              "Long Night's Oath": "LongNightsOath"
+            }
+          },
+          {
+            "name": {
+              "Finale of the Deep Galleries": "FinaleOfTheDeepGalleries"
             }
           }
         ]
@@ -2274,6 +2294,11 @@
     },
     {
       "name": {
+        "Iansan": "Iansan"
+      }
+    },
+    {
+      "name": {
         "Jean": "Jean"
       }
     },
@@ -2494,6 +2519,11 @@
     },
     {
       "name": {
+        "Varesa": "Varesa"
+      }
+    },
+    {
+      "name": {
         "Venti": "Venti"
       }
     },
@@ -2677,7 +2707,9 @@
         "10000106": "Mavuika",
         "10000107": "Citlali",
         "10000108": "LanYan",
-        "10000109": "YumemizukiMizuki"
+        "10000109": "YumemizukiMizuki",
+        "10000110": "Iansan",
+        "10000111": "Varesa"
       }
     },
     {
@@ -2969,6 +3001,12 @@
         "11091": "auto",
         "11092": "skill",
         "11095": "burst",
+        "11101": "auto",
+        "11102": "skill",
+        "11105": "burst",
+        "11111": "auto",
+        "11112": "skill",
+        "11115": "burst",
         "100541": "auto",
         "10097": "skill",
         "10098": "burst",
