@@ -531,7 +531,7 @@ namespace AdeptiScanner_GI
         /// <param name="area">Area containing the artifact info</param>
         /// <param name="rows">Filter results per row</param>
         /// <returns>Filtered image of the artifact area</returns>
-        public static Bitmap getArtifactImg(Bitmap img, Rectangle area, out int[] rows, bool saveImages, out bool locked, out bool astralMark, out int rarity, out Rectangle typeMainArea, out Rectangle levelArea, out Rectangle subArea, out Rectangle setArea, out Rectangle charArea)
+        public static Bitmap getArtifactImg(Bitmap img, Rectangle area, out int[] rows, bool saveImages, out bool locked, out bool astralMark, out bool elixirCrafted, out int rarity, out Rectangle typeMainArea, out Rectangle levelArea, out Rectangle subArea, out Rectangle setArea, out Rectangle charArea)
         {
             typeMainArea = Rectangle.Empty;
             levelArea = Rectangle.Empty;
@@ -542,6 +542,7 @@ namespace AdeptiScanner_GI
 
             locked = false;
             astralMark = false;
+            elixirCrafted = false;
             rows = new int[area.Height];
             //Get relevant part of image
             Bitmap areaImg = new Bitmap(area.Width, area.Height);
@@ -601,6 +602,12 @@ namespace AdeptiScanner_GI
                         {
                             line_rarity++;
                         }
+                    }
+
+                    if (section == 0 && rarity == 5 && PixelIsColor(pixel, GameColor.SanctifyingElixirBackground))
+                    {
+                        // check if crafted via Sanctifying Elixir / Artifact Transmuter
+                        elixirCrafted = true;
                     }
 
                     if (section == 1)
@@ -919,7 +926,7 @@ namespace AdeptiScanner_GI
         /// </summary>
         /// <param name="img">Image of artifact area, filtered</param>
         /// <param name="rows">Filter results per row</param>
-        public static Artifact getArtifacts(Bitmap img, int[] rows, bool saveImages, TesseractEngine tessEngine, bool locked, bool astralMark, int rarity, Rectangle typeMainArea, Rectangle levelArea, Rectangle subArea, Rectangle setArea, Rectangle charArea)
+        public static Artifact getArtifacts(Bitmap img, int[] rows, bool saveImages, TesseractEngine tessEngine, bool locked, bool astralMark, bool elixirCrafted, int rarity, Rectangle typeMainArea, Rectangle levelArea, Rectangle subArea, Rectangle setArea, Rectangle charArea)
         {
             //get all potential text rows
             List<Tuple<int, int>> textRows = new List<Tuple<int, int>>();
@@ -943,6 +950,7 @@ namespace AdeptiScanner_GI
             Artifact foundArtifact = new Artifact();
             foundArtifact.locked = locked;
             foundArtifact.astralMark = astralMark;
+            foundArtifact.elixirCrafted = elixirCrafted;
             foundArtifact.rarity = rarity;
             i = 0;
             //Piece type
@@ -1210,6 +1218,7 @@ namespace AdeptiScanner_GI
 
             StarYellow, // rarity star
             LockRed, // lock icon
+            SanctifyingElixirBackground, // light purple background
 
         }
 
@@ -1224,7 +1233,7 @@ namespace AdeptiScanner_GI
             switch (color)
             {
                 case GameColor.TextWhiteIsh:
-                    return pixel[0] > 140 && pixel[1] > 140 && pixel[2] > 140;
+                    return pixel[0] > 140 && pixel[1] > 140 && pixel[2] > 140 && (Math.Abs(pixel[0] - pixel[1]) < 50); // allow color diff, but avoid SanctifyingElixirBackground
                 case GameColor.TextBrightWhite:
                     return pixel[0] > 225 && pixel[1] > 225 && pixel[2] > 225;
                 case GameColor.TextBlackIsh:
@@ -1254,6 +1263,8 @@ namespace AdeptiScanner_GI
                     return pixel[0] < 60 && pixel[1] > 190 && pixel[2] > 240;
                 case GameColor.LockRed:
                     return pixel[0] < 150 && pixel[1] > 120 && pixel[2] > 200;
+                case GameColor.SanctifyingElixirBackground:
+                    return pixel[0] > 250 && pixel[1] is > 180 and < 200 && pixel[2] is > 210 and < 230;
             }
             
             throw new NotImplementedException("No filter defined for GameColor " + color);
