@@ -340,9 +340,9 @@ namespace AdeptiScanner_GI
                         }
                         else
                         {
-                            filtered = ImageProcessing.getArtifactImg(filtered, area, out int[] rows, saveImages, out bool locked, out int rarity, out Rectangle typeMainArea, out Rectangle levelArea, out Rectangle subArea, out Rectangle setArea, out Rectangle charArea);
+                            filtered = ImageProcessing.getArtifactImg(filtered, area, out int[] rows, saveImages, out bool locked, out bool astralMark, out int rarity, out Rectangle typeMainArea, out Rectangle levelArea, out Rectangle subArea, out Rectangle setArea, out Rectangle charArea);
 
-                            Artifact item = ImageProcessing.getArtifacts(filtered, rows, saveImages, threadEngines[threadIndex], locked, rarity, typeMainArea, levelArea, subArea, setArea, charArea);
+                            Artifact item = ImageProcessing.getArtifacts(filtered, rows, saveImages, threadEngines[threadIndex], locked, astralMark, rarity, typeMainArea, levelArea, subArea, setArea, charArea);
 
                             if (Database.artifactInvalid(rarity, item))
                             {
@@ -624,8 +624,8 @@ namespace AdeptiScanner_GI
                     Bitmap filtered = new Bitmap(img);
                     string timestamp = DateTime.UtcNow.ToString("yyyy-MM-dd HH-mm-ssff");
                     filtered.Save(Path.Join(Database.appDir, "images", "GenshinArtifactImg_" + timestamp + ".png"));
-                    filtered = ImageProcessing.getArtifactImg(filtered, area, out int[] rows, true, out bool locked, out int rarity, out Rectangle typeMainArea, out Rectangle levelArea, out Rectangle subArea, out Rectangle setArea, out Rectangle charArea);
-                    Artifact item = ImageProcessing.getArtifacts(filtered, rows, true, tessEngine, locked, rarity, typeMainArea, levelArea, subArea, setArea, charArea);
+                    filtered = ImageProcessing.getArtifactImg(filtered, area, out int[] rows, true, out bool locked, out bool astralMark, out int rarity, out Rectangle typeMainArea, out Rectangle levelArea, out Rectangle subArea, out Rectangle setArea, out Rectangle charArea);
+                    Artifact item = ImageProcessing.getArtifacts(filtered, rows, true, tessEngine, locked, astralMark, rarity, typeMainArea, levelArea, subArea, setArea, charArea);
                     AppendStatusText(item.ToString() + Environment.NewLine, false);
                 }
 
@@ -1130,8 +1130,8 @@ namespace AdeptiScanner_GI
             else
             {
 
-                img_Filtered = ImageProcessing.getArtifactImg(img_Filtered, readArea, out filtered_rows, saveImages, out bool locked, out int rarity, out Rectangle typeMainArea, out Rectangle levelArea, out Rectangle subArea, out Rectangle setArea, out Rectangle charArea);
-                Artifact artifact = ImageProcessing.getArtifacts(img_Filtered, filtered_rows, saveImages, tessEngine, locked, rarity, typeMainArea, levelArea, subArea, setArea, charArea);
+                img_Filtered = ImageProcessing.getArtifactImg(img_Filtered, readArea, out filtered_rows, saveImages, out bool locked, out bool astralMark, out int rarity, out Rectangle typeMainArea, out Rectangle levelArea, out Rectangle subArea, out Rectangle setArea, out Rectangle charArea);
+                Artifact artifact = ImageProcessing.getArtifacts(img_Filtered, filtered_rows, saveImages, tessEngine, locked, astralMark, rarity, typeMainArea, levelArea, subArea, setArea, charArea);
                 if (Database.artifactInvalid(rarity, artifact))
                 {
                     displayInventoryItem(artifact);

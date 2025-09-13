@@ -13,6 +13,7 @@ namespace AdeptiScanner_GI
         public ArtifactSetData? set;
         public CharacterNameData? character;
         public bool locked = false;
+        public bool astralMark = false;
         public int rarity = 0;
 
         public Artifact()
@@ -69,6 +70,7 @@ namespace AdeptiScanner_GI
                 text += "Null" + Environment.NewLine;
 
             text += "Locked: " + locked + Environment.NewLine;
+            text += "Astral Mark: " + astralMark + Environment.NewLine;
 
 
 

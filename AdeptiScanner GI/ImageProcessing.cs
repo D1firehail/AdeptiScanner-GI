@@ -531,7 +531,7 @@ namespace AdeptiScanner_GI
         /// <param name="area">Area containing the artifact info</param>
         /// <param name="rows">Filter results per row</param>
         /// <returns>Filtered image of the artifact area</returns>
-        public static Bitmap getArtifactImg(Bitmap img, Rectangle area, out int[] rows, bool saveImages, out bool locked, out int rarity, out Rectangle typeMainArea, out Rectangle levelArea, out Rectangle subArea, out Rectangle setArea, out Rectangle charArea)
+        public static Bitmap getArtifactImg(Bitmap img, Rectangle area, out int[] rows, bool saveImages, out bool locked, out bool astralMark, out int rarity, out Rectangle typeMainArea, out Rectangle levelArea, out Rectangle subArea, out Rectangle setArea, out Rectangle charArea)
         {
             typeMainArea = Rectangle.Empty;
             levelArea = Rectangle.Empty;
@@ -541,6 +541,7 @@ namespace AdeptiScanner_GI
             rarity = 0;
 
             locked = false;
+            astralMark = false;
             rows = new int[area.Height];
             //Get relevant part of image
             Bitmap areaImg = new Bitmap(area.Width, area.Height);
@@ -602,11 +603,19 @@ namespace AdeptiScanner_GI
                         }
                     }
 
-                    if ( section == 1 && PixelIsColor(pixel, GameColor.LockRed))
+                    if (section == 1)
                     {
-                        //if section 1, look for red lock
-                        locked = true;
-                    } else if (section == 2 && PixelIsColor(pixel, GameColor.TextGreen))
+                        // if section 1, look for red lock or yellow star, depending on current lock status
+                        // can't have astral mark without being locked
+                        if (!locked && PixelIsColor(pixel, GameColor.LockRed))
+                        {
+                            locked = true;
+                        } else if (PixelIsColor(pixel, GameColor.StarYellow))
+                        {
+                            astralMark = true;
+                        }
+                    }
+                    else if (section == 2 && PixelIsColor(pixel, GameColor.TextGreen))
                     {
                         //if section 2, look for green text
                         subArea = new Rectangle(0, levelArea.Bottom, levelArea.Width, y - levelArea.Bottom);
@@ -910,7 +919,7 @@ namespace AdeptiScanner_GI
         /// </summary>
         /// <param name="img">Image of artifact area, filtered</param>
         /// <param name="rows">Filter results per row</param>
-        public static Artifact getArtifacts(Bitmap img, int[] rows, bool saveImages, TesseractEngine tessEngine, bool locked, int rarity, Rectangle typeMainArea, Rectangle levelArea, Rectangle subArea, Rectangle setArea, Rectangle charArea)
+        public static Artifact getArtifacts(Bitmap img, int[] rows, bool saveImages, TesseractEngine tessEngine, bool locked, bool astralMark, int rarity, Rectangle typeMainArea, Rectangle levelArea, Rectangle subArea, Rectangle setArea, Rectangle charArea)
         {
             //get all potential text rows
             List<Tuple<int, int>> textRows = new List<Tuple<int, int>>();
@@ -933,6 +942,7 @@ namespace AdeptiScanner_GI
 
             Artifact foundArtifact = new Artifact();
             foundArtifact.locked = locked;
+            foundArtifact.astralMark = astralMark;
             foundArtifact.rarity = rarity;
             i = 0;
             //Piece type
