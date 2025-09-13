@@ -39,7 +39,7 @@ namespace AdeptiScanner_GI
         public string GetPlainText() => Text;
     }
 
-    public readonly record struct ArtifactSubStatData(string Text, string StatKey, double StatValue) : IParsableData
+    public readonly record struct ArtifactSubStatData(string Text, string StatKey, double StatValue, int MinRolls, int MaxRolls, bool IsUnactivated) : IParsableData
     {
         public string GetPlainText() => Text;
     }
@@ -210,11 +210,11 @@ namespace AdeptiScanner_GI
                     string statName = statNameTup.Key;
                     string statKey = statNameTup.Value.ToObject<string>();
                     List<int> baserolls = new List<int>();
-                    List<int> rolls = new List<int>();
+                    List<(int Value, int Rolls)> rolls = new();
                     foreach (double statValue in substat["rolls"].ToObject<List<double>>())
                     {
                         baserolls.Add((int)(statValue * 100));
-                        rolls.Add((int)(statValue * 100));
+                        rolls.Add(((int)(statValue * 100), 1));
 
                     }
 
@@ -226,16 +226,18 @@ namespace AdeptiScanner_GI
                         {
                             foreach (int value in baserolls)
                             {
-                                int tmp = rolls[j] + value;
-                                if (!rolls.Contains(tmp))
-                                    rolls.Add(tmp);
+                                int tmp = rolls[j].Value + value;
+                                rolls.Add((tmp, rolls[j].Rolls + 1));
                             }
                         }
                         start = stop;
                         stop = rolls.Count;
                     }
-                    foreach (int value_int in rolls)
+                    Dictionary<string, (double ValueDouble, int MinRolls, int MaxRolls)> processedRolls = new();
+                    foreach (var roll in rolls)
                     {
+                        int value_int = roll.Value;
+                        int rollCount = roll.Rolls;
                         double value = value_int / 100.0 + 0.001;
                         string text = statName + value.ToString("N0", culture);
                         if (statName.Contains("%"))
@@ -247,7 +249,31 @@ namespace AdeptiScanner_GI
                         {
                             value = Math.Round(value, 0);
                         }
-                        Substats.Add( new ArtifactSubStatData(text, statKey, value));
+
+                        int maxRolls = rollCount;
+                        int minRolls = rollCount;
+
+                        if (processedRolls.TryGetValue(text, out var entry))
+                        {
+                            maxRolls = Math.Max(entry.MaxRolls, maxRolls);
+                            minRolls = Math.Min(entry.MinRolls, minRolls);
+                        }
+
+                        processedRolls[text] = (value, minRolls, maxRolls);
+                    }
+
+                    foreach(var processedRoll in processedRolls)
+                    {
+                        string text = processedRoll.Key;
+                        int minRolls = processedRoll.Value.MinRolls;
+                        int maxRolls = processedRoll.Value.MaxRolls;
+                        double value = processedRoll.Value.ValueDouble;
+
+                        Substats.Add(new ArtifactSubStatData(text, statKey, value, minRolls, maxRolls, false));
+                        if (minRolls == 1 && maxRolls == 1)
+                        {
+                            Substats.Add(new ArtifactSubStatData(text + "(unactivated)", statKey, value, minRolls, maxRolls, true));
+                        }
                     }
                 }
             }

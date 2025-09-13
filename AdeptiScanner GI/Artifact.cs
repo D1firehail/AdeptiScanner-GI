@@ -95,10 +95,14 @@ namespace AdeptiScanner_GI
                 JArray subsJArr = new JArray();
                 foreach (ArtifactSubStatData sub in subs)
                 {
+                    // ignore unactivated subs in export, until format update is done
+                    if (!sub.IsUnactivated)
+                    {
                     JObject subJObj = new JObject();
                     subJObj.Add("key", JToken.FromObject(sub.StatKey));
                     subJObj.Add("value", JToken.FromObject(sub.StatValue));
                     subsJArr.Add(subJObj);
+                    }
                 }
                 result.Add("substats", subsJArr);
             }

@@ -573,7 +573,7 @@ namespace AdeptiScanner_GI
                 if (
                     (section == 0 && x < width * 0.55 && PixelIsColor(pixel, GameColor.TextWhiteIsh)) //look for white-ish text, skip right edge (artifact image)
                     || (section == 1 && x < width * 0.55 && (PixelIsColor(pixel, GameColor.TextBrightWhite) || PixelIsColor(pixelBelow, GameColor.TextBrightWhite))) //look for bright white text, skip right edge
-                    || (section == 2 && PixelIsColor(pixel, GameColor.TextBlackIsh)) //look for black
+                    || (section == 2 && (PixelIsColor(pixel, GameColor.TextBlackIsh) || PixelIsColor(pixel, GameColor.TextSubstatUnactivated))) //look for both active and inactive substat text color
                     || (section == 3 && PixelIsColor(pixel, GameColor.TextGreen)) //look for green
                     || (section == 4 && x > width * 0.15 && PixelIsColor(pixel, GameColor.TextBlackIsh)) // look for black, skip left edge (character head)
                     )
@@ -983,24 +983,71 @@ namespace AdeptiScanner_GI
             //Substats
             foundArtifact.subs = new List<ArtifactSubStatData>();
             int substat = 0;
+            prevRaw = "";
             while (i < textRows.Count && textRows[i].Item2 <= subArea.Top)
                 i++;
             for (; i < textRows.Count && textRows[i].Item2 > subArea.Top; i++)
             {
-                string result = OCRRow(img, textRows[i].Item1, textRows[i].Item2, Database.rarityData[rarity-1].Substats, out ArtifactSubStatData? bestMatch, out int dist, out string rawText, "", saveImages, tessEngine);
-                if (bestMatch.HasValue &&dist < 3)
+                const int activeArtifactDistLimit = 3;
+                const int inactiveArtifactDistLimit = 6;
+                const int artifactJunkRowLengthLimit = 5;
+
+                string result = OCRRow(img, textRows[i].Item1, textRows[i].Item2, Database.rarityData[rarity-1].Substats, out ArtifactSubStatData? bestMatch, out int dist, out string rawText, prevRaw, saveImages, tessEngine);
+
+                if (substat < 3 || rarity != 5)
                 {
-                    foundArtifact.subs.Add(bestMatch.Value);
-                    if (substat > 2)
+                    // basic case, no need to account for unactivated substats
+                    if (bestMatch.HasValue && dist < activeArtifactDistLimit)
                     {
-                        i++;
+                        foundArtifact.subs.Add(bestMatch.Value);
+                        substat++;
+                    }
+                    else if (rawText.Length > artifactJunkRowLengthLimit)
+                    {
                         break;
                     }
-                    substat++;
                 }
-                else if (rawText.Length > 5)
+                else if (substat == 3)
                 {
-                    break;
+                    if (bestMatch.HasValue 
+                        && (dist < activeArtifactDistLimit 
+                            || (bestMatch.Value.IsUnactivated && dist < inactiveArtifactDistLimit)))
+                    {
+                        foundArtifact.subs.Add(bestMatch.Value);
+                        substat++;
+
+                        if (bestMatch.Value.IsUnactivated || bestMatch.Value.MinRolls > 1)
+                        {
+                            // safe to assume it's not an unactivated substat
+                            i++;
+                            break;
+                        }
+                        else
+                        {
+                            // could still be an unactivated substat
+                            prevRaw = rawText;
+                        }
+                    }
+                    else if (rawText.Length > artifactJunkRowLengthLimit)
+                    {
+                        break;
+                    }
+                }
+                else if (substat == 4)
+                {
+                    // we have all 4 substats, but "(unactivated)" might be on a separate row
+                    if (rawText.Length > prevRaw.Length + 2)
+                    {
+                        // something new was read (with slight junk margin), so we're done with substats either way
+                        if (bestMatch.HasValue && bestMatch.Value.IsUnactivated && dist < inactiveArtifactDistLimit)
+                        {
+                            // replace previous sub
+                            foundArtifact.subs[3] = bestMatch.Value;
+                            i++;
+                        }
+                        // if we didn't replace sub, this row should be the set name
+                        break;
+                    }
                 }
             }
 
@@ -1137,6 +1184,7 @@ namespace AdeptiScanner_GI
             TextBlackIsh, // substats, equipped status
             TextGreen, // set text
             TextGold, // weapon refinement text
+            TextSubstatUnactivated,
 
             BackgroundCharacterArea, // character label background
             BackgroundWhiteIsh, // background of area with substats, description etc
@@ -1170,6 +1218,8 @@ namespace AdeptiScanner_GI
                     return (pixel[0] < 130 && pixel[1] > 160 && pixel[2] < 130);
                 case GameColor.TextGold:
                     return (pixel[0] is > 100 and < 160 && pixel[1] > 160 && pixel[2] is > 200 and < 230);
+                case GameColor.TextSubstatUnactivated:
+                    return (pixel[0] is > 150 and < 172 && pixel[1] is > 150 and < 172 && pixel[2] is > 150 and < 172) && (Math.Abs(pixel[0] - pixel[1]) < 8 && Math.Abs(pixel[1] - pixel[2]) < 8);
 
                 case GameColor.BackgroundCharacterArea:
                     return pixel[0] is > 180 and < 200 && pixel[1] > 220 && pixel[2] > 240;
