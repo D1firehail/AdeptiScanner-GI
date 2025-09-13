@@ -1145,8 +1145,13 @@ namespace AdeptiScanner_GI
                     string result = OCRRow(img, textRows[i].Item1, textRows[i].Item2, Database.WeaponLevels[name], out WeaponLevelAndAscensionData? bestMatch, out int dist, out string rawText, "", saveImages, tessEngine);
                     if (bestMatch.HasValue && dist == 0)
                     {
+                        // secondary stat value at some level *might* match base atk at some other level
+                        // so remember result but keep checking
                         foundWeapon.level = bestMatch.Value;
-                        i++;
+                    } 
+                    else if (foundWeapon.level.HasValue)
+                    {
+                        // non-result after getting a result. This should be after base ATK row, so don't increment
                         break;
                     }
                 }
