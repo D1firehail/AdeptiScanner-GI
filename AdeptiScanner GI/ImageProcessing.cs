@@ -565,6 +565,10 @@ namespace AdeptiScanner_GI
             int rightEdge = 0;
             int leftEdge = width - 1;
             int line_rarity = 0;
+
+            List<(int i, int x, int y)> unactivedSubstatPixels = new();
+            int lastActiveSubstatRow = 0;
+
             for (int i = 0; i < numBytes; i += PixelSize)
             {
                 int x = (i / PixelSize) % width;
@@ -575,7 +579,7 @@ namespace AdeptiScanner_GI
                 if (
                     (section == 0 && x < width * 0.55 && PixelIsColor(pixel, GameColor.TextWhiteIsh)) //look for white-ish text, skip right edge (artifact image)
                     || (section == 1 && x < width * 0.55 && (PixelIsColor(pixel, GameColor.TextBrightWhite) || PixelIsColor(pixelBelow, GameColor.TextBrightWhite))) //look for bright white text, skip right edge
-                    || (section == 2 && (PixelIsColor(pixel, GameColor.TextBlackIsh) || PixelIsColor(pixel, GameColor.TextSubstatUnactivated))) //look for both active and inactive substat text color
+                    || (section == 2 && PixelIsColor(pixel, GameColor.TextBlackIsh)) //look for active substat text color
                     || (section == 3 && PixelIsColor(pixel, GameColor.TextGreen)) //look for green
                     || (section == 4 && x > width * 0.15 && PixelIsColor(pixel, GameColor.TextBlackIsh)) // look for black, skip left edge (character head)
                     )
@@ -590,6 +594,20 @@ namespace AdeptiScanner_GI
                         rightEdge = x;
                     if (x < leftEdge && x != 0)
                         leftEdge = x;
+                    if (section == 2)
+                    {
+                        lastActiveSubstatRow = y;
+                    }
+                }
+                else if (section == 2 && PixelIsColor(pixel, GameColor.TextSubstatUnactivated))
+                {
+                    // look for inactive substat text color, to revisit later
+                    //Make White for now
+                    imgBytes[i] = 255;
+                    imgBytes[i + 1] = 255;
+                    imgBytes[i + 2] = 255;
+                    imgBytes[i + 3] = 255;
+                    unactivedSubstatPixels.Add((i, x, y));
                 }
                 else
                 {
@@ -698,6 +716,33 @@ namespace AdeptiScanner_GI
                     }
                 }
             }
+
+            foreach (var px in unactivedSubstatPixels)
+            {
+                // re-process pixels of unactived substat color.
+                // pixels reasonably belonging to active substats should remain untouched
+                // pixels reasonably belonging to unactived substats should be re-classified
+                if (px.y < lastActiveSubstatRow + 5)
+                {
+                    continue;
+                }
+
+                int i = px.i;
+                int x = px.x;
+                int y = px.y;
+
+                //Make Black
+                imgBytes[i] = 0;
+                imgBytes[i + 1] = 0;
+                imgBytes[i + 2] = 0;
+                imgBytes[i + 3] = 255;
+                rows[y]++;
+                if (x > rightEdge)
+                    rightEdge = x;
+                if (x < leftEdge && x != 0)
+                    leftEdge = x;
+            }
+
             Marshal.Copy(imgBytes, 0, imgData.Scan0, numBytes);
             areaImg.UnlockBits(imgData);
 
@@ -1243,7 +1288,7 @@ namespace AdeptiScanner_GI
                 case GameColor.TextGold:
                     return (pixel[0] is > 100 and < 160 && pixel[1] > 160 && pixel[2] is > 200 and < 230);
                 case GameColor.TextSubstatUnactivated:
-                    return (pixel[0] is > 150 and < 172 && pixel[1] is > 150 and < 172 && pixel[2] is > 150 and < 172) && (Math.Abs(pixel[0] - pixel[1]) < 8 && Math.Abs(pixel[1] - pixel[2]) < 8);
+                    return (pixel[0] is > 150 and < 200 && pixel[1] is > 150 and < 200 && pixel[2] is > 150 and < 200) && (Math.Abs(pixel[0] - pixel[1]) < 8 && Math.Abs(pixel[1] - pixel[2]) < 8);
 
                 case GameColor.BackgroundCharacterArea:
                     return pixel[0] is > 180 and < 200 && pixel[1] > 220 && pixel[2] > 240;
