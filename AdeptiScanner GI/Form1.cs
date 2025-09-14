@@ -329,7 +329,7 @@ namespace AdeptiScanner_GI
                             filtered = ImageProcessing.getWeaponImg(filtered, area, out int[] rows, saveImages, out bool locked, out Rectangle nameArea, out Rectangle statArea, out Rectangle refinementArea, out Rectangle charArea);
                             Weapon weapon = ImageProcessing.getWeapon(filtered, rows, saveImages, threadEngines[threadIndex], locked, nameArea, statArea, refinementArea, charArea);
 
-                            if (Database.weaponInvalid(weapon))
+                            if (weapon.IsInvalid())
                             {
                                 badResults.Enqueue(img);
                             }
@@ -344,7 +344,7 @@ namespace AdeptiScanner_GI
 
                             Artifact item = ImageProcessing.getArtifacts(filtered, rows, saveImages, threadEngines[threadIndex], locked, astralMark, elixirCrafted, rarity, typeMainArea, levelArea, subArea, setArea, charArea);
 
-                            if (Database.artifactInvalid(rarity, item))
+                            if (item.IsInvalid())
                             {
                                 badResults.Enqueue(img);
                             }
@@ -1113,7 +1113,7 @@ namespace AdeptiScanner_GI
 
                 img_Filtered = ImageProcessing.getWeaponImg(img_Filtered, readArea, out filtered_rows, saveImages, out bool locked, out Rectangle nameArea, out Rectangle statArea, out Rectangle refinementArea, out Rectangle charArea);
                 Weapon weapon = ImageProcessing.getWeapon(img_Filtered, filtered_rows, saveImages, tessEngine, locked, nameArea, statArea, refinementArea, charArea);
-                if (Database.weaponInvalid(weapon))
+                if (weapon.IsInvalid())
                 {
                     displayInventoryItem(weapon);
                     text_full.AppendText(Environment.NewLine + "---This weapon is invalid---" + Environment.NewLine);
@@ -1132,7 +1132,7 @@ namespace AdeptiScanner_GI
 
                 img_Filtered = ImageProcessing.getArtifactImg(img_Filtered, readArea, out filtered_rows, saveImages, out bool locked, out bool astralMark, out bool elixirCrafted, out int rarity, out Rectangle typeMainArea, out Rectangle levelArea, out Rectangle subArea, out Rectangle setArea, out Rectangle charArea);
                 Artifact artifact = ImageProcessing.getArtifacts(img_Filtered, filtered_rows, saveImages, tessEngine, locked, astralMark, elixirCrafted, rarity, typeMainArea, levelArea, subArea, setArea, charArea);
-                if (Database.artifactInvalid(rarity, artifact))
+                if (artifact.IsInvalid())
                 {
                     displayInventoryItem(artifact);
                     text_full.AppendText(Environment.NewLine + "---This artifact is invalid---" + Environment.NewLine);

@@ -88,5 +88,12 @@ namespace AdeptiScanner_GI
             result.Add("weapons", weaponJArr);
             return result;
         }
+
+        public bool IsInvalid()
+        {
+            return level == null || name == null || level.Value.Level > 90
+                || (name.Value.Rarity < 3 && level.Value.Level > 70)
+                || (name.Value.Rarity >= 3 && refinement == null);
+        }
     }
 }

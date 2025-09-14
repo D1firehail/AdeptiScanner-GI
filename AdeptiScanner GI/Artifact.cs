@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace AdeptiScanner_GI
 {
@@ -225,7 +226,7 @@ namespace AdeptiScanner_GI
                 }
             }
 
-            if (Database.artifactInvalid(res.rarity, res))
+            if (res.IsInvalid())
             {
                 ScannerForm.INSTANCE.AppendStatusText("Failed to parse artifact: " + GOODArtifact.ToString(Newtonsoft.Json.Formatting.None) + Environment.NewLine, false);
                 return null;
@@ -261,6 +262,55 @@ namespace AdeptiScanner_GI
             }
             result.Add("artifacts", artifactJArr);
             return result;
+        }
+
+        public bool IsInvalid()
+        {
+            // null on mandatory values
+            if (rarity < 0 || rarity > 5 || piece == null || main == null || level == null || subs == null || set == null)
+            {
+                return true;
+            }
+
+            // basic rarity-based level/substat count 
+            if ((rarity == 1 && (level.Value.Key > 4 || subs.Count > 1))
+                || (rarity == 2 && (level.Value.Key > 4 || subs.Count > 2))
+                || (rarity == 3 && (level.Value.Key > 12 || subs.Count > 4 || subs.Count < 1))
+                || (rarity == 4 && (level.Value.Key > 16 || subs.Count > 4 || subs.Count < 2))
+                || (rarity == 5 && (level.Value.Key > 20 || subs.Count > 4 || subs.Count < 3)))
+            {
+                return true;
+            }
+
+            int minRollCount = subs.Sum(x => x.MinRolls);
+            int maxRollCount = subs.Sum(x => x.MaxRolls);
+
+            int upgradeCount = level.Value.Key / 4;
+
+            // total roll count
+            if ((rarity == 1 && (maxRollCount < 0 + upgradeCount || minRollCount > 0 + upgradeCount))
+                || (rarity == 2 && (maxRollCount < 0 + upgradeCount || minRollCount > 1 + upgradeCount))
+                || (rarity == 3 && (maxRollCount < 1 + upgradeCount || minRollCount > 2 + upgradeCount))
+                || (rarity == 4 && (maxRollCount < 2 + upgradeCount || minRollCount > 3 + upgradeCount))
+                || (rarity == 5 && (maxRollCount < 3 + upgradeCount || minRollCount > 4 + upgradeCount)))
+            {
+                return true;
+            }
+
+            bool hasPassedUnactivatedSub = false;
+            foreach (var sub in subs) 
+            {
+                if (sub.IsUnactivated)
+                {
+                    hasPassedUnactivatedSub = true;
+                }
+                else if (hasPassedUnactivatedSub)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }

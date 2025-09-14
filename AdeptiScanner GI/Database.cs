@@ -3,6 +3,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
@@ -259,6 +260,10 @@ namespace AdeptiScanner_GI
                             minRolls = Math.Min(entry.MinRolls, minRolls);
                         }
 
+                        if (maxRolls < minRolls)
+                        {
+                            throw new Exception("Min/Max rolls for a given display value failed sanity check");
+                        }
                         processedRolls[text] = (value, minRolls, maxRolls);
                     }
 
@@ -464,23 +469,6 @@ namespace AdeptiScanner_GI
                     break;
                 }
             }
-        }
-
-        public static bool artifactInvalid(int rarity, Artifact item)
-        {
-            return rarity < 0 || rarity > 5 || item.piece == null || item.main == null || item.level == null || item.subs == null || item.set == null
-                || (rarity == 1 && (item.level.Value.Key > 4 || item.subs.Count > 1)) 
-                || (rarity == 2 && (item.level.Value.Key > 4 || item.subs.Count > 2)) 
-                || (rarity == 3 && (item.level.Value.Key > 12 || item.subs.Count > 4 || item.subs.Count < 1))
-                || (rarity == 4 && (item.level.Value.Key > 16 || item.subs.Count > 4 || item.subs.Count < 2)) 
-                || (rarity == 5 && (item.level.Value.Key > 20 || item.subs.Count > 4 || item.subs.Count < 3));
-        }
-
-        public static bool weaponInvalid(Weapon item)
-        {
-            return item.level == null || item.name == null || item.level.Value.Level > 90 
-                || (item.name.Value.Rarity < 3 && item.level.Value.Level > 70) 
-                || (item.name.Value.Rarity >= 3 && item.refinement == null);
         }
     }
 
