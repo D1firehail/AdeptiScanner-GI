@@ -67,7 +67,7 @@ namespace AdeptiScanner_GI
         private static System.Globalization.CultureInfo culture = new System.Globalization.CultureInfo("en-GB", false);
         public static string appDir = Path.Join(Application.StartupPath, "ScannerFiles");
         public static string appdataPath = Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "AdeptiScanner");
-        public static string programVersion = "2.4.0";
+        public static string programVersion = "3.0.0";
         public static string dataVersion = "X.XX";
         //These get filled on startup by other file
         public static List<PieceData> Pieces = new List<PieceData>();

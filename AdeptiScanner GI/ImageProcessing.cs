@@ -635,7 +635,7 @@ namespace AdeptiScanner_GI
                         if (!locked && PixelIsColor(pixel, GameColor.LockRed))
                         {
                             locked = true;
-                        } else if (PixelIsColor(pixel, GameColor.StarYellow))
+                        } else if (PixelIsColor(pixel, GameColor.AstralMarkYellow))
                         {
                             astralMark = true;
                         }
@@ -1262,6 +1262,7 @@ namespace AdeptiScanner_GI
             WhiteWindowHeader, // White windows window header
 
             StarYellow, // rarity star
+            AstralMarkYellow, // Astral Mark star, separate from StarYellow due to fading
             LockRed, // lock icon
             SanctifyingElixirBackground, // light purple background
 
@@ -1306,6 +1307,8 @@ namespace AdeptiScanner_GI
 
                 case GameColor.StarYellow:
                     return pixel[0] < 60 && pixel[1] > 190 && pixel[2] > 240;
+                case GameColor.AstralMarkYellow:
+                    return pixel[0] < 150 && pixel[1] > 120 && pixel[2] > 200 && Math.Abs(pixel[1] - pixel[2]) < 55;
                 case GameColor.LockRed:
                     return pixel[0] < 150 && pixel[1] > 120 && pixel[2] > 200;
                 case GameColor.SanctifyingElixirBackground:

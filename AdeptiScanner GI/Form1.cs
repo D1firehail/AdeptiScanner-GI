@@ -93,7 +93,7 @@ namespace AdeptiScanner_GI
             loadSettings();
             InitializeComponent();
             finalizeLoadSettings();
-            label_dataversion.Text = "Data: V" + Database.dataVersion;
+            label_dataversion.Text = "Data: " + Database.dataVersion;
             label_appversion.Text = "Program: V" + Database.programVersion;
             label_admin.Text = "Admin: " + IsAdministrator();
             this.Text = "AdeptiScanner_GI V" + Database.programVersion;
