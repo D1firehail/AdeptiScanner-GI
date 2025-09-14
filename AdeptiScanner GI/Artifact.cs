@@ -9,7 +9,7 @@ namespace AdeptiScanner_GI
     {
         public PieceData? piece;
         public ArtifactMainStatData? main;
-        public ArtifactLevelData? level;
+        public ArtifactLevelData? level; // unreliable
         public List<ArtifactSubStatData> subs;
         public ArtifactSetData? set;
         public CharacterNameData? character;
@@ -17,6 +17,10 @@ namespace AdeptiScanner_GI
         public bool astralMark = false;
         public bool elixirCrafted = false;
         public int rarity = 0;
+
+        // not used internally, just to not lose data between import/export
+        public Dictionary<string, double> importedInitialValues;
+        public int? importedTotalRolls;
 
         public Artifact()
         {
@@ -95,22 +99,76 @@ namespace AdeptiScanner_GI
                 result.Add("slotKey", JToken.FromObject(piece.Value.StatKey));
             if (main != null)
                 result.Add("mainStatKey", JToken.FromObject(main.Value.StatKey));
+            int? totalRollCount = null;
             if (subs != null)
             {
                 JArray subsJArr = new JArray();
+                JArray unactivatedSubsJArr = new JArray();
                 foreach (ArtifactSubStatData sub in subs)
                 {
-                    // ignore unactivated subs in export, until format update is done
-                    if (!sub.IsUnactivated)
-                    {
                     JObject subJObj = new JObject();
                     subJObj.Add("key", JToken.FromObject(sub.StatKey));
                     subJObj.Add("value", JToken.FromObject(sub.StatValue));
-                    subsJArr.Add(subJObj);
+
+                    if (importedInitialValues != null && importedInitialValues.TryGetValue(sub.StatKey, out double dictInitialRoll))
+                    {
+                        // prefer imported initial roll over own attempt
+                        subJObj.Add("initialValue", JToken.FromObject(dictInitialRoll));
+                    } else if (sub.MaxRolls == 1)
+                    {
+                        // could maybe detect results requiring all rolls to be the same
+                        // like 7.8 CR requiring 2 x 3.9
+                        // or or 5.4 CR requiring 2 x 2.7
+                        subJObj.Add("initialValue", JToken.FromObject(sub.StatValue));
+                    }
+
+                    if (sub.IsUnactivated)
+                    {
+                        unactivatedSubsJArr.Add(subJObj);
+                    } else
+                    {
+                        subsJArr.Add(subJObj);
                     }
                 }
+
+                if (main != null)
+                {
+                    int minRollCount = subs.Where(x => !x.IsUnactivated).Sum(x => x.MinRolls);
+                    int maxRollCount = subs.Where(x => !x.IsUnactivated).Sum(x => x.MaxRolls);
+
+                    int maxPossibleRollCount = GetMaxRollCount(rarity, main.Value.Level);
+                    int minPossibleRollCount = GetMinRollCount(rarity, main.Value.Level);
+
+                    if (minRollCount == maxRollCount)
+                    {
+                        // unambiguous
+                        totalRollCount = minRollCount;
+                    } else if (maxRollCount > maxPossibleRollCount && minRollCount == maxPossibleRollCount)
+                    {
+                        // ambiguity solved because only 1 option is possible
+                        totalRollCount = minRollCount;
+                    } else if (minRollCount < minPossibleRollCount && maxRollCount == minPossibleRollCount)
+                    {
+                        // ambiguity solved because only 1 option is possible
+                        totalRollCount = minRollCount;
+                    }
+                }
+
                 result.Add("substats", subsJArr);
+                result.Add("unactivatedSubstats", unactivatedSubsJArr);
             }
+
+            if (importedTotalRolls.HasValue)
+            {
+                // prefer imported roll count over own attempt
+                totalRollCount = importedTotalRolls.Value;
+            }
+
+            if (totalRollCount.HasValue)
+            {
+                result.Add("totalRolls", JToken.FromObject(totalRollCount.Value));
+            }
+
             if (includeLocation)
             {
                 if (character != null)
@@ -120,6 +178,8 @@ namespace AdeptiScanner_GI
             }
 
             result.Add("lock", JToken.FromObject(locked));
+            result.Add("astralMark", JToken.FromObject(astralMark));
+            result.Add("elixirCrafted", JToken.FromObject(elixirCrafted));
 
             /*if (level != null && main != null && level.Item2 != main.Item4)
             {
@@ -207,23 +267,34 @@ namespace AdeptiScanner_GI
             if (GOODArtifact.ContainsKey("substats"))
             {
                 JArray substats = GOODArtifact["substats"].ToObject<JArray>();
-                res.subs = new List<ArtifactSubStatData>();
                 foreach (JObject sub in substats)
                 {
-                    if (sub.ContainsKey("key") && sub.ContainsKey("value") )
-                    {
-                        string statKey = sub["key"].ToObject<string>();
-                        double statVal = sub["value"].ToObject<double>();
-                        for (int i = 0; i < rarityDb.Substats.Count; i++)
-                        {
-                            if (rarityDb.Substats[i].StatKey == statKey && rarityDb.Substats[i].StatValue - statVal < 0.099)
-                            {
-                                res.subs.Add(rarityDb.Substats[i]);
-                                break;
-                            }
-                        }
-                    }
+                    res.ImportSubstat(sub, rarityDb, false);
                 }
+            }
+
+            if (GOODArtifact.ContainsKey("unactivatedSubstats"))
+            {
+                JArray substats = GOODArtifact["unactivatedSubstats"].ToObject<JArray>();
+                foreach (JObject sub in substats)
+                {
+                    res.ImportSubstat(sub, rarityDb, true);
+                }
+            }
+
+            if (GOODArtifact.ContainsKey("astralMark"))
+            {
+                res.astralMark = GOODArtifact["astralMark"].ToObject<bool>();
+            }
+
+            if (GOODArtifact.ContainsKey("elixirCrafted"))
+            {
+                res.elixirCrafted = GOODArtifact["elixirCrafted"].ToObject<bool>();
+            }
+
+            if (GOODArtifact.ContainsKey("totalRolls"))
+            {
+                res.importedTotalRolls = GOODArtifact["totalRolls"].ToObject<int>();
             }
 
             if (res.IsInvalid())
@@ -234,6 +305,39 @@ namespace AdeptiScanner_GI
             else
             {
                 return res;
+            }
+        }
+
+        private void ImportSubstat(JObject sub, Database rarityDb, bool isUnactivated)
+        {
+            if (subs == null)
+            {
+                subs = new List<ArtifactSubStatData>();
+            }
+
+            if (importedInitialValues == null)
+            {
+                importedInitialValues = new();
+            }
+
+            if (sub.ContainsKey("key") && sub.ContainsKey("value"))
+            {
+                string statKey = sub["key"].ToObject<string>();
+                double statVal = sub["value"].ToObject<double>();
+                for (int i = 0; i < rarityDb.Substats.Count; i++)
+                {
+                    if (rarityDb.Substats[i].StatKey == statKey && Math.Abs(rarityDb.Substats[i].StatValue - statVal) < 0.099 && rarityDb.Substats[i].IsUnactivated == isUnactivated)
+                    {
+                        subs.Add(rarityDb.Substats[i]);
+                        break;
+                    }
+                }
+
+                if (sub.ContainsKey("initialValue"))
+                {
+                    double initialValue = sub["value"].ToObject<double>();
+                    importedInitialValues[statKey] = initialValue;
+                }
             }
         }
 
@@ -249,7 +353,7 @@ namespace AdeptiScanner_GI
                     add = true;
                 }
                     
-                if (item.level.HasValue && item.level.Value.Key >= minLevel && item.level.Value.Key <= maxLevel
+                if (item.main.HasValue && item.main.Value.Level >= minLevel && item.main.Value.Level <= maxLevel
                     && item.rarity >= minRarity && item.rarity <= maxRarity)
                 {
                     add = true;
@@ -264,35 +368,52 @@ namespace AdeptiScanner_GI
             return result;
         }
 
+        private int GetMaxRollCount(int rarity, int level)
+        {
+            return Math.Clamp(rarity - 1, 0, 4) + level / 4;
+        }
+
+        private int GetMinRollCount(int rarity, int level)
+        {
+            if (rarity == 0)
+            {
+                return GetMaxRollCount(rarity, level);
+            }
+
+            return GetMaxRollCount(rarity, level) - 1;
+        }
+
         public bool IsInvalid()
         {
             // null on mandatory values
-            if (rarity < 0 || rarity > 5 || piece == null || main == null || level == null || subs == null || set == null)
+            if (rarity < 0 || rarity > 5 || piece == null || main == null || subs == null || set == null)
             {
                 return true;
             }
 
             // basic rarity-based level/substat count 
-            if ((rarity == 1 && (level.Value.Key > 4 || subs.Count > 1))
-                || (rarity == 2 && (level.Value.Key > 4 || subs.Count > 2))
-                || (rarity == 3 && (level.Value.Key > 12 || subs.Count > 4 || subs.Count < 1))
-                || (rarity == 4 && (level.Value.Key > 16 || subs.Count > 4 || subs.Count < 2))
-                || (rarity == 5 && (level.Value.Key > 20 || subs.Count > 4 || subs.Count < 3)))
+            if ((rarity == 1 && (main.Value.Level > 4 || subs.Count > 1))
+                || (rarity == 2 && (main.Value.Level > 4 || subs.Count > 2))
+                || (rarity == 3 && (main.Value.Level > 12 || subs.Count > 4 || subs.Count < 1))
+                || (rarity == 4 && (main.Value.Level > 16 || subs.Count > 4 || subs.Count < 2))
+                || (rarity == 5 && (main.Value.Level > 20 || subs.Count > 4 || subs.Count < 3)))
             {
                 return true;
             }
 
-            int minRollCount = subs.Sum(x => x.MinRolls);
-            int maxRollCount = subs.Sum(x => x.MaxRolls);
+            int minRollCount = subs.Where(x => !x.IsUnactivated).Sum(x => x.MinRolls);
+            int maxRollCount = subs.Where(x => !x.IsUnactivated).Sum(x => x.MaxRolls);
 
-            int upgradeCount = level.Value.Key / 4;
+            int maxPossibleRollCount = GetMaxRollCount(rarity, main.Value.Level);
+            int minPossibleRollCount = GetMinRollCount(rarity, main.Value.Level);
 
             // total roll count
-            if ((rarity == 1 && (maxRollCount < 0 + upgradeCount || minRollCount > 0 + upgradeCount))
-                || (rarity == 2 && (maxRollCount < 0 + upgradeCount || minRollCount > 1 + upgradeCount))
-                || (rarity == 3 && (maxRollCount < 1 + upgradeCount || minRollCount > 2 + upgradeCount))
-                || (rarity == 4 && (maxRollCount < 2 + upgradeCount || minRollCount > 3 + upgradeCount))
-                || (rarity == 5 && (maxRollCount < 3 + upgradeCount || minRollCount > 4 + upgradeCount)))
+            if (maxRollCount < minPossibleRollCount || minRollCount > maxPossibleRollCount)
+            {
+                return true;
+            }
+
+            if (importedTotalRolls.HasValue && (importedTotalRolls.Value > maxPossibleRollCount || importedTotalRolls.Value < minPossibleRollCount))
             {
                 return true;
             }

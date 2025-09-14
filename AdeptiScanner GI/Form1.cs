@@ -309,7 +309,19 @@ namespace AdeptiScanner_GI
 
         private void runOCRThread(int threadIndex, bool weaponMode)
         {
-            Task.Run(RunOCRThreadInternal);
+            Task.Run(async () =>
+            {
+                try
+                {
+                    await RunOCRThreadInternal();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error occurred while running auto. Please contact scanner dev." + Environment.NewLine + Environment.NewLine +
+                    "Exact error:" + Environment.NewLine + ex.ToString(), "Error Running Auto", MessageBoxButtons.OK);
+                    throw;
+                }
+            });
 
             async Task RunOCRThreadInternal()
             {
@@ -383,7 +395,19 @@ namespace AdeptiScanner_GI
                 runOCRThread(i, false);
             }
 
-            Task.Run(ArtifactAutoInternal);
+            Task.Run(() =>
+            {
+                try
+                {
+                    ArtifactAutoInternal();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error occurred while running auto. Please contact scanner dev." + Environment.NewLine + Environment.NewLine +
+                    "Exact error:" + Environment.NewLine + ex.ToString(), "Error Running Auto", MessageBoxButtons.OK);
+                    throw;
+                }
+            });
 
             void ArtifactAutoInternal()
             {
@@ -592,13 +616,17 @@ namespace AdeptiScanner_GI
                     + "Time elapsed: " + runtime.ElapsedMilliseconds + "ms" + Environment.NewLine, false);
                 for (int i = 0; i < ThreadCount; i++)
                 {
-                    while (threadRunning[i] || pauseAuto)
+                    while (threadRunning[i])
                     {
                         if (hardCancelAuto)
                         {
                             goto hard_cancel_pos;
                         }
                         System.Threading.Thread.Sleep(1000);
+                    }
+                    if (hardCancelAuto)
+                    {
+                        goto hard_cancel_pos;
                     }
                     foreach (object item in threadResults[i])
                     {
@@ -654,7 +682,19 @@ namespace AdeptiScanner_GI
                 runOCRThread(i, true);
             }
 
-            Task.Run(WeaponAutoInternal);
+            Task.Run(() =>
+            {
+                try
+                {
+                    WeaponAutoInternal();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error occurred while running auto. Please contact scanner dev." + Environment.NewLine + Environment.NewLine +
+                    "Exact error:" + Environment.NewLine + ex.ToString(), "Error Running Auto", MessageBoxButtons.OK);
+                    throw;
+                }
+            });
 
             void WeaponAutoInternal()
             {
@@ -856,13 +896,17 @@ namespace AdeptiScanner_GI
                     + "Time elapsed: " + runtime.ElapsedMilliseconds + "ms" + Environment.NewLine, false);
                 for (int i = 0; i < ThreadCount; i++)
                 {
-                    while (threadRunning[i] || pauseAuto)
+                    while (threadRunning[i])
                     {
                         if (hardCancelAuto)
                         {
                             goto hard_cancel_pos;
                         }
                         System.Threading.Thread.Sleep(1000);
+                    }
+                    if (hardCancelAuto)
+                    {
+                        goto hard_cancel_pos;
                     }
                     foreach (object item in threadResults[i])
                     {
@@ -1274,7 +1318,7 @@ namespace AdeptiScanner_GI
             else
             {
                 currData.Add("format", "GOOD");
-                currData.Add("version", 1);
+                currData.Add("version", 3);
                 currData.Add("source", "AdeptiScanner");
                 //currData.Add("characters", new JArray());
                 //currData.Add("weapons", new JArray());
