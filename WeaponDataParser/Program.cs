@@ -142,6 +142,11 @@ namespace WeaponDataParser // Note: actual namespace depends on the project name
             foreach (var currChar in charJson)
             {
                 var val = currChar.Value.ToObject<JObject>();
+                if (val.Count == 0)
+                {
+                    Console.WriteLine("Empty entry in charJson: " + currChar);
+                    continue;
+                }
                 var nameKey = val["NameTextMapHash"].ToString();
                 var name = enJson[nameKey].ToString();
 
